@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{004DE826-51AB-4B63-8DCA-BCB2BF696DEE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>SchoolManager</RootNamespace>
+    <AssemblyName>SchoolManager</AssemblyName>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.2.2.5\lib\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.Video.2.2.5\lib\AForge.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.DirectShow, Version=2.2.5.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.Video.DirectShow.2.2.5\lib\AForge.Video.DirectShow.dll</HintPath>
+    </Reference>
+    <Reference Include="BCrypt.Net-Next, Version=4.0.3.0, Culture=neutral, PublicKeyToken=1e11be04b6288443, processorArchitecture=MSIL">
+      <HintPath>..\packages\BCrypt.Net-Next.4.0.3\lib\net48\BCrypt.Net-Next.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.8.0\lib\net462\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.8.0\lib\net462\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="Guna.UI2, Version=2.0.4.7, Culture=neutral, PublicKeyToken=8b9d14aa5142e261, processorArchitecture=MSIL">
+      <HintPath>..\packages\Guna.UI2.WinForms.2.0.4.7\lib\net48\Guna.UI2.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.4, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.4\lib\net461\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.16.0.18925.20022\lib\net40\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.7.0.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.7.0\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="zxing, Version=0.16.11.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.11\lib\net48\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation, Version=0.16.11.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.11\lib\net48\zxing.presentation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BLL\Business_Logic_Attendance.cs" />
+    <Compile Include="BLL\Business_Logic_Categories.cs" />
+    <Compile Include="BLL\Business_Logic_Classes.cs" />
+    <Compile Include="BLL\Business_Logic_Grades.cs" />
+    <Compile Include="BLL\Business_Logic_Manual_Roll_Call.cs" />
+    <Compile Include="BLL\Business_Logic_Notes.cs" />
+    <Compile Include="BLL\Business_Logic_QR_Roll_Call.cs" />
+    <Compile Include="BLL\Business_Logic_Quizzes.cs" />
+    <Compile Include="BLL\Business_Logic_Students.cs" />
+    <Compile Include="BLL\Business_Logic_Vocabulary.cs" />
+    <Compile Include="DAL\data_Access_Base.cs" />
+    <Compile Include="DAL\data_Access_Categories.cs" />
+    <Compile Include="DAL\data_Access_Classes.cs" />
+    <Compile Include="DAL\data_Access_Grades.cs" />
+    <Compile Include="DAL\data_Access_Manual_Roll_Call.cs" />
+    <Compile Include="DAL\data_Access_Notes.cs" />
+    <Compile Include="DAL\data_Access_QR_Roll_Call.cs" />
+    <Compile Include="DAL\data_Access_Quizzes.cs" />
+    <Compile Include="DAL\data_Access_Students.cs" />
+    <Compile Include="DAL\data_Access_Vocabulary.cs" />
+    <Compile Include="DTO\AcademicReportDTO.cs" />
+    <Compile Include="DTO\AttendanceSummaryDTO.cs" />
+    <Compile Include="DTO\CategoryDTO.cs" />
+    <Compile Include="DTO\CheckedListItem.cs" />
+    <Compile Include="DTO\NoteDTO.cs" />
+    <Compile Include="DTO\QuizDTO.cs" />
+    <Compile Include="DTO\Roll_Call_Records.cs" />
+    <Compile Include="DTO\Classes.cs" />
+    <Compile Include="DTO\Students.cs" />
+    <Compile Include="DTO\StudyResultDTO.cs" />
+    <Compile Include="DTO\SubjectResultDTO.cs" />
+    <Compile Include="DTO\VocabularyDTO.cs" />
+    <Compile Include="Presentations\All_User_Control\uc_Approve_Registration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Approve_Registration.Designer.cs">
+      <DependentUpon>uc_Approve_Registration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Create_Quiz.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Create_Quiz.Designer.cs">
+      <DependentUpon>uc_Create_Quiz.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Game_FillBlank.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Game_FillBlank.Designer.cs">
+      <DependentUpon>uc_Game_FillBlank.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Game_MemoryMatch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Game_MemoryMatch.Designer.cs">
+      <DependentUpon>uc_Game_MemoryMatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Game_Menu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Game_Menu.Designer.cs">
+      <DependentUpon>uc_Game_Menu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Game_SentenceScramble.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Game_SentenceScramble.Designer.cs">
+      <DependentUpon>uc_Game_SentenceScramble.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Game_WordMatch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Game_WordMatch.Designer.cs">
+      <DependentUpon>uc_Game_WordMatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Manage_Vocabulary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Manage_Vocabulary.Designer.cs">
+      <DependentUpon>uc_Manage_Vocabulary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Manual_Roll_Call.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Manual_Roll_Call.Designer.cs">
+      <DependentUpon>uc_Manual_Roll_Call.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\QR_Roll_Call.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\QR_Roll_Call.Designer.cs">
+      <DependentUpon>QR_Roll_Call.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Print_Export.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Print_Export.Designer.cs">
+      <DependentUpon>uc_Print_Export.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Rp_Statistics.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Rp_Statistics.Designer.cs">
+      <DependentUpon>uc_Rp_Statistics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Show_Study_Management.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Show_Study_Management.Designer.cs">
+      <DependentUpon>uc_Show_Study_Management.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Show_Tools.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Show_Tools.Designer.cs">
+      <DependentUpon>uc_Show_Tools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\UC_Student_Management.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\UC_Student_Management.Designer.cs">
+      <DependentUpon>UC_Student_Management.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Study_Notes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Study_Notes.Designer.cs">
+      <DependentUpon>uc_Study_Notes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\UC_Add_New_Student.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\UC_Add_New_Student.Designer.cs">
+      <DependentUpon>UC_Add_New_Student.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uC_Import_FIile_Excel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uC_Import_FIile_Excel.Designer.cs">
+      <DependentUpon>uC_Import_FIile_Excel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Teacher_Management.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Teacher_Management.Designer.cs">
+      <DependentUpon>uc_Teacher_Management.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Time_Management_Tool.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Time_Management_Tool.Designer.cs">
+      <DependentUpon>uc_Time_Management_Tool.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\Forms\admin_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentations\Forms\admin_Form.Designer.cs">
+      <DependentUpon>admin_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\Forms\forget_Password_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentations\Forms\forget_Password_Form.Designer.cs">
+      <DependentUpon>forget_Password_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\Forms\Form_EditStudent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentations\Forms\Form_EditStudent.Designer.cs">
+      <DependentUpon>Form_EditStudent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\Forms\index.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentations\Forms\index.Designer.cs">
+      <DependentUpon>index.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\Forms\register_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentations\Forms\register_Form.Designer.cs">
+      <DependentUpon>register_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\Forms\teacher_AccountManager_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentations\Forms\teacher_AccountManager_Form.Designer.cs">
+      <DependentUpon>teacher_AccountManager_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\Forms\login_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentations\Forms\login_Form.Designer.cs">
+      <DependentUpon>login_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Study_Result.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Study_Result.Designer.cs">
+      <DependentUpon>uc_Study_Result.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Drawing_Board.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Drawing_Board.Designer.cs">
+      <DependentUpon>uc_Drawing_Board.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\PdfReportGenerator.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Presentations\All_User_Control\QR_Roll_Call.resx">
+      <DependentUpon>QR_Roll_Call.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\UC_Add_New_Student.resx">
+      <DependentUpon>UC_Add_New_Student.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Approve_Registration.resx">
+      <DependentUpon>uc_Approve_Registration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Create_Quiz.resx">
+      <DependentUpon>uc_Create_Quiz.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Game_FillBlank.resx">
+      <DependentUpon>uc_Game_FillBlank.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Game_MemoryMatch.resx">
+      <DependentUpon>uc_Game_MemoryMatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Game_Menu.resx">
+      <DependentUpon>uc_Game_Menu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Game_SentenceScramble.resx">
+      <DependentUpon>uc_Game_SentenceScramble.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Game_WordMatch.resx">
+      <DependentUpon>uc_Game_WordMatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Manage_Vocabulary.resx">
+      <DependentUpon>uc_Manage_Vocabulary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Manual_Roll_Call.resx">
+      <DependentUpon>uc_Manual_Roll_Call.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Print_Export.resx">
+      <DependentUpon>uc_Print_Export.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Rp_Statistics.resx">
+      <DependentUpon>uc_Rp_Statistics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Show_Study_Management.resx">
+      <DependentUpon>uc_Show_Study_Management.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Show_Tools.resx">
+      <DependentUpon>uc_Show_Tools.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\UC_Student_Management.resx">
+      <DependentUpon>UC_Student_Management.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Study_Notes.resx">
+      <DependentUpon>uc_Study_Notes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uC_Import_FIile_Excel.resx">
+      <DependentUpon>uC_Import_FIile_Excel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Teacher_Management.resx">
+      <DependentUpon>uc_Teacher_Management.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Time_Management_Tool.resx">
+      <DependentUpon>uc_Time_Management_Tool.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\Forms\admin_Form.resx">
+      <DependentUpon>admin_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\Forms\forget_Password_Form.resx">
+      <DependentUpon>forget_Password_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\Forms\Form_EditStudent.resx">
+      <DependentUpon>Form_EditStudent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\Forms\index.resx">
+      <DependentUpon>index.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\Forms\register_Form.resx">
+      <DependentUpon>register_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\Forms\teacher_AccountManager_Form.resx">
+      <DependentUpon>teacher_AccountManager_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\Forms\login_Form.resx">
+      <DependentUpon>login_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Study_Result.resx">
+      <DependentUpon>uc_Study_Result.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Drawing_Board.resx">
+      <DependentUpon>uc_Drawing_Board.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="Fonts\ARIAL.TTF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
