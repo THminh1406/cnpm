@@ -19,13 +19,13 @@ namespace SchoolManager
         {
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new login_Form());
+            Application.Run(new login_Form());
             //Application.Run(new register_Form());
             //Application.Run(new forget_Password_Form());
             //Application.Run(new admin_Form());
             ////Application.Run(new teacher_AccountManager_Form());
             //Application.Run(new main_Form());
-            Application.Run(new index());
+            //Application.Run(new index());
 
         }
     }

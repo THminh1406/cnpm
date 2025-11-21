@@ -8,30 +8,57 @@ namespace SchoolManager.DAL
 {
     public class data_Access_Classes : data_Access_Base
     {
-        // Return all classes including current assigned teacher (nullable) via stored procedure
         public List<Classes> GetAllClasses()
         {
-            List<Classes> classes_List = new List<Classes>();
-            using (SqlConnection conn = new SqlConnection(connection_String))
+            var classes_List = new List<Classes>();
+            try
             {
-                conn.Open();
-
-                string query = "SELECT id_class AS id_Class, class_name AS name_Class FROM classes";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                using (SqlConnection conn = new SqlConnection(connection_String))
+                using (SqlCommand cmd = new SqlCommand("sp_GetAllClasses", conn))
                 {
-                    classes_List.Add(new Classes
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        id_Class = (int)reader["id_Class"],
-                        name_Class = reader["name_Class"].ToString()
-                    });
+                        while (reader.Read())
+                        {
+                            var cls = new Classes
+                            {
+                                id_Class = reader.IsDBNull(reader.GetOrdinal("id_class")) ? 0 : Convert.ToInt32(reader["id_class"]),
+                                name_Class = reader.IsDBNull(reader.GetOrdinal("class_name")) ? string.Empty : reader["class_name"].ToString(),
+                                AssignedTeacherId = reader.IsDBNull(reader.GetOrdinal("id_teacher")) ? (int?)null : Convert.ToInt32(reader["id_teacher"]) 
+                            };
+
+                            classes_List.Add(cls);
+                        }
+                    }
                 }
             }
+            catch
+            {}
+
             return classes_List;
         }
 
-        // Assign selected classes to a teacher via stored procedure sp_AssignClassesToTeacher
+        public bool AssignTeacherToClass(int classId, int teacherId)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connection_String))
+                using (SqlCommand cmd = new SqlCommand("sp_AssignTeacherToClass", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@classId", classId);
+                    cmd.Parameters.AddWithValue("@teacherId", teacherId);
+                    conn.Open();
+                    int affected = cmd.ExecuteNonQuery();
+                    return affected != 0;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

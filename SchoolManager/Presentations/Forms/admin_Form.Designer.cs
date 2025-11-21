@@ -48,6 +48,7 @@
             // 
             // guna2GradientPanel1
             // 
+            this.guna2GradientPanel1.AutoSize = true;
             this.guna2GradientPanel1.BackColor = System.Drawing.Color.White;
             this.guna2GradientPanel1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.guna2GradientPanel1.BorderThickness = 4;
@@ -61,9 +62,10 @@
             this.guna2GradientPanel1.Controls.Add(this.guna2PictureBox1);
             this.guna2GradientPanel1.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.guna2GradientPanel1.FillColor2 = System.Drawing.Color.Silver;
-            this.guna2GradientPanel1.Location = new System.Drawing.Point(-10, -9);
+            this.guna2GradientPanel1.Location = new System.Drawing.Point(-7, -6);
+            this.guna2GradientPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.guna2GradientPanel1.Name = "guna2GradientPanel1";
-            this.guna2GradientPanel1.Size = new System.Drawing.Size(2411, 194);
+            this.guna2GradientPanel1.Size = new System.Drawing.Size(1607, 124);
             this.guna2GradientPanel1.TabIndex = 10;
             // 
             // guna2ControlBox1
@@ -75,9 +77,10 @@
             this.guna2ControlBox1.FillColor = System.Drawing.Color.Transparent;
             this.guna2ControlBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 22.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.guna2ControlBox1.IconColor = System.Drawing.Color.Gray;
-            this.guna2ControlBox1.Location = new System.Drawing.Point(2310, 3);
+            this.guna2ControlBox1.Location = new System.Drawing.Point(1540, 2);
+            this.guna2ControlBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.guna2ControlBox1.Name = "guna2ControlBox1";
-            this.guna2ControlBox1.Size = new System.Drawing.Size(73, 52);
+            this.guna2ControlBox1.Size = new System.Drawing.Size(49, 33);
             this.guna2ControlBox1.TabIndex = 18;
             // 
             // guna2ControlBox2
@@ -90,9 +93,10 @@
             this.guna2ControlBox2.FillColor = System.Drawing.Color.Transparent;
             this.guna2ControlBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 22.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.guna2ControlBox2.IconColor = System.Drawing.Color.Gray;
-            this.guna2ControlBox2.Location = new System.Drawing.Point(2240, 3);
+            this.guna2ControlBox2.Location = new System.Drawing.Point(1493, 2);
+            this.guna2ControlBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.guna2ControlBox2.Name = "guna2ControlBox2";
-            this.guna2ControlBox2.Size = new System.Drawing.Size(73, 52);
+            this.guna2ControlBox2.Size = new System.Drawing.Size(49, 33);
             this.guna2ControlBox2.TabIndex = 19;
             // 
             // guna2ControlBox3
@@ -105,9 +109,10 @@
             this.guna2ControlBox3.FillColor = System.Drawing.Color.Transparent;
             this.guna2ControlBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 22.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.guna2ControlBox3.IconColor = System.Drawing.Color.Gray;
-            this.guna2ControlBox3.Location = new System.Drawing.Point(2172, -8);
+            this.guna2ControlBox3.Location = new System.Drawing.Point(1448, -5);
+            this.guna2ControlBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.guna2ControlBox3.Name = "guna2ControlBox3";
-            this.guna2ControlBox3.Size = new System.Drawing.Size(71, 63);
+            this.guna2ControlBox3.Size = new System.Drawing.Size(47, 40);
             this.guna2ControlBox3.TabIndex = 20;
             // 
             // guna2Button1
@@ -124,9 +129,10 @@
             this.guna2Button1.Image = ((System.Drawing.Image)(resources.GetObject("guna2Button1.Image")));
             this.guna2Button1.ImageOffset = new System.Drawing.Point(0, 3);
             this.guna2Button1.ImageSize = new System.Drawing.Size(40, 40);
-            this.guna2Button1.Location = new System.Drawing.Point(1728, 45);
+            this.guna2Button1.Location = new System.Drawing.Point(1152, 29);
+            this.guna2Button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.guna2Button1.Name = "guna2Button1";
-            this.guna2Button1.Size = new System.Drawing.Size(398, 84);
+            this.guna2Button1.Size = new System.Drawing.Size(265, 54);
             this.guna2Button1.TabIndex = 17;
             this.guna2Button1.Text = "Quản lý giáo viên";
             this.guna2Button1.Click += new System.EventHandler(this.guna2Button1_Click);
@@ -145,9 +151,10 @@
             this.guna2Button3.Image = ((System.Drawing.Image)(resources.GetObject("guna2Button3.Image")));
             this.guna2Button3.ImageOffset = new System.Drawing.Point(0, 3);
             this.guna2Button3.ImageSize = new System.Drawing.Size(40, 40);
-            this.guna2Button3.Location = new System.Drawing.Point(1286, 45);
+            this.guna2Button3.Location = new System.Drawing.Point(857, 29);
+            this.guna2Button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.guna2Button3.Name = "guna2Button3";
-            this.guna2Button3.Size = new System.Drawing.Size(398, 84);
+            this.guna2Button3.Size = new System.Drawing.Size(265, 54);
             this.guna2Button3.TabIndex = 16;
             this.guna2Button3.Text = "Duyệt đăng ký";
             this.guna2Button3.Click += new System.EventHandler(this.guna2Button3_Click);
@@ -157,9 +164,10 @@
             this.guna2HtmlLabel2.BackColor = System.Drawing.Color.Transparent;
             this.guna2HtmlLabel2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.guna2HtmlLabel2.ForeColor = System.Drawing.Color.Black;
-            this.guna2HtmlLabel2.Location = new System.Drawing.Point(148, 105);
+            this.guna2HtmlLabel2.Location = new System.Drawing.Point(99, 67);
+            this.guna2HtmlLabel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.guna2HtmlLabel2.Name = "guna2HtmlLabel2";
-            this.guna2HtmlLabel2.Size = new System.Drawing.Size(284, 34);
+            this.guna2HtmlLabel2.Size = new System.Drawing.Size(175, 22);
             this.guna2HtmlLabel2.TabIndex = 2;
             this.guna2HtmlLabel2.Text = "Truy cập với quyền Admin";
             // 
@@ -168,9 +176,10 @@
             this.guna2HtmlLabel1.BackColor = System.Drawing.Color.Transparent;
             this.guna2HtmlLabel1.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.guna2HtmlLabel1.ForeColor = System.Drawing.Color.Black;
-            this.guna2HtmlLabel1.Location = new System.Drawing.Point(148, 32);
+            this.guna2HtmlLabel1.Location = new System.Drawing.Point(99, 20);
+            this.guna2HtmlLabel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.guna2HtmlLabel1.Name = "guna2HtmlLabel1";
-            this.guna2HtmlLabel1.Size = new System.Drawing.Size(396, 67);
+            this.guna2HtmlLabel1.Size = new System.Drawing.Size(248, 43);
             this.guna2HtmlLabel1.TabIndex = 1;
             this.guna2HtmlLabel1.Text = "Quản lý giáo viên";
             // 
@@ -180,9 +189,10 @@
             this.guna2PictureBox1.FillColor = System.Drawing.Color.DarkGray;
             this.guna2PictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("guna2PictureBox1.Image")));
             this.guna2PictureBox1.ImageRotate = 0F;
-            this.guna2PictureBox1.Location = new System.Drawing.Point(55, 42);
+            this.guna2PictureBox1.Location = new System.Drawing.Point(37, 27);
+            this.guna2PictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.guna2PictureBox1.Name = "guna2PictureBox1";
-            this.guna2PictureBox1.Size = new System.Drawing.Size(87, 87);
+            this.guna2PictureBox1.Size = new System.Drawing.Size(58, 56);
             this.guna2PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.guna2PictureBox1.TabIndex = 0;
             this.guna2PictureBox1.TabStop = false;
@@ -191,17 +201,19 @@
             // 
             this.panelContainer.Controls.Add(this.uc_Teacher_Management1);
             this.panelContainer.Controls.Add(this.uc_Approve_Registration1);
-            this.panelContainer.Location = new System.Drawing.Point(12, 213);
+            this.panelContainer.Location = new System.Drawing.Point(8, 136);
+            this.panelContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panelContainer.Name = "panelContainer";
-            this.panelContainer.Size = new System.Drawing.Size(2350, 1181);
+            this.panelContainer.Size = new System.Drawing.Size(1567, 756);
             this.panelContainer.TabIndex = 11;
             // 
             // uc_Teacher_Management1
             // 
             this.uc_Teacher_Management1.AutoScroll = true;
-            this.uc_Teacher_Management1.Location = new System.Drawing.Point(34, 3);
+            this.uc_Teacher_Management1.Location = new System.Drawing.Point(2, -1);
+            this.uc_Teacher_Management1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.uc_Teacher_Management1.Name = "uc_Teacher_Management1";
-            this.uc_Teacher_Management1.Size = new System.Drawing.Size(2316, 1181);
+            this.uc_Teacher_Management1.Size = new System.Drawing.Size(1544, 756);
             this.uc_Teacher_Management1.TabIndex = 1;
             this.uc_Teacher_Management1.Visible = false;
             // 
@@ -209,18 +221,20 @@
             // 
             this.uc_Approve_Registration1.AutoScroll = true;
             this.uc_Approve_Registration1.Location = new System.Drawing.Point(0, 0);
+            this.uc_Approve_Registration1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.uc_Approve_Registration1.Name = "uc_Approve_Registration1";
-            this.uc_Approve_Registration1.Size = new System.Drawing.Size(2350, 1181);
+            this.uc_Approve_Registration1.Size = new System.Drawing.Size(1567, 756);
             this.uc_Approve_Registration1.TabIndex = 0;
             // 
             // admin_Form
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2374, 1429);
+            this.ClientSize = new System.Drawing.Size(1578, 920);
             this.Controls.Add(this.panelContainer);
             this.Controls.Add(this.guna2GradientPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "admin_Form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "admin_Form";
@@ -229,6 +243,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).EndInit();
             this.panelContainer.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
