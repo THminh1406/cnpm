@@ -1362,7 +1362,7 @@ IF OBJECT_ID('dbo.sp_GetAllClasses', 'P') IS NOT NULL
     DROP PROCEDURE dbo.sp_GetAllClasses;
 GO
 -- Procedure: return all classes
-CREATE OR ALTER PROCEDURE dbo.sp_GetAllClasses
+CREATE PROCEDURE dbo.sp_GetAllClasses
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -1376,7 +1376,7 @@ IF OBJECT_ID('dbo.sp_AssignTeacherToClass', 'P') IS NOT NULL
     DROP PROCEDURE dbo.sp_AssignTeacherToClass;
 GO
 -- Procedure: assign a teacher to a class
-CREATE OR ALTER PROCEDURE dbo.sp_AssignTeacherToClass
+CREATE PROCEDURE dbo.sp_AssignTeacherToClass
     @classId INT,
     @teacherId INT
 AS
@@ -1389,5 +1389,854 @@ BEGIN
 
     -- Return rows affected for diagnostics
     SELECT @@ROWCOUNT AS rowsAffected;
+END
+GO
+
+
+-- Mthuan
+-- 2. Procedure lấy danh sách Categories
+-- Logic: Nếu @OnlyShowNonEmpty = 1 thì chỉ lấy category nào có từ vựng (bảng Vocabulary)
+IF OBJECT_ID('dbo.sp_GetAllCategories', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetAllCategories;
+GO
+CREATE PROCEDURE dbo.sp_GetAllCategories
+    @OnlyShowNonEmpty BIT = 0
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @OnlyShowNonEmpty = 1
+    BEGIN
+        SELECT C.id_category, C.category_name 
+        FROM dbo.Categories C 
+        WHERE EXISTS (SELECT 1 FROM dbo.Vocabulary V WHERE V.id_category = C.id_category)
+        ORDER BY C.category_name;
+    END
+    ELSE
+    BEGIN
+        SELECT id_category, category_name 
+        FROM dbo.Categories 
+        ORDER BY category_name;
+    END
+END
+GO
+
+-- 3. Procedure Thêm mới Category
+IF OBJECT_ID('dbo.sp_InsertCategory', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_InsertCategory;
+GO
+CREATE PROCEDURE dbo.sp_InsertCategory
+    @Name NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    INSERT INTO dbo.Categories (category_name) 
+    VALUES (@Name);
+    
+    SELECT SCOPE_IDENTITY(); 
+END
+GO
+
+-- 4. Procedure Xóa Category
+IF OBJECT_ID('dbo.sp_DeleteCategory', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_DeleteCategory;
+GO
+CREATE PROCEDURE dbo.sp_DeleteCategory
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    DELETE FROM dbo.Categories WHERE id_category = @Id;
+END
+
+
+-- Nguyen
+-- 1. Lấy bảng điểm thô cho GridView nhập điểm
+IF OBJECT_ID('dbo.sp_GetRawGrades', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetRawGrades;
+GO
+CREATE PROCEDURE dbo.sp_GetRawGrades
+    @classId INT,
+    @semester NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT 
+        s.id_student, 
+        s.full_name, 
+        sub.subject_name, 
+        g.grade_period, 
+        g.grade_score
+    FROM dbo.students s
+    LEFT JOIN dbo.grades g ON s.id_student = g.id_student AND g.semester = @semester
+    LEFT JOIN dbo.subjects sub ON g.id_subject = sub.id_subject
+    WHERE s.id_class = @classId;
+END
+GO
+
+-- 2. Lấy danh sách tất cả môn học
+IF OBJECT_ID('dbo.sp_GetAllSubjects', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetAllSubjects;
+GO
+CREATE PROCEDURE dbo.sp_GetAllSubjects
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM dbo.subjects;
+END
+GO
+
+-- 3. Lấy ID môn học theo tên
+IF OBJECT_ID('dbo.sp_GetSubjectIdByName', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetSubjectIdByName;
+GO
+CREATE PROCEDURE dbo.sp_GetSubjectIdByName
+    @name NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT id_subject FROM dbo.subjects WHERE subject_name = @name;
+END
+GO
+
+-- 4. QUAN TRỌNG: Procedure Lưu điểm (Upsert - Update if exists, Insert if new)
+-- Logic này thay thế hoàn toàn việc check count ở C#
+IF OBJECT_ID('dbo.sp_UpsertGrade', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_UpsertGrade;
+GO
+CREATE PROCEDURE dbo.sp_UpsertGrade
+    @sid INT,
+    @subId INT,
+    @sem NVARCHAR(50),
+    @type NVARCHAR(50), -- 'Mid' or 'Final'
+    @score FLOAT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Check exist
+    IF EXISTS (SELECT 1 FROM dbo.grades 
+               WHERE id_student = @sid 
+                 AND id_subject = @subId 
+                 AND semester = @sem 
+                 AND grade_period = @type)
+    BEGIN
+        -- Update
+        UPDATE dbo.grades 
+        SET grade_score = @score, 
+            grade_date = GETDATE()
+        WHERE id_student = @sid 
+          AND id_subject = @subId 
+          AND semester = @sem 
+          AND grade_period = @type;
+    END
+    ELSE
+    BEGIN
+        -- Insert
+        INSERT INTO dbo.grades (id_student, id_subject, semester, grade_period, grade_score, grade_date)
+        VALUES (@sid, @subId, @sem, @type, @score, GETDATE());
+    END
+END
+GO
+
+-- 5. Báo cáo: Lấy dữ liệu thô toàn trường theo ngày
+IF OBJECT_ID('dbo.sp_GetAcademicRawData', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetAcademicRawData;
+GO
+CREATE PROCEDURE dbo.sp_GetAcademicRawData
+    @from DATE,
+    @to DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT 
+        s.id_student,
+        c.class_name, 
+        s.gender,
+        s.ethnicity,
+        sub.subject_name,
+        g.grade_score
+    FROM dbo.students s
+    JOIN dbo.classes c ON s.id_class = c.id_class
+    JOIN dbo.grades g ON s.id_student = g.id_student
+    JOIN dbo.subjects sub ON g.id_subject = sub.id_subject
+    WHERE g.grade_period = 'Final' 
+      AND g.grade_date BETWEEN @from AND @to;
+END
+GO
+
+
+-- 6. Báo cáo: Lấy dữ liệu thô theo lớp và ngày
+IF OBJECT_ID('dbo.sp_GetRawDataByClass', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetRawDataByClass;
+GO
+CREATE PROCEDURE dbo.sp_GetRawDataByClass
+    @classId INT,
+    @from DATE,
+    @to DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT 
+        s.id_student,
+        c.class_name, 
+        s.gender,
+        s.ethnicity,
+        sub.subject_name,
+        g.grade_score
+    FROM dbo.students s
+    JOIN dbo.classes c ON s.id_class = c.id_class
+    JOIN dbo.grades g ON s.id_student = g.id_student
+    JOIN dbo.subjects sub ON g.id_subject = sub.id_subject
+    WHERE s.id_class = @classId
+      AND g.grade_period = 'Final' 
+      AND g.grade_date BETWEEN @from AND @to;
+END
+GO
+
+
+-- MODULE: ATTENDANCE (Manual Roll Call)
+-- =============================================
+
+-- 1. Procedure: Xóa điểm danh cũ của lớp trong ngày (để chuẩn bị lưu mới)
+IF OBJECT_ID('dbo.sp_DeleteAttendanceByClassDate', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_DeleteAttendanceByClassDate;
+GO
+CREATE PROCEDURE dbo.sp_DeleteAttendanceByClassDate
+    @classId INT,
+    @date DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    DELETE FROM dbo.attendance 
+    WHERE attendance_date = @date
+      AND id_student IN (SELECT id_student FROM dbo.students WHERE id_class = @classId);
+END
+GO
+
+-- 2. Procedure: Thêm mới bản ghi điểm danh (Thủ công)
+IF OBJECT_ID('dbo.sp_InsertManualAttendance', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_InsertManualAttendance;
+GO
+CREATE PROCEDURE dbo.sp_InsertManualAttendance
+    @studentId INT,
+    @date DATE,
+    @status NVARCHAR(50),
+    @notes NVARCHAR(MAX) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO dbo.attendance 
+    (id_student, attendance_date, attendance_status, attendance_method, attendance_notes) 
+    VALUES 
+    (@studentId, @date, @status, 'manual', @notes);
+END
+GO
+
+-- 3. Procedure: Lấy dữ liệu điểm danh của lớp trong ngày (Load lên Grid)
+IF OBJECT_ID('dbo.sp_GetAttendanceByClassDate', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetAttendanceByClassDate;
+GO
+CREATE PROCEDURE dbo.sp_GetAttendanceByClassDate
+    @classId INT,
+    @date DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        B.id_attendance,
+        B.id_student, 
+        A.id_class, 
+        B.attendance_date, 
+        B.attendance_status, 
+        B.attendance_notes
+    FROM dbo.students A
+    JOIN dbo.attendance B ON A.id_student = B.id_student
+    WHERE A.id_class = @classId 
+      AND B.attendance_date = @date;
+END
+GO
+
+-- 4. Procedure: Lấy báo cáo điểm danh theo khoảng thời gian (Có kèm tên sinh viên)
+IF OBJECT_ID('dbo.sp_GetAttendanceReportByClass', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetAttendanceReportByClass;
+GO
+CREATE PROCEDURE dbo.sp_GetAttendanceReportByClass
+    @classId INT,
+    @startDate DATE,
+    @endDate DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        a.id_attendance, 
+        s.id_student,     
+        s.id_class,       
+        s.full_name,      
+        a.attendance_date, 
+        a.attendance_status, 
+        a.attendance_notes 
+    FROM dbo.attendance AS a
+    INNER JOIN dbo.students AS s ON a.id_student = s.id_student
+    WHERE s.id_class = @classId
+      AND a.attendance_date BETWEEN @startDate AND @endDate
+    ORDER BY s.full_name, a.attendance_date;
+END
+GO
+
+
+
+-- MODULE: STUDENT NOTES
+-- =============================================
+
+-- 1. Procedure: Lấy danh sách ghi chú (Có lọc theo loại)
+IF OBJECT_ID('dbo.sp_GetNotesByClass', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetNotesByClass;
+GO
+CREATE PROCEDURE dbo.sp_GetNotesByClass
+    @classId INT,
+    @noteType NVARCHAR(50) -- Truyền 'Tất cả' hoặc loại cụ thể
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT n.*, s.full_name 
+    FROM dbo.student_notes n
+    JOIN dbo.students s ON n.id_student = s.id_student
+    WHERE s.id_class = @classId
+      AND (@noteType = N'Tất cả' OR n.note_type = @noteType)
+    ORDER BY n.created_at DESC;
+END
+GO
+
+-- 2. Procedure: Thêm ghi chú mới
+IF OBJECT_ID('dbo.sp_InsertNote', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_InsertNote;
+GO
+CREATE PROCEDURE dbo.sp_InsertNote
+    @sid INT,
+    @content NVARCHAR(MAX),
+    @type NVARCHAR(50),
+    @priority NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO dbo.student_notes 
+    (id_student, note_content, note_type, priority, created_at) 
+    VALUES 
+    (@sid, @content, @type, @priority, GETDATE());
+END
+GO
+
+-- 3. Procedure: Xóa 1 ghi chú theo ID
+IF OBJECT_ID('dbo.sp_DeleteNote', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_DeleteNote;
+GO
+CREATE PROCEDURE dbo.sp_DeleteNote
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    DELETE FROM dbo.student_notes WHERE id_note = @id;
+END
+GO
+
+-- 4. Procedure: Xóa hàng loạt ghi chú theo bộ lọc (Nút Xóa tất cả)
+IF OBJECT_ID('dbo.sp_DeleteNotesByFilter', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_DeleteNotesByFilter;
+GO
+CREATE PROCEDURE dbo.sp_DeleteNotesByFilter
+    @classId INT,
+    @noteType NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE n 
+    FROM dbo.student_notes n
+    JOIN dbo.students s ON n.id_student = s.id_student
+    WHERE s.id_class = @classId
+      AND (@noteType = N'Tất cả' OR n.note_type = @noteType);
+END
+GO
+
+-- 5. Procedure: Cập nhật nội dung ghi chú
+IF OBJECT_ID('dbo.sp_UpdateNoteContent', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_UpdateNoteContent;
+GO
+CREATE PROCEDURE dbo.sp_UpdateNoteContent
+    @id INT,
+    @content NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.student_notes 
+    SET note_content = @content 
+    WHERE id_note = @id;
+END
+GO
+
+-- 6. Procedure: Lấy ghi chú để xuất báo cáo (Theo ngày)
+IF OBJECT_ID('dbo.sp_GetNotesForExport', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetNotesForExport;
+GO
+CREATE PROCEDURE dbo.sp_GetNotesForExport
+    @classId INT,
+    @from DATETIME,
+    @to DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT n.*, s.full_name 
+    FROM dbo.student_notes n
+    JOIN dbo.students s ON n.id_student = s.id_student
+    WHERE s.id_class = @classId 
+      AND n.created_at BETWEEN @from AND @to
+    ORDER BY s.id_student ASC, n.created_at DESC;
+END
+GO
+
+
+-- MODULE: QR ROLL CALL
+-- =============================================
+
+-- 1. Procedure: Điểm danh 1 học sinh (Upsert - Thêm hoặc Sửa)
+-- Sử dụng MERGE để xử lý logic: Có rồi thì Update, chưa có thì Insert
+IF OBJECT_ID('dbo.sp_MarkStudentAttendance', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_MarkStudentAttendance;
+GO
+CREATE PROCEDURE dbo.sp_MarkStudentAttendance
+    @id_Student INT,
+    @date DATE,
+    @status NVARCHAR(50),
+    @method NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    MERGE INTO dbo.attendance AS T
+    USING (SELECT @id_Student AS id_student, @date AS attendance_date) AS S
+    ON T.id_student = S.id_student AND T.attendance_date = S.attendance_date
+    WHEN MATCHED THEN
+        UPDATE SET 
+            attendance_status = @status, 
+            attendance_method = @method
+    WHEN NOT MATCHED THEN
+        INSERT (id_student, attendance_date, attendance_status, attendance_method)
+        VALUES (@id_Student, @date, @status, @method);
+END
+GO
+
+-- 2. Procedure: Lấy danh sách học sinh đã điểm danh trong ngày của lớp
+IF OBJECT_ID('dbo.sp_GetTodaysAttendance', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetTodaysAttendance;
+GO
+CREATE PROCEDURE dbo.sp_GetTodaysAttendance
+    @id_Class INT,
+    @date DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        s.id_student AS id_Student, 
+        s.student_code AS code_Student, 
+        s.full_name AS name_Student,
+        a.attendance_status,
+        a.attendance_method
+    FROM dbo.students s
+    JOIN dbo.attendance a ON s.id_student = a.id_student
+    WHERE s.id_class = @id_Class 
+      AND a.attendance_date = @date;
+END
+GO
+
+-- 3. Procedure: Xóa dữ liệu điểm danh của lớp trong ngày
+-- (Lưu ý: Thủ tục này có thể đã được tạo ở file update_attendance.sql, 
+-- nhưng tôi định nghĩa lại ở đây để đảm bảo file này chạy độc lập vẫn đủ chức năng)
+IF OBJECT_ID('dbo.sp_DeleteAttendanceByClassDate', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_DeleteAttendanceByClassDate;
+GO
+CREATE PROCEDURE dbo.sp_DeleteAttendanceByClassDate
+    @classId INT,
+    @date DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    DELETE A
+    FROM dbo.attendance A
+    JOIN dbo.students S ON A.id_student = S.id_student
+    WHERE S.id_class = @classId 
+      AND A.attendance_date = @date;
+END
+GO
+
+-- MODULE: QUIZZES
+-- =============================================
+
+-- 1. Procedure: Tạo Header cho Game mới
+IF OBJECT_ID('dbo.sp_InsertQuiz', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_InsertQuiz;
+GO
+CREATE PROCEDURE dbo.sp_InsertQuiz
+    @id_teacher INT,
+    @id_class INT,
+    @quiz_title NVARCHAR(255),
+    @quiz_type NVARCHAR(50),
+    @quiz_config_json NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    INSERT INTO dbo.Quizzes (id_teacher, id_class, quiz_title, quiz_type, quiz_config_json)
+    VALUES (@id_teacher, @id_class, @quiz_title, @quiz_type, @quiz_config_json);
+    
+    -- Trả về ID vừa tạo
+    SELECT SCOPE_IDENTITY();
+END
+GO
+
+-- 2. Procedure: Thêm 1 dòng nội dung cho Game
+IF OBJECT_ID('dbo.sp_InsertQuizContent', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_InsertQuizContent;
+GO
+CREATE PROCEDURE dbo.sp_InsertQuizContent
+    @id_quiz INT,
+    @id_vocabulary INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    INSERT INTO dbo.Quiz_Content (id_quiz, id_vocabulary)
+    VALUES (@id_quiz, @id_vocabulary);
+END
+GO
+
+-- 3. Procedure: Lấy danh sách ID từ vựng của 1 Game
+IF OBJECT_ID('dbo.sp_GetQuizContentIds', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetQuizContentIds;
+GO
+CREATE PROCEDURE dbo.sp_GetQuizContentIds
+    @id_quiz INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT id_vocabulary 
+    FROM dbo.Quiz_Content 
+    WHERE id_quiz = @id_quiz;
+END
+GO
+
+-- 4. Procedure: Lấy danh sách tất cả Game
+IF OBJECT_ID('dbo.sp_GetAllQuizzes', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetAllQuizzes;
+GO
+CREATE PROCEDURE dbo.sp_GetAllQuizzes
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT id_quiz, quiz_title, quiz_type 
+    FROM dbo.Quizzes;
+END
+GO
+
+-- 5. Procedure: Xóa Game (Tự động xóa nội dung liên quan trong 1 Transaction)
+IF OBJECT_ID('dbo.sp_DeleteQuiz', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_DeleteQuiz;
+GO
+CREATE PROCEDURE dbo.sp_DeleteQuiz
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- Bước 1: Xóa nội dung chi tiết trước
+        DELETE FROM dbo.Quiz_Content WHERE id_quiz = @id;
+        
+        -- Bước 2: Xóa header game
+        DELETE FROM dbo.Quizzes WHERE id_quiz = @id;
+        
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        -- Ném lỗi ra để C# bắt được
+        THROW;
+    END CATCH
+END
+GO
+
+
+-- MODULE: STUDENTS
+-- =============================================
+
+-- 1. Procedure: Lấy danh sách học sinh theo Lớp
+IF OBJECT_ID('dbo.sp_GetStudentsByClassId', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetStudentsByClassId;
+GO
+CREATE PROCEDURE dbo.sp_GetStudentsByClassId
+    @classId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT id_student, student_code, full_name, date_of_birth, gender, ethnicity, id_class 
+    FROM dbo.students 
+    WHERE id_class = @classId;
+END
+GO
+
+-- 2. Procedure: Lấy thông tin 1 học sinh theo Mã số
+IF OBJECT_ID('dbo.sp_GetStudentByCode', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetStudentByCode;
+GO
+CREATE PROCEDURE dbo.sp_GetStudentByCode
+    @code NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT id_student, student_code, full_name, date_of_birth, gender, ethnicity, id_class 
+    FROM dbo.students 
+    WHERE student_code = @code;
+END
+GO
+
+-- 3. Procedure: Thêm mới học sinh
+IF OBJECT_ID('dbo.sp_InsertStudent', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_InsertStudent;
+GO
+CREATE PROCEDURE dbo.sp_InsertStudent
+    @code NVARCHAR(50),
+    @name NVARCHAR(255),
+    @dob DATE,
+    @gender NVARCHAR(10),
+    @ethnicity NVARCHAR(50),
+    @classId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO dbo.students (student_code, full_name, date_of_birth, gender, ethnicity, id_class) 
+    VALUES (@code, @name, @dob, @gender, @ethnicity, @classId);
+END
+GO
+
+-- 4. Procedure: Cập nhật thông tin học sinh
+IF OBJECT_ID('dbo.sp_UpdateStudent', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_UpdateStudent;
+GO
+CREATE PROCEDURE dbo.sp_UpdateStudent
+    @id INT,
+    @code NVARCHAR(50),
+    @name NVARCHAR(255),
+    @dob DATE,
+    @gender NVARCHAR(10),
+    @ethnicity NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE dbo.students 
+    SET student_code = @code, 
+        full_name = @name, 
+        date_of_birth = @dob, 
+        gender = @gender, 
+        ethnicity = @ethnicity
+    WHERE id_student = @id;
+END
+GO
+
+-- 5. Procedure: Xóa học sinh
+IF OBJECT_ID('dbo.sp_DeleteStudent', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_DeleteStudent;
+GO
+CREATE PROCEDURE dbo.sp_DeleteStudent
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DELETE FROM dbo.students WHERE id_student = @id;
+END
+GO
+
+-- 6. Procedure: Kiểm tra mã học sinh đã tồn tại chưa
+IF OBJECT_ID('dbo.sp_CheckStudentCodeExists', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_CheckStudentCodeExists;
+GO
+CREATE PROCEDURE dbo.sp_CheckStudentCodeExists
+    @code NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT COUNT(*) FROM dbo.students WHERE student_code = @code;
+END
+GO
+
+
+-- MODULE: VOCABULARY
+-- =============================================
+
+-- 1. Procedure: Thêm mới từ vựng
+IF OBJECT_ID('dbo.sp_InsertVocabulary', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_InsertVocabulary;
+GO
+CREATE PROCEDURE dbo.sp_InsertVocabulary
+    @WordText NVARCHAR(255),
+    @WordImage VARBINARY(MAX) = NULL,
+    @id_category INT,
+    @VocabType NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    INSERT INTO dbo.Vocabulary (WordText, WordImage, id_category, VocabType)
+    VALUES (@WordText, @WordImage, @id_category, @VocabType);
+END
+GO
+
+-- 2. Procedure: Cập nhật từ vựng (Xử lý logic ảnh NULL)
+IF OBJECT_ID('dbo.sp_UpdateVocabulary', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_UpdateVocabulary;
+GO
+CREATE PROCEDURE dbo.sp_UpdateVocabulary
+    @id INT,
+    @WordText NVARCHAR(255),
+    @WordImage VARBINARY(MAX) = NULL,
+    @id_category INT,
+    @VocabType NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Nếu có ảnh truyền vào (khác NULL) -> Cập nhật cả ảnh
+    IF @WordImage IS NOT NULL
+    BEGIN
+        UPDATE dbo.Vocabulary 
+        SET WordText = @WordText, 
+            WordImage = @WordImage, 
+            id_category = @id_category, 
+            VocabType = @VocabType 
+        WHERE id_vocabulary = @id;
+    END
+    ELSE
+    BEGIN
+        -- Nếu ảnh là NULL -> Giữ nguyên ảnh cũ, chỉ cập nhật thông tin khác
+        UPDATE dbo.Vocabulary 
+        SET WordText = @WordText, 
+            id_category = @id_category, 
+            VocabType = @VocabType 
+        WHERE id_vocabulary = @id;
+    END
+END
+GO
+
+-- 3. Procedure: Lấy danh sách từ vựng cho GridView (Có lọc và tìm kiếm)
+IF OBJECT_ID('dbo.sp_GetVocabularyList', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetVocabularyList;
+GO
+CREATE PROCEDURE dbo.sp_GetVocabularyList
+    @categoryId INT = 0,
+    @searchTerm NVARCHAR(255) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        V.id_vocabulary, 
+        V.WordText AS Word, 
+        V.WordImage AS WordImage, 
+        C.category_name AS CategoryName,
+        V.VocabType
+    FROM dbo.Vocabulary V
+    JOIN dbo.Categories C ON V.id_category = C.id_category
+    WHERE (@categoryId = 0 OR V.id_category = @categoryId)
+      AND (@searchTerm IS NULL OR @searchTerm = '' OR V.WordText LIKE N'%' + @searchTerm + N'%');
+END
+GO
+
+-- 4. Procedure: Lấy từ vựng theo Category và Type (Dùng cho Game)
+IF OBJECT_ID('dbo.sp_GetVocabularyByCategory', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetVocabularyByCategory;
+GO
+CREATE PROCEDURE dbo.sp_GetVocabularyByCategory
+    @categoryId INT,
+    @vocabType NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT id_vocabulary, WordText, WordImage, id_category, VocabType 
+    FROM dbo.Vocabulary 
+    WHERE id_category = @categoryId AND VocabType = @vocabType;
+END
+GO
+
+-- 5. Procedure: Lấy danh sách từ vựng theo danh sách ID (Dùng STRING_SPLIT)
+IF OBJECT_ID('dbo.sp_GetVocabularyByIds', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetVocabularyByIds;
+GO
+CREATE PROCEDURE dbo.sp_GetVocabularyByIds
+    @ids NVARCHAR(MAX) -- Chuỗi ID ngăn cách bởi dấu phẩy (VD: "1,5,10")
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT id_vocabulary, WordText, WordImage, id_category, VocabType 
+    FROM dbo.Vocabulary 
+    WHERE id_vocabulary IN (SELECT value FROM STRING_SPLIT(@ids, ','));
+END
+GO
+
+-- 6. Procedure: Xóa từ vựng
+IF OBJECT_ID('dbo.sp_DeleteVocabulary', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_DeleteVocabulary;
+GO
+CREATE PROCEDURE dbo.sp_DeleteVocabulary
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    DELETE FROM dbo.Vocabulary WHERE id_vocabulary = @id;
+END
+GO
+
+-- 7. Procedure: Lấy Category ID của từ vựng
+IF OBJECT_ID('dbo.sp_GetCategoryIdForVocab', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetCategoryIdForVocab;
+GO
+CREATE PROCEDURE dbo.sp_GetCategoryIdForVocab
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT id_category FROM dbo.Vocabulary WHERE id_vocabulary = @id;
+END
+GO
+
+-- 8. Procedure: Đếm số lượng từ vựng trong Category
+IF OBJECT_ID('dbo.sp_GetVocabularyCountByCategory', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetVocabularyCountByCategory;
+GO
+CREATE PROCEDURE dbo.sp_GetVocabularyCountByCategory
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT COUNT(*) FROM dbo.Vocabulary WHERE id_category = @id;
 END
 GO

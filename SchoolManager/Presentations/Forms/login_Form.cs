@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Guna.UI2.WinForms;
+using SchoolManager.BLL;
+using SchoolManager.DTO;
+using SchoolManager.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,18 +11,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SchoolManager.BLL;
-using SchoolManager.DTO;
-using SchoolManager.Properties;
 
 namespace SchoolManager
 {
     public partial class login_Form : Form
     {
         private Business_Logic_Account bll = new Business_Logic_Account();
-        private bool tokenIsValid = false;
-        private Accounts tokenAccount = null;
-
         public login_Form()
         {
             InitializeComponent();
@@ -26,38 +24,10 @@ namespace SchoolManager
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // If a saved token exists, validate it but do not auto-open main form
-            string savedToken = Settings.Default.RememberToken;
-            if (!string.IsNullOrEmpty(savedToken))
+            if(Properties.Settings.Default.Username != string.Empty)
             {
-                try
-                {
-                    // Use the form-level BLL instance
-                    Accounts acc = bll.LoginWithToken(savedToken);
-                    if (acc != null)
-                    {
-                        tokenIsValid = true;
-                        tokenAccount = acc;
-
-                        guna2TextBox1.Text = acc.Username;
-                        guna2CustomCheckBox1.Checked = true;
-                    }
-                    else
-                    {
-                        // Clear invalid token
-                        Settings.Default.RememberToken = string.Empty;
-                        Settings.Default.RememberTeacherId = 0;
-                        Settings.Default.Save();
-
-                        tokenIsValid = false;
-                        tokenAccount = null;
-                    }
-                }
-                catch
-                {
-                    tokenIsValid = false;
-                    tokenAccount = null;
-                }
+                guna2TextBox1.Text = Properties.Settings.Default.Username;
+                guna2TextBox2.Text = Properties.Settings.Default.Password;
             }
         }
 
@@ -65,55 +35,35 @@ namespace SchoolManager
         {
             try
             {
+                // 1. Lấy thông tin từ form
                 string username = guna2TextBox1.Text.Trim();
-                string password = guna2TextBox2.Text; // Consider hashing in real app
+                string password = guna2TextBox2.Text;
 
-                Accounts account = null;
+                // 2. Gọi hàm đăng nhập trực tiếp (Bỏ qua phần check Token)
+                Accounts account = bll.Login(username, password);
 
-                if (tokenIsValid && tokenAccount != null && string.IsNullOrEmpty(password))
-                {
-                    if (string.IsNullOrEmpty(username) || username.Equals(tokenAccount.Username, StringComparison.OrdinalIgnoreCase))
-                    {
-                        account = tokenAccount;
-                    }
-                }
-
-                if (account == null)
-                {
-                    account = bll.Login(username, password);
-                }
-
-                // If account was loaded via token, set session here as well
-                if (account != null && SchoolManager.Session.CurrentTeacherId == 0)
-                {
-                    SchoolManager.Session.CurrentTeacherId = account.IdTeacher;
-                    SchoolManager.Session.CurrentUserRole = account.UserRole ?? string.Empty;
-                    SchoolManager.Session.CurrentUsername = account.Username ?? string.Empty;
-                }
-
+                // 3. Kiểm tra kết quả
                 if (account != null)
                 {
-                    // set session
-                    SchoolManager.Session.CurrentTeacherId = account.IdTeacher;
-                    SchoolManager.Session.CurrentUserRole = account.UserRole ?? string.Empty;
-                    SchoolManager.Session.CurrentUsername = account.Username ?? string.Empty;
-
-                    if (guna2CustomCheckBox1.Checked)
+                    // --- ĐĂNG NHẬP THÀNH CÔNG ---
+                    if (checkBox1.Checked == true)
                     {
-                        if (bll.CreateRememberMeToken(account, out string token))
-                        {
-                            Settings.Default.RememberToken = token;
-                            Settings.Default.RememberTeacherId = account.IdTeacher;
-                            Settings.Default.Save();
-                        }
+                        Properties.Settings.Default.Username = username;
+                        Properties.Settings.Default.Password = password;
+                        Properties.Settings.Default.Save();
                     }
                     else
                     {
-                        Settings.Default.RememberToken = string.Empty;
-                        Settings.Default.RememberTeacherId = 0;
-                        Settings.Default.Save();
+                        Properties.Settings.Default.Username = "";
+                        Properties.Settings.Default.Password = "";
+                        Properties.Settings.Default.Save();
                     }
 
+                    SchoolManager.Session.CurrentTeacherId = account.IdTeacher;
+                    SchoolManager.Session.CurrentUsername = account.Username;
+                    SchoolManager.Session.CurrentUserRole = account.UserRole;
+
+                    // Phân quyền và chuyển form
                     if (!string.IsNullOrEmpty(account.UserRole) && account.UserRole.Equals("admin", StringComparison.OrdinalIgnoreCase))
                     {
                         var adminForm = new SchoolManager.Presentations.Forms.admin_Form();
@@ -129,11 +79,13 @@ namespace SchoolManager
                 }
                 else
                 {
-                    // New logic: check password first, then activation
+                    // --- ĐĂNG NHẬP THẤT BẠI ---
+                    // Kiểm tra chi tiết lỗi để báo cho người dùng
                     bool passwordCorrect = bll.VerifyPassword(username, password);
+
                     if (!passwordCorrect)
                     {
-                        MessageBox.Show("Incorrect account or password!", "Sign in failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Tài khoản hoặc mật khẩu không chính xác!", "Đăng nhập thất bại", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
@@ -148,17 +100,16 @@ namespace SchoolManager
                     }
                     else
                     {
-                        // Fallback
-                        MessageBox.Show("Incorrect account or password!", "Sign in failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Tài khoản hoặc mật khẩu không chính xác!", "Đăng nhập thất bại", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Show exception message for debugging
-                MessageBox.Show("An error occurred while trying to sign in: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Đã xảy ra lỗi khi đăng nhập: " + ex.Message, "Lỗi Hệ Thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -177,11 +128,6 @@ namespace SchoolManager
             this.Hide();
         }
 
-        private void guna2CustomCheckBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void guna2CircleButton2_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -192,6 +138,20 @@ namespace SchoolManager
             var register = new SchoolManager.Presentations.Forms.register_Form();
             register.Show();
             this.Hide();
+        }
+
+        private void guna2Button2_Click(object sender, EventArgs e)
+        {
+            if (guna2TextBox2.PasswordChar == '*')
+            {
+                guna2Button2. BringToFront();
+                guna2TextBox2.PasswordChar = '\0';
+            }
+            else
+            {
+                guna2Button2.BringToFront();
+                guna2TextBox2.PasswordChar = '*';
+            }
         }
     }
 }

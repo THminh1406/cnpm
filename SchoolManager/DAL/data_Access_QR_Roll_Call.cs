@@ -10,95 +10,83 @@ namespace SchoolManager.DAL
     {
         /// <summary>
         /// Điểm danh MỘT học sinh.
-        /// Dùng MERGE (UPSERT) để Cập nhật nếu đã điểm danh, hoặc Thêm mới nếu chưa.
+        /// Gọi SP: dbo.sp_MarkStudentAttendance (Dùng MERGE trong SQL)
         /// </summary>
         public bool MarkStudentAttendance(int studentId, DateTime date, string status, string method)
         {
-            // Lệnh MERGE kiểm tra (id_student, date)
-            // 1. NẾU TỒN TẠI (MATCHED): Cập nhật trạng thái
-            // 2. NẾU CHƯA TỒN TẠI (NOT MATCHED): Thêm mới
-            string query = @"
-                MERGE INTO attendance AS T
-                USING (SELECT @id_Student AS id_student, @date AS attendance_date) AS S
-                ON T.id_student = S.id_student AND T.attendance_date = S.attendance_date
-                WHEN MATCHED THEN
-                    UPDATE SET attendance_status = @status, attendance_method = @method
-                WHEN NOT MATCHED THEN
-                    INSERT (id_student, attendance_date, attendance_status, attendance_method)
-                    VALUES (@id_Student, @date, @status, @method);";
-
             using (SqlConnection conn = new SqlConnection(connection_String))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@id_Student", studentId);
-                cmd.Parameters.AddWithValue("@date", date.Date);
-                cmd.Parameters.AddWithValue("@status", status);
-                cmd.Parameters.AddWithValue("@method", method);
-
                 conn.Open();
-                int rowsAffected = cmd.ExecuteNonQuery();
-                return rowsAffected > 0;
+                using (SqlCommand cmd = new SqlCommand("dbo.sp_MarkStudentAttendance", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id_Student", studentId);
+                    cmd.Parameters.AddWithValue("@date", date.Date);
+                    cmd.Parameters.AddWithValue("@status", status);
+                    cmd.Parameters.AddWithValue("@method", method);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0; // MERGE luôn trả về số dòng insert hoặc update
+                }
             }
         }
 
         /// <summary>
         /// Lấy danh sách học sinh ĐÃ ĐƯỢC ĐIỂM DANH (bằng QR hoặc Thủ công)
+        /// Gọi SP: dbo.sp_GetTodaysAttendance
         /// </summary>
         public List<Students> GetTodaysAttendance(int id_Class, DateTime date)
         {
             List<Students> studentsList = new List<Students>();
-            string query = @"SELECT 
-                                s.id_student AS id_Student, 
-                                s.student_code AS code_Student, 
-                                s.full_name AS name_Student,
-                                a.attendance_status,
-                                a.attendance_method
-                             FROM students s
-                             JOIN attendance a ON s.id_student = a.id_student
-                             WHERE s.id_class = @id_Class AND a.attendance_date = @date";
 
             using (SqlConnection conn = new SqlConnection(connection_String))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@id_Class", id_Class);
-                cmd.Parameters.AddWithValue("@date", date.Date);
                 conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                using (SqlCommand cmd = new SqlCommand("dbo.sp_GetTodaysAttendance", conn))
                 {
-                    studentsList.Add(new Students
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id_Class", id_Class);
+                    cmd.Parameters.AddWithValue("@date", date.Date);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        //id_Student = (int)reader["id_Student"],
-                        code_Student = reader["code_Student"].ToString(),
-                        name_Student = reader["name_Student"].ToString()
-                        // (Bạn có thể thêm thuộc tính 'Status' vào DTO 'Students'
-                        // nếu muốn hiển thị trạng thái trên bảng)
-                    });
+                        while (reader.Read())
+                        {
+                            studentsList.Add(new Students
+                            {
+                                // Chú ý: DTO Students của bạn cần khớp với các cột trả về
+                                // id_Student = (int)reader["id_Student"], // Nếu DTO có field này thì uncomment
+                                code_Student = reader["code_Student"].ToString(),
+                                name_Student = reader["name_Student"].ToString()
+                                // Bạn có thể map thêm status/method vào DTO nếu cần hiển thị
+                            });
+                        }
+                    }
                 }
             }
             return studentsList;
         }
 
+        /// <summary>
+        /// Xóa dữ liệu điểm danh của lớp trong ngày
+        /// Gọi SP: dbo.sp_DeleteAttendanceByClassDate
+        /// </summary>
         public bool DeleteAttendanceByClassAndDate(int id_Class, DateTime date)
         {
-            // Câu lệnh DELETE này JOIN với bảng students
-            // để tìm ra id_student nào thuộc id_Class
-            string query = @"DELETE A
-                     FROM attendance A
-                     JOIN students S ON A.id_student = S.id_student
-                     WHERE S.id_class = @id_Class 
-                       AND A.attendance_date = @date";
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connection_String))
                 {
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@id_Class", id_Class);
-                    cmd.Parameters.AddWithValue("@date", date.Date);
                     conn.Open();
-                    cmd.ExecuteNonQuery(); // Chạy lệnh xóa
-                    return true; // Xóa thành công (ngay cả khi 0 dòng bị ảnh hưởng)
+                    using (SqlCommand cmd = new SqlCommand("dbo.sp_DeleteAttendanceByClassDate", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@classId", id_Class);
+                        cmd.Parameters.AddWithValue("@date", date.Date);
+
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
                 }
             }
             catch (Exception)

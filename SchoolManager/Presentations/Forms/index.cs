@@ -24,7 +24,6 @@ namespace SchoolManager.Presentations.Forms
 
         private void Index_Load(object sender, EventArgs e)
         {
-            // If there is a logged-in user in Session, load their info into guna2Panel3
             try
             {
                 int curId = SchoolManager.Session.CurrentTeacherId;
@@ -34,15 +33,12 @@ namespace SchoolManager.Presentations.Forms
                     if (acc != null)
                     {
                         this.guna2HtmlLabel8.Text = acc.FullName;
-                        this.guna2HtmlLabel1.Text = acc.Username;
-
-                        // create avatar from name similar to other UCs
+                        this.guna2HtmlLabel1.Text = acc.Email;
                         try
                         {
                             var bmp = CreateAvatarFromName(acc.FullName, 80);
                             if (bmp != null)
                             {
-                                // dispose previous image if any
                                 if (this.guna2CirclePictureBox2.Image != null) this.guna2CirclePictureBox2.Image.Dispose();
                                 this.guna2CirclePictureBox2.Image = bmp;
                             }
@@ -53,10 +49,10 @@ namespace SchoolManager.Presentations.Forms
             }
             catch { }
 
-            // hook settings button (guna2GradientButton13) click
+            // 2. Hook sự kiện cho Settings
             this.guna2GradientButton13.Click += SettingsButton_Click;
-            // also allow clicking the small settings circle button to open settings
             try { this.guna2CircleButton2.Click += SettingsButton_Click; this.guna2CircleButton2.Cursor = Cursors.Hand; } catch { }
+            showUC(uc_Index1);
         }
 
         private void SettingsButton_Click(object sender, EventArgs e)
@@ -89,11 +85,9 @@ namespace SchoolManager.Presentations.Forms
                 settingsPanel.Controls.Add(btnPass);
                 settingsPanel.Controls.Add(btnLogout);
 
-                // place settingsPanel above guna2Panel3 near gradient button
                 var panel = this.guna2Panel3;
                 settingsPanel.Location = panel.PointToClient(this.guna2GradientButton13.PointToScreen(new Point(0, -150)));
 
-                // ensure it is inside main form
                 settingsPanel.Location = new Point(panel.Left + 12, panel.Top - 150);
 
                 this.Controls.Add(settingsPanel);
@@ -113,7 +107,7 @@ namespace SchoolManager.Presentations.Forms
             if (acc == null) return;
 
             var dlg = new Form();
-            dlg.Text = "Ð?i thông tin";
+            dlg.Text = "Ðổi thông tin";
             dlg.FormBorderStyle = FormBorderStyle.None;
             dlg.StartPosition = FormStartPosition.CenterParent;
             dlg.ClientSize = new Size(500,450);
@@ -177,7 +171,7 @@ namespace SchoolManager.Presentations.Forms
                 {
                     MessageBox.Show("Cập nhật thông tin thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.guna2HtmlLabel8.Text = txtName.Text.Trim();
-                    this.guna2HtmlLabel1.Text = acc.Username;
+                    this.guna2HtmlLabel1.Text = acc.Email;
                     dlg.Close();
                 }
                 else MessageBox.Show("Cập nhật thất bại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -195,6 +189,9 @@ namespace SchoolManager.Presentations.Forms
         {
             int curId = SchoolManager.Session.CurrentTeacherId;
             if (curId <= 0) return;
+
+            var currentAccount = bll.GetTeacherById(curId);
+            if (currentAccount == null) return;
 
             var dlg = new Form();
             dlg.FormBorderStyle = FormBorderStyle.None;
@@ -245,7 +242,7 @@ namespace SchoolManager.Presentations.Forms
                 if (string.IsNullOrEmpty(txtOld.Text) || string.IsNullOrEmpty(txtNew.Text)) { MessageBox.Show("Vui lòng điền đủ thông tin", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
                 if (txtNew.Text.Length < 6) { MessageBox.Show("Mật khẩu mới phải ít nhất 6 ký tự", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
 
-                if (!bll.VerifyPassword(this.guna2HtmlLabel1.Text, txtOld.Text)) { MessageBox.Show("Mật khẩu hiện tại không đúng", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+                if (!bll.VerifyPassword(currentAccount.Username, txtOld.Text)) { MessageBox.Show("Mật khẩu hiện tại không đúng", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
 
                 string newHash = bll.CreatePasswordHash(txtNew.Text);
                 if (bll.SetPasswordHashById(curId, newHash))
@@ -274,8 +271,6 @@ namespace SchoolManager.Presentations.Forms
             login.Show();
             this.Close();
         }
-
-        // Helper to create avatar image (same algorithm used in other UCs)
         private Image CreateAvatarFromName(string name, int diameter)
         {
             if (diameter <= 0) diameter = 60;

@@ -22,28 +22,28 @@ namespace SchoolManager.Properties {
                 return defaultInstance;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RememberToken {
+        public string Username {
             get {
-                return ((string)(this["RememberToken"]));
+                return ((string)(this["Username"]));
             }
             set {
-                this["RememberToken"] = value;
+                this["Username"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int RememberTeacherId {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Password {
             get {
-                return ((int)(this["RememberTeacherId"]));
+                return ((string)(this["Password"]));
             }
             set {
-                this["RememberTeacherId"] = value;
+                this["Password"] = value;
             }
         }
     }

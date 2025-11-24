@@ -97,5 +97,40 @@ namespace SchoolManager.Presentations.Forms
         {
             this.Close();
         }
+
+        private void guna2Button2_Click(object sender, EventArgs e)
+        {
+            
+            if (guna2TextBox2.PasswordChar == '*')
+            {
+                guna2Button2.BringToFront();
+                guna2TextBox2.PasswordChar = '\0';
+            }
+            else
+            {
+                guna2Button2.BringToFront();
+                guna2TextBox2.PasswordChar = '*';
+            }
+        }
+
+        private void guna2Button3_Click(object sender, EventArgs e)
+        {
+            if (guna2TextBox3.PasswordChar == '*')
+            {
+                guna2Button3.BringToFront();
+                guna2TextBox3.PasswordChar = '\0';
+            }
+            else
+            {
+                guna2Button3.BringToFront();
+                guna2TextBox3.PasswordChar = '*';
+            }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            new login_Form().Show();
+            this.Hide();
+        }
     }
 }

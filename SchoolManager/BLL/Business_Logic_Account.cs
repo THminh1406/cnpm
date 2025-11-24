@@ -13,23 +13,6 @@ namespace SchoolManager.BLL
                 return null;
             return dal.Login(username.Trim(), password);
         }
-
-        public Accounts LoginWithToken(string token)
-        {
-            if (string.IsNullOrEmpty(token)) return null;
-            return dal.LoginWithToken(token);
-        }
-
-        public bool CreateRememberMeToken(Accounts account, out string token)
-        {
-            token = null;
-            if (account == null || account.IdTeacher <= 0) return false;
-            token = Guid.NewGuid().ToString("N");
-            DateTime expires = DateTime.Now.AddDays(30);
-
-            return dal.SaveRememberToken(account.IdTeacher, token, expires);
-        }
-
         public int GetActivationState(string username)
         {
             try

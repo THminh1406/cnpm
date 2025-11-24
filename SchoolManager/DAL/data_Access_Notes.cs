@@ -1,51 +1,44 @@
 ﻿using SchoolManager.DTO;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace SchoolManager.DAL
 {
     public class data_Access_Notes : data_Access_Base
     {
-        // 1. Lấy danh sách ghi chú theo Lớp và Loại (để lọc)
+        // 1. Lấy danh sách ghi chú theo Lớp và Loại
+        // Gọi SP: dbo.sp_GetNotesByClass
         public List<NoteDTO> GetNotes(int classId, string noteTypeFilter)
         {
             List<NoteDTO> list = new List<NoteDTO>();
 
-            string query = @"SELECT n.*, s.full_name 
-                             FROM student_notes n
-                             JOIN students s ON n.id_student = s.id_student
-                             WHERE s.id_class = @classId";
-
-            // Nếu lọc loại cụ thể (khác "Tất cả")
-            if (noteTypeFilter != "Tất cả")
-            {
-                query += " AND n.note_type = @type";
-            }
-
-            query += " ORDER BY n.created_at DESC";
-
             using (SqlConnection conn = new SqlConnection(connection_String))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@classId", classId);
-                if (noteTypeFilter != "Tất cả") cmd.Parameters.AddWithValue("@type", noteTypeFilter);
-
                 conn.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand("dbo.sp_GetNotesByClass", conn))
                 {
-                    while (reader.Read())
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@classId", classId);
+                    // Truyền thẳng giá trị lọc ("Tất cả" hoặc tên loại) xuống SQL
+                    cmd.Parameters.AddWithValue("@noteType", noteTypeFilter);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        list.Add(new NoteDTO
+                        while (reader.Read())
                         {
-                            NoteId = (int)reader["id_note"],
-                            StudentId = (int)reader["id_student"],
-                            StudentName = reader["full_name"].ToString(),
-                            NoteContent = reader["note_content"].ToString(),
-                            NoteType = reader["note_type"].ToString(),
-                            Priority = reader["priority"] != DBNull.Value ? reader["priority"].ToString() : "Thấp",
-                            CreatedAt = Convert.ToDateTime(reader["created_at"])
-                        });
+                            list.Add(new NoteDTO
+                            {
+                                NoteId = (int)reader["id_note"],
+                                StudentId = (int)reader["id_student"],
+                                StudentName = reader["full_name"].ToString(),
+                                NoteContent = reader["note_content"].ToString(),
+                                NoteType = reader["note_type"].ToString(),
+                                Priority = reader["priority"] != DBNull.Value ? reader["priority"].ToString() : "Thấp",
+                                CreatedAt = Convert.ToDateTime(reader["created_at"])
+                            });
+                        }
                     }
                 }
             }
@@ -53,102 +46,108 @@ namespace SchoolManager.DAL
         }
 
         // 2. Thêm ghi chú
+        // Gọi SP: dbo.sp_InsertNote
         public bool AddNote(NoteDTO note)
         {
-            string query = @"INSERT INTO student_notes (id_student, note_content, note_type, priority, created_at) 
-                             VALUES (@sid, @content, @type, @priority, GETDATE())";
-
             using (SqlConnection conn = new SqlConnection(connection_String))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@sid", note.StudentId);
-                cmd.Parameters.AddWithValue("@content", note.NoteContent);
-                cmd.Parameters.AddWithValue("@type", note.NoteType);
-                cmd.Parameters.AddWithValue("@priority", note.Priority);
                 conn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                using (SqlCommand cmd = new SqlCommand("dbo.sp_InsertNote", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@sid", note.StudentId);
+                    cmd.Parameters.AddWithValue("@content", note.NoteContent);
+                    cmd.Parameters.AddWithValue("@type", note.NoteType);
+                    cmd.Parameters.AddWithValue("@priority", note.Priority);
+
+                    return cmd.ExecuteNonQuery() > 0;
+                }
             }
         }
 
         // 3. Xóa 1 ghi chú
+        // Gọi SP: dbo.sp_DeleteNote
         public bool DeleteNote(int noteId)
         {
             using (SqlConnection conn = new SqlConnection(connection_String))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("DELETE FROM student_notes WHERE id_note = @id", conn);
-                cmd.Parameters.AddWithValue("@id", noteId);
-                return cmd.ExecuteNonQuery() > 0;
+                using (SqlCommand cmd = new SqlCommand("dbo.sp_DeleteNote", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", noteId);
+                    return cmd.ExecuteNonQuery() > 0;
+                }
             }
         }
 
-        // 4. Xóa tất cả ghi chú theo bộ lọc (Nút Xóa tất cả)
+        // 4. Xóa tất cả ghi chú theo bộ lọc
+        // Gọi SP: dbo.sp_DeleteNotesByFilter
         public bool DeleteNotesByFilter(int classId, string noteTypeFilter)
         {
-            string query = @"DELETE n FROM student_notes n
-                             JOIN students s ON n.id_student = s.id_student
-                             WHERE s.id_class = @classId";
-
-            if (noteTypeFilter != "Tất cả") query += " AND n.note_type = @type";
-
             using (SqlConnection conn = new SqlConnection(connection_String))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@classId", classId);
-                if (noteTypeFilter != "Tất cả") cmd.Parameters.AddWithValue("@type", noteTypeFilter);
                 conn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                using (SqlCommand cmd = new SqlCommand("dbo.sp_DeleteNotesByFilter", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@classId", classId);
+                    cmd.Parameters.AddWithValue("@noteType", noteTypeFilter);
+
+                    return cmd.ExecuteNonQuery() > 0;
+                }
             }
         }
 
+        // 5. Cập nhật nội dung ghi chú
+        // Gọi SP: dbo.sp_UpdateNoteContent
         public bool UpdateNoteContent(int noteId, string newContent)
         {
-            string query = "UPDATE student_notes SET note_content = @content WHERE id_note = @id";
             using (SqlConnection conn = new SqlConnection(connection_String))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@id", noteId);
-                cmd.Parameters.AddWithValue("@content", newContent);
                 conn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                using (SqlCommand cmd = new SqlCommand("dbo.sp_UpdateNoteContent", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", noteId);
+                    cmd.Parameters.AddWithValue("@content", newContent);
+
+                    return cmd.ExecuteNonQuery() > 0;
+                }
             }
         }
 
+        // 6. Lấy dữ liệu xuất báo cáo
+        // Gọi SP: dbo.sp_GetNotesForExport
         public List<NoteDTO> GetNotesForExport(int classId, DateTime fromDate, DateTime toDate)
         {
             List<NoteDTO> list = new List<NoteDTO>();
 
-            // Lấy tất cả ghi chú của lớp trong khoảng thời gian
-            // Sắp xếp theo ID học sinh để tiện gom nhóm
-            string query = @"SELECT n.*, s.full_name 
-                     FROM student_notes n
-                     JOIN students s ON n.id_student = s.id_student
-                     WHERE s.id_class = @classId 
-                     AND n.created_at BETWEEN @from AND @to
-                     ORDER BY s.id_student ASC, n.created_at DESC";
-
             using (SqlConnection conn = new SqlConnection(connection_String))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@classId", classId);
-                cmd.Parameters.AddWithValue("@from", fromDate);
-                cmd.Parameters.AddWithValue("@to", toDate);
-
                 conn.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand("dbo.sp_GetNotesForExport", conn))
                 {
-                    while (reader.Read())
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@classId", classId);
+                    cmd.Parameters.AddWithValue("@from", fromDate);
+                    cmd.Parameters.AddWithValue("@to", toDate);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        list.Add(new NoteDTO
+                        while (reader.Read())
                         {
-                            NoteId = (int)reader["id_note"],
-                            StudentId = (int)reader["id_student"],
-                            StudentName = reader["full_name"].ToString(),
-                            NoteContent = reader["note_content"].ToString(),
-                            NoteType = reader["note_type"].ToString(),
-                            Priority = reader["priority"] != DBNull.Value ? reader["priority"].ToString() : "Thấp",
-                            CreatedAt = Convert.ToDateTime(reader["created_at"])
-                        });
+                            list.Add(new NoteDTO
+                            {
+                                NoteId = (int)reader["id_note"],
+                                StudentId = (int)reader["id_student"],
+                                StudentName = reader["full_name"].ToString(),
+                                NoteContent = reader["note_content"].ToString(),
+                                NoteType = reader["note_type"].ToString(),
+                                Priority = reader["priority"] != DBNull.Value ? reader["priority"].ToString() : "Thấp",
+                                CreatedAt = Convert.ToDateTime(reader["created_at"])
+                            });
+                        }
                     }
                 }
             }
