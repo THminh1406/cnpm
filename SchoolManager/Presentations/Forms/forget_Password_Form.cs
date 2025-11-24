@@ -93,6 +93,9 @@ namespace SchoolManager.Presentations.Forms
 
         }
 
-        
+        private void guna2CircleButton2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

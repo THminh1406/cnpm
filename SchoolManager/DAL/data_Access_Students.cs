@@ -138,5 +138,42 @@ namespace SchoolManager.DAL
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
+
+        public bool InsertStudent(Students s)
+        {
+            // --- SỬA Ở ĐÂY: Đổi 'birthday' thành 'date_of_birth' ---
+            string query = @"INSERT INTO students (student_code, full_name, date_of_birth, gender, ethnicity, id_class) 
+                     VALUES (@code, @name, @dob, @gender, @eth, @classId)";
+
+            using (SqlConnection conn = new SqlConnection(connection_String))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@code", s.code_Student);
+                cmd.Parameters.AddWithValue("@name", s.name_Student);
+
+                // DTO của bạn dùng tên biến là 'birthday', nhưng khi lưu xuống SQL phải vào cột 'date_of_birth'
+                cmd.Parameters.AddWithValue("@dob", s.birthday);
+
+                cmd.Parameters.AddWithValue("@gender", s.gender);
+                cmd.Parameters.AddWithValue("@eth", s.ethnicity);
+                cmd.Parameters.AddWithValue("@classId", s.id_Class);
+
+                conn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+        // Kiểm tra trùng mã
+        public bool CheckStudentCodeExists(string code)
+        {
+            using (SqlConnection conn = new SqlConnection(connection_String))
+            {
+                string query = "SELECT COUNT(*) FROM students WHERE student_code = @code";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@code", code);
+                conn.Open();
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
     }
 }

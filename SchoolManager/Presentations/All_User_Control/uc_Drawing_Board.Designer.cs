@@ -33,7 +33,6 @@
             this.panel_DrawingSurface = new Guna.UI2.WinForms.Guna2Panel();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
             this.btn_Eraser_Tool = new Guna.UI2.WinForms.Guna2GradientButton();
-            this.btn_Ruler_Tool = new Guna.UI2.WinForms.Guna2GradientButton();
             this.btn_Pen_Tool = new Guna.UI2.WinForms.Guna2GradientButton();
             this.guna2HtmlLabel13 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
@@ -88,6 +87,7 @@
             this.panel_DrawingSurface.Name = "panel_DrawingSurface";
             this.panel_DrawingSurface.Size = new System.Drawing.Size(1700, 799);
             this.panel_DrawingSurface.TabIndex = 0;
+            this.panel_DrawingSurface.Tag = "NoTheme";
             this.panel_DrawingSurface.Paint += new System.Windows.Forms.PaintEventHandler(this.panel_DrawingSurface_Paint);
             this.panel_DrawingSurface.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel_DrawingSurface_MouseDown);
             this.panel_DrawingSurface.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_DrawingSurface_MouseMove);
@@ -97,12 +97,11 @@
             // 
             this.guna2Panel2.BackColor = System.Drawing.Color.White;
             this.guna2Panel2.Controls.Add(this.btn_Eraser_Tool);
-            this.guna2Panel2.Controls.Add(this.btn_Ruler_Tool);
             this.guna2Panel2.Controls.Add(this.btn_Pen_Tool);
             this.guna2Panel2.Controls.Add(this.guna2HtmlLabel13);
             this.guna2Panel2.Location = new System.Drawing.Point(342, 23);
             this.guna2Panel2.Name = "guna2Panel2";
-            this.guna2Panel2.Size = new System.Drawing.Size(439, 108);
+            this.guna2Panel2.Size = new System.Drawing.Size(375, 108);
             this.guna2Panel2.TabIndex = 1;
             // 
             // btn_Eraser_Tool
@@ -120,10 +119,11 @@
             this.btn_Eraser_Tool.FocusedColor = System.Drawing.Color.Transparent;
             this.btn_Eraser_Tool.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.btn_Eraser_Tool.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.btn_Eraser_Tool.Image = ((System.Drawing.Image)(resources.GetObject("btn_Eraser_Tool.Image")));
             this.btn_Eraser_Tool.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btn_Eraser_Tool.ImageOffset = new System.Drawing.Point(20, 0);
-            this.btn_Eraser_Tool.ImageSize = new System.Drawing.Size(100, 100);
-            this.btn_Eraser_Tool.Location = new System.Drawing.Point(339, 19);
+            this.btn_Eraser_Tool.ImageOffset = new System.Drawing.Point(10, 0);
+            this.btn_Eraser_Tool.ImageSize = new System.Drawing.Size(40, 40);
+            this.btn_Eraser_Tool.Location = new System.Drawing.Point(248, 19);
             this.btn_Eraser_Tool.Name = "btn_Eraser_Tool";
             this.btn_Eraser_Tool.Size = new System.Drawing.Size(79, 62);
             this.btn_Eraser_Tool.TabIndex = 55;
@@ -133,34 +133,6 @@
             this.btn_Eraser_Tool.UseTransparentBackground = true;
             this.btn_Eraser_Tool.Click += new System.EventHandler(this.btn_Tool_Click);
             this.btn_Eraser_Tool.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel_DrawingSurface_MouseMove);
-            // 
-            // btn_Ruler_Tool
-            // 
-            this.btn_Ruler_Tool.BackColor = System.Drawing.Color.Transparent;
-            this.btn_Ruler_Tool.BorderColor = System.Drawing.Color.Transparent;
-            this.btn_Ruler_Tool.BorderRadius = 10;
-            this.btn_Ruler_Tool.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btn_Ruler_Tool.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btn_Ruler_Tool.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btn_Ruler_Tool.DisabledState.FillColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btn_Ruler_Tool.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btn_Ruler_Tool.FillColor = System.Drawing.Color.AliceBlue;
-            this.btn_Ruler_Tool.FillColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btn_Ruler_Tool.FocusedColor = System.Drawing.Color.Transparent;
-            this.btn_Ruler_Tool.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btn_Ruler_Tool.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.btn_Ruler_Tool.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btn_Ruler_Tool.ImageOffset = new System.Drawing.Point(20, 0);
-            this.btn_Ruler_Tool.ImageSize = new System.Drawing.Size(100, 100);
-            this.btn_Ruler_Tool.Location = new System.Drawing.Point(240, 19);
-            this.btn_Ruler_Tool.Name = "btn_Ruler_Tool";
-            this.btn_Ruler_Tool.Size = new System.Drawing.Size(79, 62);
-            this.btn_Ruler_Tool.TabIndex = 54;
-            this.btn_Ruler_Tool.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btn_Ruler_Tool.TextFormatNoPrefix = true;
-            this.btn_Ruler_Tool.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
-            this.btn_Ruler_Tool.UseTransparentBackground = true;
-            this.btn_Ruler_Tool.Click += new System.EventHandler(this.btn_Tool_Click);
             // 
             // btn_Pen_Tool
             // 
@@ -177,12 +149,13 @@
             this.btn_Pen_Tool.FocusedColor = System.Drawing.Color.Transparent;
             this.btn_Pen_Tool.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.btn_Pen_Tool.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.btn_Pen_Tool.Image = ((System.Drawing.Image)(resources.GetObject("btn_Pen_Tool.Image")));
             this.btn_Pen_Tool.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btn_Pen_Tool.ImageOffset = new System.Drawing.Point(20, 0);
-            this.btn_Pen_Tool.ImageSize = new System.Drawing.Size(100, 100);
+            this.btn_Pen_Tool.ImageSize = new System.Drawing.Size(40, 40);
             this.btn_Pen_Tool.Location = new System.Drawing.Point(139, 19);
             this.btn_Pen_Tool.Name = "btn_Pen_Tool";
-            this.btn_Pen_Tool.Size = new System.Drawing.Size(79, 62);
+            this.btn_Pen_Tool.Size = new System.Drawing.Size(92, 62);
             this.btn_Pen_Tool.TabIndex = 53;
             this.btn_Pen_Tool.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btn_Pen_Tool.TextFormatNoPrefix = true;
@@ -494,9 +467,10 @@
             this.btn_ClearPage.FocusedColor = System.Drawing.Color.Transparent;
             this.btn_ClearPage.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.btn_ClearPage.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.btn_ClearPage.Image = ((System.Drawing.Image)(resources.GetObject("btn_ClearPage.Image")));
             this.btn_ClearPage.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btn_ClearPage.ImageOffset = new System.Drawing.Point(20, 0);
-            this.btn_ClearPage.ImageSize = new System.Drawing.Size(100, 100);
+            this.btn_ClearPage.ImageOffset = new System.Drawing.Point(5, 0);
+            this.btn_ClearPage.ImageSize = new System.Drawing.Size(40, 40);
             this.btn_ClearPage.Location = new System.Drawing.Point(348, 9);
             this.btn_ClearPage.Name = "btn_ClearPage";
             this.btn_ClearPage.Size = new System.Drawing.Size(67, 39);
@@ -522,9 +496,10 @@
             this.btn_Redo.FocusedColor = System.Drawing.Color.Transparent;
             this.btn_Redo.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.btn_Redo.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.btn_Redo.Image = ((System.Drawing.Image)(resources.GetObject("btn_Redo.Image")));
             this.btn_Redo.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btn_Redo.ImageOffset = new System.Drawing.Point(20, 0);
-            this.btn_Redo.ImageSize = new System.Drawing.Size(100, 100);
+            this.btn_Redo.ImageOffset = new System.Drawing.Point(10, 0);
+            this.btn_Redo.ImageSize = new System.Drawing.Size(40, 40);
             this.btn_Redo.Location = new System.Drawing.Point(247, 9);
             this.btn_Redo.Name = "btn_Redo";
             this.btn_Redo.Size = new System.Drawing.Size(67, 39);
@@ -550,9 +525,10 @@
             this.btn_Undo.FocusedColor = System.Drawing.Color.Transparent;
             this.btn_Undo.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.btn_Undo.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.btn_Undo.Image = ((System.Drawing.Image)(resources.GetObject("btn_Undo.Image")));
             this.btn_Undo.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.btn_Undo.ImageOffset = new System.Drawing.Point(20, 0);
-            this.btn_Undo.ImageSize = new System.Drawing.Size(100, 100);
+            this.btn_Undo.ImageOffset = new System.Drawing.Point(10, 0);
+            this.btn_Undo.ImageSize = new System.Drawing.Size(40, 40);
             this.btn_Undo.Location = new System.Drawing.Point(145, 9);
             this.btn_Undo.Name = "btn_Undo";
             this.btn_Undo.Size = new System.Drawing.Size(67, 39);
@@ -715,7 +691,6 @@
         private Guna.UI2.WinForms.Guna2Panel guna2Panel3;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel13;
         private Guna.UI2.WinForms.Guna2GradientButton btn_Eraser_Tool;
-        private Guna.UI2.WinForms.Guna2GradientButton btn_Ruler_Tool;
         private Guna.UI2.WinForms.Guna2GradientButton btn_Pen_Tool;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel4;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel1;

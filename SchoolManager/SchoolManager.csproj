@@ -197,6 +197,18 @@
     <Compile Include="Presentations\All_User_Control\uc_Game_WordMatch.Designer.cs">
       <DependentUpon>uc_Game_WordMatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Index.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_Index.Designer.cs">
+      <DependentUpon>uc_Index.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_ManagementGame.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentations\All_User_Control\uc_ManagementGame.Designer.cs">
+      <DependentUpon>uc_ManagementGame.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentations\All_User_Control\uc_Manage_Vocabulary.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -305,12 +317,6 @@
     <Compile Include="Presentations\Forms\register_Form.Designer.cs">
       <DependentUpon>register_Form.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presentations\Forms\teacher_AccountManager_Form.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Presentations\Forms\teacher_AccountManager_Form.Designer.cs">
-      <DependentUpon>teacher_AccountManager_Form.cs</DependentUpon>
-    </Compile>
     <Compile Include="Presentations\Forms\login_Form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -330,6 +336,7 @@
       <DependentUpon>uc_Drawing_Board.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentations\PdfReportGenerator.cs" />
+    <Compile Include="Presentations\ThemeHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Presentations\All_User_Control\QR_Roll_Call.resx">
@@ -358,6 +365,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentations\All_User_Control\uc_Game_WordMatch.resx">
       <DependentUpon>uc_Game_WordMatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_Index.resx">
+      <DependentUpon>uc_Index.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\All_User_Control\uc_ManagementGame.resx">
+      <DependentUpon>uc_ManagementGame.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentations\All_User_Control\uc_Manage_Vocabulary.resx">
       <DependentUpon>uc_Manage_Vocabulary.cs</DependentUpon>
@@ -406,9 +419,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentations\Forms\register_Form.resx">
       <DependentUpon>register_Form.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Presentations\Forms\teacher_AccountManager_Form.resx">
-      <DependentUpon>teacher_AccountManager_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentations\Forms\login_Form.resx">
       <DependentUpon>login_Form.cs</DependentUpon>

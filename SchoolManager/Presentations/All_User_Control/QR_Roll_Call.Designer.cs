@@ -437,6 +437,7 @@
             this.dtp_QR_Date.Name = "dtp_QR_Date";
             this.dtp_QR_Date.Size = new System.Drawing.Size(195, 46);
             this.dtp_QR_Date.TabIndex = 41;
+            this.dtp_QR_Date.Tag = "NoTheme";
             this.dtp_QR_Date.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
             this.dtp_QR_Date.Value = new System.DateTime(2025, 11, 4, 0, 0, 0, 0);
             // 
@@ -461,6 +462,7 @@
             this.guna2Panel6.Name = "guna2Panel6";
             this.guna2Panel6.Size = new System.Drawing.Size(290, 118);
             this.guna2Panel6.TabIndex = 37;
+            this.guna2Panel6.Tag = "NoTheme";
             // 
             // guna2Panel10
             // 
@@ -521,6 +523,7 @@
             this.guna2Panel3.Name = "guna2Panel3";
             this.guna2Panel3.Size = new System.Drawing.Size(289, 118);
             this.guna2Panel3.TabIndex = 36;
+            this.guna2Panel3.Tag = "NoTheme";
             // 
             // guna2Panel9
             // 
@@ -581,6 +584,7 @@
             this.guna2Panel8.Name = "guna2Panel8";
             this.guna2Panel8.Size = new System.Drawing.Size(289, 118);
             this.guna2Panel8.TabIndex = 35;
+            this.guna2Panel8.Tag = "NoTheme";
             // 
             // guna2Panel11
             // 

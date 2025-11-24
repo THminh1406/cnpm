@@ -147,6 +147,7 @@
             // txt_Note
             // 
             this.txt_Note.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.txt_Note.BackColor = System.Drawing.Color.Transparent;
             this.txt_Note.BorderRadius = 20;
             this.txt_Note.BorderThickness = 2;
             this.txt_Note.Cursor = System.Windows.Forms.Cursors.IBeam;
@@ -166,6 +167,7 @@
             this.txt_Note.SelectedText = "";
             this.txt_Note.Size = new System.Drawing.Size(496, 447);
             this.txt_Note.TabIndex = 32;
+            this.txt_Note.Tag = "NoTheme";
             this.txt_Note.TextOffset = new System.Drawing.Point(0, -70);
             // 
             // guna2HtmlLabel7

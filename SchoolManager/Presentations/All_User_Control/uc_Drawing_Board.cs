@@ -170,11 +170,6 @@ namespace SchoolManager.Presentations
                 UpdateEraserCursor();
             }
             // 'btn_Ruler_Tool' là Thước
-            else if (sender == btn_Ruler_Tool)
-            {
-                MessageBox.Show("Chức năng 'Thước' đang được phát triển.");
-                panel_DrawingSurface.Cursor = Cursors.Default;
-            }
         }
 
         private void btn_Color_Click(object sender, EventArgs e)

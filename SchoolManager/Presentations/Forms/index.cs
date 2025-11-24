@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolManager.Presentations.All_User_Control;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -115,7 +116,7 @@ namespace SchoolManager.Presentations.Forms
             dlg.Text = "Ð?i thông tin";
             dlg.FormBorderStyle = FormBorderStyle.None;
             dlg.StartPosition = FormStartPosition.CenterParent;
-            dlg.ClientSize = new Size(420, 320);
+            dlg.ClientSize = new Size(500,450);
             dlg.BackColor = Color.White;
 
             // Header - lime green frame with close
@@ -133,17 +134,6 @@ namespace SchoolManager.Presentations.Forms
             hdrTitle.Location = new Point(16, 14);
             dlgHeader.Controls.Add(hdrTitle);
 
-            var hdrClose = new Guna.UI2.WinForms.Guna2CircleButton();
-            hdrClose.Size = new Size(34, 34);
-            hdrClose.Location = new Point(dlg.ClientSize.Width - 50, 12);
-            hdrClose.FillColor = Color.White;
-            hdrClose.Image = null; // keep simple
-            hdrClose.Text = "X";
-            hdrClose.ForeColor = Color.FromArgb(86, 180, 72);
-            hdrClose.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            hdrClose.Click += (s, ev) => { dlg.Close(); };
-            dlgHeader.Controls.Add(hdrClose);
-
             dlg.Controls.Add(dlgHeader);
 
             var card = new Guna.UI2.WinForms.Guna2Panel();
@@ -152,22 +142,22 @@ namespace SchoolManager.Presentations.Forms
             card.Padding = new Padding(16);
             dlg.Controls.Add(card);
 
-            int y = 54;
-            var lblName = new Guna.UI2.WinForms.Guna2HtmlLabel() { Text = "Họ và tên", Location = new Point(16, y), ForeColor = Color.DimGray };
+            int y = 70;
+            var lblName = new Guna.UI2.WinForms.Guna2HtmlLabel() { Text = "Họ và tên", Location = new Point(16, y), ForeColor = Color.DimGray, Font =  new Font("Segoe UI", 10F, FontStyle.Regular) };
             card.Controls.Add(lblName);
-            var txtName = new Guna.UI2.WinForms.Guna2TextBox() { Location = new Point(16, y + 26), Width = 368, Text = acc.FullName, PlaceholderText = "Nhập họ và tên" };
+            var txtName = new Guna.UI2.WinForms.Guna2TextBox() { Location = new Point(16, y + 40), Width = 460, Text = acc.FullName, PlaceholderText = "Nhập họ và tên" };
             card.Controls.Add(txtName);
 
             y += 72;
             var lblEmail = new Guna.UI2.WinForms.Guna2HtmlLabel() { Text = "Email", Location = new Point(16, y), ForeColor = Color.DimGray };
             card.Controls.Add(lblEmail);
-            var txtEmail = new Guna.UI2.WinForms.Guna2TextBox() { Location = new Point(16, y + 26), Width = 368, Text = acc.Email, PlaceholderText = "Nhập email" };
+            var txtEmail = new Guna.UI2.WinForms.Guna2TextBox() { Location = new Point(16, y + 40), Width = 460, Text = acc.Email, PlaceholderText = "Nhập email" };
             card.Controls.Add(txtEmail);
 
             y += 72;
             var lblPhone = new Guna.UI2.WinForms.Guna2HtmlLabel() { Text = "SĐT", Location = new Point(16, y), ForeColor = Color.DimGray };
             card.Controls.Add(lblPhone);
-            var txtPhone = new Guna.UI2.WinForms.Guna2TextBox() { Location = new Point(16, y + 26), Width = 368, Text = acc.Phone, PlaceholderText = "Nhập số điện thoại" };
+            var txtPhone = new Guna.UI2.WinForms.Guna2TextBox() { Location = new Point(16, y + 40), Width = 460, Text = acc.Phone, PlaceholderText = "Nhập số điện thoại" };
             card.Controls.Add(txtPhone);
 
             var btnSave = new Guna.UI2.WinForms.Guna2Button() { Text = "Lưu", Size = new Size(120, 40), Location = new Point(264, dlg.ClientSize.Height - 56), BorderRadius = 8, FillColor = Color.DodgerBlue, ForeColor = Color.White };
@@ -209,7 +199,7 @@ namespace SchoolManager.Presentations.Forms
             var dlg = new Form();
             dlg.FormBorderStyle = FormBorderStyle.None;
             dlg.StartPosition = FormStartPosition.CenterParent;
-            dlg.ClientSize = new Size(420, 260);
+            dlg.ClientSize = new Size(420, 350);
             dlg.BackColor = Color.White;
 
             // header
@@ -227,16 +217,6 @@ namespace SchoolManager.Presentations.Forms
             hdrTitle.Location = new Point(16, 14);
             dlgHeader.Controls.Add(hdrTitle);
 
-            var hdrClose = new Guna.UI2.WinForms.Guna2CircleButton();
-            hdrClose.Size = new Size(34, 34);
-            hdrClose.Location = new Point(dlg.ClientSize.Width - 50, 12);
-            hdrClose.FillColor = Color.White;
-            hdrClose.Text = "X";
-            hdrClose.ForeColor = Color.FromArgb(86, 180, 72);
-            hdrClose.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            hdrClose.Click += (s, ev) => { dlg.Close(); };
-            dlgHeader.Controls.Add(hdrClose);
-
             dlg.Controls.Add(dlgHeader);
 
             var card = new Guna.UI2.WinForms.Guna2Panel();
@@ -245,9 +225,7 @@ namespace SchoolManager.Presentations.Forms
             card.Padding = new Padding(16);
             dlg.Controls.Add(card);
 
-            int y = 54;
-            var lblOld = new Guna.UI2.WinForms.Guna2HtmlLabel() { Text = "Mật khẩu hiện tại", Location = new Point(16, y), ForeColor = Color.DimGray };
-            card.Controls.Add(lblOld);
+            int y = 65;
             var txtOld = new Guna.UI2.WinForms.Guna2TextBox() { Location = new Point(16, y + 26), Width = 368, UseSystemPasswordChar = true, PlaceholderText = "Mật khẩu hiện tại" };
             card.Controls.Add(txtOld);
 
@@ -380,7 +358,7 @@ namespace SchoolManager.Presentations.Forms
 
         private void guna2Button4_Click(object sender, EventArgs e)
         {
-            showUC(uc_Manage_Vocabulary);
+            showUC(uc_ManagementGame1);
         }
 
         private void guna2Button3_Click(object sender, EventArgs e)
@@ -388,16 +366,7 @@ namespace SchoolManager.Presentations.Forms
             showUC(uc_Show_Study_Management1);
         }
 
-        private void guna2Button7_Click(object sender, EventArgs e)
-        {
-            showUC(uc_Create_Quiz);
-        }
 
-        private void guna2Button8_Click(object sender, EventArgs e)
-        {
-            uc_Game_Menu1.RefreshGameList();
-            showUC(uc_Game_Menu1);
-        }
 
         private void uc_Game_Menu1_OnPlayGameClicked(int quizId, string quizType)
         {
@@ -441,6 +410,30 @@ namespace SchoolManager.Presentations.Forms
         private void guna2Button1_Click(object sender, EventArgs e)
         {
             showUC(uC_Student_Management1);
+        }
+
+        private void guna2CircleButton3_Click(object sender, EventArgs e)
+        {
+            // 1. Đảo ngược trạng thái
+            ThemeHelper.IsDarkMode = !ThemeHelper.IsDarkMode;
+
+            // 2. Áp dụng cho Form chính (Menu, Header...)
+            ThemeHelper.ApplyTheme(this);
+
+            // 3. Áp dụng cho UserControl đang hiển thị (nếu có)
+            // Ví dụ: pnl_Container là nơi chứa UserControl
+            foreach (Control ctrl in panelContainer.Controls)
+            {
+                if (ctrl is UserControl uc)
+                {
+                    ThemeHelper.ApplyTheme(uc);
+                }
+            } 
+        }
+
+        private void guna2Button7_Click(object sender, EventArgs e)
+        {
+            showUC(uc_Index1);
         }
     }
 }

@@ -146,6 +146,7 @@
             this.dgv_GameList.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
             this.dgv_GameList.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
             this.dgv_GameList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_GameList_CellClick);
+            this.dgv_GameList.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgv_GameList_CellPainting);
             // 
             // id_quiz
             // 

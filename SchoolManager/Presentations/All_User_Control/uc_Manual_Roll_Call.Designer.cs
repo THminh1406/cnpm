@@ -30,13 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(uc_Manual_Roll_Call));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
             this.cbo_Select_Class = new Guna.UI2.WinForms.Guna2ComboBox();
-            this.dtp_Select_Date = new Guna.UI2.WinForms.Guna2DateTimePicker();
             this.guna2CirclePictureBox2 = new Guna.UI2.WinForms.Guna2CirclePictureBox();
             this.guna2Button4 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Panel6 = new Guna.UI2.WinForms.Guna2Panel();
@@ -60,6 +59,7 @@
             this.lbl_TotalStudents = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2HtmlLabel17 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2HtmlLabel6 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            this.dtp_Select_Date = new Guna.UI2.WinForms.Guna2DateTimePicker();
             this.btn_All_Absent = new Guna.UI2.WinForms.Guna2Button();
             this.btn_All_Present = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Elipse1 = new Guna.UI2.WinForms.Guna2Elipse(this.components);
@@ -112,7 +112,7 @@
             this.guna2Panel2.FillColor = System.Drawing.Color.White;
             this.guna2Panel2.Location = new System.Drawing.Point(15, 42);
             this.guna2Panel2.Name = "guna2Panel2";
-            this.guna2Panel2.Size = new System.Drawing.Size(1975, 348);
+            this.guna2Panel2.Size = new System.Drawing.Size(1941, 348);
             this.guna2Panel2.TabIndex = 12;
             // 
             // cbo_Select_Class
@@ -129,28 +129,10 @@
             this.cbo_Select_Class.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cbo_Select_Class.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.cbo_Select_Class.ItemHeight = 70;
-            this.cbo_Select_Class.Location = new System.Drawing.Point(1703, 24);
+            this.cbo_Select_Class.Location = new System.Drawing.Point(1669, 24);
             this.cbo_Select_Class.Name = "cbo_Select_Class";
             this.cbo_Select_Class.Size = new System.Drawing.Size(235, 76);
             this.cbo_Select_Class.TabIndex = 43;
-            // 
-            // dtp_Select_Date
-            // 
-            this.dtp_Select_Date.AutoRoundedCorners = true;
-            this.dtp_Select_Date.BackColor = System.Drawing.Color.Transparent;
-            this.dtp_Select_Date.Checked = true;
-            this.dtp_Select_Date.FillColor = System.Drawing.Color.White;
-            this.dtp_Select_Date.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.dtp_Select_Date.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtp_Select_Date.IndicateFocus = true;
-            this.dtp_Select_Date.Location = new System.Drawing.Point(39, 94);
-            this.dtp_Select_Date.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
-            this.dtp_Select_Date.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
-            this.dtp_Select_Date.Name = "dtp_Select_Date";
-            this.dtp_Select_Date.Size = new System.Drawing.Size(199, 46);
-            this.dtp_Select_Date.TabIndex = 42;
-            this.dtp_Select_Date.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
-            this.dtp_Select_Date.Value = new System.DateTime(2025, 11, 4, 0, 0, 0, 0);
             // 
             // guna2CirclePictureBox2
             // 
@@ -178,7 +160,7 @@
             this.guna2Button4.Image = ((System.Drawing.Image)(resources.GetObject("guna2Button4.Image")));
             this.guna2Button4.ImageOffset = new System.Drawing.Point(0, 3);
             this.guna2Button4.ImageSize = new System.Drawing.Size(40, 40);
-            this.guna2Button4.Location = new System.Drawing.Point(1436, 906);
+            this.guna2Button4.Location = new System.Drawing.Point(1402, 906);
             this.guna2Button4.Name = "guna2Button4";
             this.guna2Button4.Size = new System.Drawing.Size(534, 84);
             this.guna2Button4.TabIndex = 37;
@@ -191,10 +173,11 @@
             this.guna2Panel6.BorderRadius = 40;
             this.guna2Panel6.Controls.Add(this.guna2Panel10);
             this.guna2Panel6.FillColor = System.Drawing.Color.Red;
-            this.guna2Panel6.Location = new System.Drawing.Point(1648, 121);
+            this.guna2Panel6.Location = new System.Drawing.Point(1614, 121);
             this.guna2Panel6.Name = "guna2Panel6";
             this.guna2Panel6.Size = new System.Drawing.Size(290, 170);
             this.guna2Panel6.TabIndex = 34;
+            this.guna2Panel6.Tag = "NoTheme";
             // 
             // guna2Panel10
             // 
@@ -254,10 +237,11 @@
             this.guna2Panel1.BorderRadius = 40;
             this.guna2Panel1.Controls.Add(this.guna2Panel9);
             this.guna2Panel1.FillColor = System.Drawing.Color.Gold;
-            this.guna2Panel1.Location = new System.Drawing.Point(1121, 121);
+            this.guna2Panel1.Location = new System.Drawing.Point(1104, 121);
             this.guna2Panel1.Name = "guna2Panel1";
             this.guna2Panel1.Size = new System.Drawing.Size(289, 170);
             this.guna2Panel1.TabIndex = 33;
+            this.guna2Panel1.Tag = "NoTheme";
             // 
             // guna2Panel9
             // 
@@ -317,10 +301,11 @@
             this.guna2Panel8.BorderRadius = 40;
             this.guna2Panel8.Controls.Add(this.guna2Panel11);
             this.guna2Panel8.FillColor = System.Drawing.Color.ForestGreen;
-            this.guna2Panel8.Location = new System.Drawing.Point(579, 121);
+            this.guna2Panel8.Location = new System.Drawing.Point(562, 121);
             this.guna2Panel8.Name = "guna2Panel8";
             this.guna2Panel8.Size = new System.Drawing.Size(289, 170);
             this.guna2Panel8.TabIndex = 32;
+            this.guna2Panel8.Tag = "NoTheme";
             // 
             // guna2Panel11
             // 
@@ -384,6 +369,7 @@
             this.guna2Panel12.ShadowDecoration.Color = System.Drawing.Color.RoyalBlue;
             this.guna2Panel12.Size = new System.Drawing.Size(289, 170);
             this.guna2Panel12.TabIndex = 31;
+            this.guna2Panel12.Tag = "NoTheme";
             // 
             // guna2Panel13
             // 
@@ -447,6 +433,24 @@
             this.guna2HtmlLabel6.TabIndex = 6;
             this.guna2HtmlLabel6.Text = "Điểm danh lớp 10A1";
             // 
+            // dtp_Select_Date
+            // 
+            this.dtp_Select_Date.AutoRoundedCorners = true;
+            this.dtp_Select_Date.BackColor = System.Drawing.Color.Transparent;
+            this.dtp_Select_Date.Checked = true;
+            this.dtp_Select_Date.FillColor = System.Drawing.Color.White;
+            this.dtp_Select_Date.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.dtp_Select_Date.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtp_Select_Date.IndicateFocus = true;
+            this.dtp_Select_Date.Location = new System.Drawing.Point(39, 94);
+            this.dtp_Select_Date.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
+            this.dtp_Select_Date.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
+            this.dtp_Select_Date.Name = "dtp_Select_Date";
+            this.dtp_Select_Date.Size = new System.Drawing.Size(199, 46);
+            this.dtp_Select_Date.TabIndex = 42;
+            this.dtp_Select_Date.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
+            this.dtp_Select_Date.Value = new System.DateTime(2025, 11, 4, 0, 0, 0, 0);
+            // 
             // btn_All_Absent
             // 
             this.btn_All_Absent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -460,7 +464,7 @@
             this.btn_All_Absent.ForeColor = System.Drawing.Color.White;
             this.btn_All_Absent.ImageOffset = new System.Drawing.Point(0, 3);
             this.btn_All_Absent.ImageSize = new System.Drawing.Size(40, 40);
-            this.btn_All_Absent.Location = new System.Drawing.Point(1690, 38);
+            this.btn_All_Absent.Location = new System.Drawing.Point(1656, 38);
             this.btn_All_Absent.Name = "btn_All_Absent";
             this.btn_All_Absent.Size = new System.Drawing.Size(248, 84);
             this.btn_All_Absent.TabIndex = 22;
@@ -481,7 +485,7 @@
             this.btn_All_Present.Image = ((System.Drawing.Image)(resources.GetObject("btn_All_Present.Image")));
             this.btn_All_Present.ImageOffset = new System.Drawing.Point(0, 3);
             this.btn_All_Present.ImageSize = new System.Drawing.Size(40, 40);
-            this.btn_All_Present.Location = new System.Drawing.Point(1375, 38);
+            this.btn_All_Present.Location = new System.Drawing.Point(1341, 38);
             this.btn_All_Present.Name = "btn_All_Present";
             this.btn_All_Present.Size = new System.Drawing.Size(248, 84);
             this.btn_All_Present.TabIndex = 21;
@@ -509,7 +513,7 @@
             this.guna2Panel3.FillColor = System.Drawing.Color.White;
             this.guna2Panel3.Location = new System.Drawing.Point(15, 445);
             this.guna2Panel3.Name = "guna2Panel3";
-            this.guna2Panel3.Size = new System.Drawing.Size(1975, 1413);
+            this.guna2Panel3.Size = new System.Drawing.Size(1941, 1413);
             this.guna2Panel3.TabIndex = 13;
             // 
             // guna2CirclePictureBox1
@@ -539,21 +543,21 @@
             // 
             this.list_Of_Student.AllowDrop = true;
             this.list_Of_Student.AllowUserToAddRows = false;
-            dataGridViewCellStyle17.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.Color.Black;
-            this.list_Of_Student.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            this.list_Of_Student.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.list_Of_Student.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.list_Of_Student.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle18.BackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            dataGridViewCellStyle18.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.list_Of_Student.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.list_Of_Student.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.list_Of_Student.ColumnHeadersHeight = 100;
             this.list_Of_Student.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
             this.list_Of_Student.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -565,14 +569,14 @@
             this.COL_ABSENT_P,
             this.COL_ABSENT_UP,
             this.notes});
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle20.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.list_Of_Student.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.list_Of_Student.DefaultCellStyle = dataGridViewCellStyle4;
             this.list_Of_Student.GridColor = System.Drawing.Color.DarkGray;
             this.list_Of_Student.Location = new System.Drawing.Point(26, 165);
             this.list_Of_Student.Name = "list_Of_Student";
@@ -585,7 +589,7 @@
             this.list_Of_Student.ShowCellToolTips = false;
             this.list_Of_Student.ShowEditingIcon = false;
             this.list_Of_Student.ShowRowErrors = false;
-            this.list_Of_Student.Size = new System.Drawing.Size(1912, 1060);
+            this.list_Of_Student.Size = new System.Drawing.Size(1878, 1060);
             this.list_Of_Student.TabIndex = 38;
             this.list_Of_Student.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
             this.list_Of_Student.ThemeStyle.AlternatingRowsStyle.Font = null;
@@ -635,10 +639,10 @@
             // 
             // COL_PRESENT
             // 
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Segoe UI Semibold", 25.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            dataGridViewCellStyle19.NullValue = false;
-            this.COL_PRESENT.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI Semibold", 25.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            dataGridViewCellStyle3.NullValue = false;
+            this.COL_PRESENT.DefaultCellStyle = dataGridViewCellStyle3;
             this.COL_PRESENT.FillWeight = 40F;
             this.COL_PRESENT.HeaderText = "Có mặt";
             this.COL_PRESENT.MinimumWidth = 10;
@@ -686,7 +690,7 @@
             this.btn_Save.Image = ((System.Drawing.Image)(resources.GetObject("btn_Save.Image")));
             this.btn_Save.ImageOffset = new System.Drawing.Point(0, 3);
             this.btn_Save.ImageSize = new System.Drawing.Size(40, 40);
-            this.btn_Save.Location = new System.Drawing.Point(1416, 1280);
+            this.btn_Save.Location = new System.Drawing.Point(1382, 1280);
             this.btn_Save.Name = "btn_Save";
             this.btn_Save.Size = new System.Drawing.Size(534, 84);
             this.btn_Save.TabIndex = 37;
@@ -702,7 +706,7 @@
             this.Controls.Add(this.guna2Panel3);
             this.Controls.Add(this.guna2Panel2);
             this.Name = "uc_Manual_Roll_Call";
-            this.Size = new System.Drawing.Size(2009, 1388);
+            this.Size = new System.Drawing.Size(1975, 1388);
             this.Load += new System.EventHandler(this.uc_Manual_Roll_Call_Load);
             this.guna2Panel2.ResumeLayout(false);
             this.guna2Panel2.PerformLayout();

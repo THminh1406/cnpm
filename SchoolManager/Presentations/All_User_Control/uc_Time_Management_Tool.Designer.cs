@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(uc_Time_Management_Tool));
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.guna2Separator1 = new Guna.UI2.WinForms.Guna2Separator();
             this.guna2CirclePictureBox2 = new Guna.UI2.WinForms.Guna2CirclePictureBox();
             this.guna2GradientButton4 = new Guna.UI2.WinForms.Guna2GradientButton();
             this.guna2GradientButton3 = new Guna.UI2.WinForms.Guna2GradientButton();
@@ -51,7 +52,6 @@
             this.guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2HtmlLabel13 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2Elipse1 = new Guna.UI2.WinForms.Guna2Elipse(this.components);
-            this.guna2Separator1 = new Guna.UI2.WinForms.Guna2Separator();
             this.guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2CirclePictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -86,6 +86,15 @@
             this.guna2Panel1.Name = "guna2Panel1";
             this.guna2Panel1.Size = new System.Drawing.Size(1976, 800);
             this.guna2Panel1.TabIndex = 0;
+            // 
+            // guna2Separator1
+            // 
+            this.guna2Separator1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.guna2Separator1.Location = new System.Drawing.Point(35, 500);
+            this.guna2Separator1.Name = "guna2Separator1";
+            this.guna2Separator1.Size = new System.Drawing.Size(1887, 11);
+            this.guna2Separator1.TabIndex = 58;
             // 
             // guna2CirclePictureBox2
             // 
@@ -339,6 +348,7 @@
             this.guna2TextBox1.SelectedText = "";
             this.guna2TextBox1.Size = new System.Drawing.Size(834, 83);
             this.guna2TextBox1.TabIndex = 47;
+            this.guna2TextBox1.Tag = "NoTheme";
             // 
             // guna2HtmlLabel5
             // 
@@ -374,6 +384,7 @@
             this.guna2TextBox4.SelectedText = "";
             this.guna2TextBox4.Size = new System.Drawing.Size(828, 83);
             this.guna2TextBox4.TabIndex = 45;
+            this.guna2TextBox4.Tag = "NoTheme";
             // 
             // guna2HtmlLabel4
             // 
@@ -452,15 +463,6 @@
             // 
             this.guna2Elipse1.TargetControl = this;
             // 
-            // guna2Separator1
-            // 
-            this.guna2Separator1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.guna2Separator1.Location = new System.Drawing.Point(35, 500);
-            this.guna2Separator1.Name = "guna2Separator1";
-            this.guna2Separator1.Size = new System.Drawing.Size(1887, 11);
-            this.guna2Separator1.TabIndex = 58;
-            // 
             // uc_Time_Management_Tool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -471,6 +473,7 @@
             this.Controls.Add(this.guna2Panel1);
             this.Name = "uc_Time_Management_Tool";
             this.Size = new System.Drawing.Size(2077, 988);
+            this.Tag = "";
             this.Load += new System.EventHandler(this.Uc_Time_Management_Tool_Load);
             this.guna2Panel1.ResumeLayout(false);
             this.guna2Panel1.PerformLayout();

@@ -29,11 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(uc_Study_Result));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(uc_Study_Result));
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.btn_Save = new Guna.UI2.WinForms.Guna2Button();
             this.btn_Export = new Guna.UI2.WinForms.Guna2Button();
             this.cbo_Subject = new Guna.UI2.WinForms.Guna2ComboBox();
             this.cbo_SelectClass = new Guna.UI2.WinForms.Guna2ComboBox();
@@ -45,6 +46,12 @@
             this.guna2HtmlLabel3 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
             this.dgv_Result = new Guna.UI2.WinForms.Guna2DataGridView();
+            this.name_Student = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.math = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.literature = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.english = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.GPA = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rank = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.guna2HtmlLabel7 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
             this.guna2Panel7 = new Guna.UI2.WinForms.Guna2Panel();
@@ -67,13 +74,6 @@
             this.lbl_Excllent = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2HtmlLabel15 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2Elipse1 = new Guna.UI2.WinForms.Guna2Elipse(this.components);
-            this.name_Student = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.math = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.literature = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.english = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.GPA = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rank = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btn_Save = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2CirclePictureBox2)).BeginInit();
             this.guna2Panel2.SuspendLayout();
@@ -113,6 +113,27 @@
             this.guna2Panel1.Name = "guna2Panel1";
             this.guna2Panel1.Size = new System.Drawing.Size(543, 928);
             this.guna2Panel1.TabIndex = 11;
+            // 
+            // btn_Save
+            // 
+            this.btn_Save.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_Save.BorderRadius = 20;
+            this.btn_Save.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btn_Save.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btn_Save.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btn_Save.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btn_Save.FillColor = System.Drawing.Color.SeaGreen;
+            this.btn_Save.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold);
+            this.btn_Save.ForeColor = System.Drawing.Color.White;
+            this.btn_Save.Image = ((System.Drawing.Image)(resources.GetObject("btn_Save.Image")));
+            this.btn_Save.ImageOffset = new System.Drawing.Point(0, 3);
+            this.btn_Save.ImageSize = new System.Drawing.Size(40, 40);
+            this.btn_Save.Location = new System.Drawing.Point(18, 708);
+            this.btn_Save.Name = "btn_Save";
+            this.btn_Save.Size = new System.Drawing.Size(496, 84);
+            this.btn_Save.TabIndex = 31;
+            this.btn_Save.Text = "Lưu điểm";
+            this.btn_Save.Click += new System.EventHandler(this.btn_Save_Click);
             // 
             // btn_Export
             // 
@@ -332,6 +353,49 @@
             this.dgv_Result.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
             this.dgv_Result.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
             // 
+            // name_Student
+            // 
+            this.name_Student.FillWeight = 200F;
+            this.name_Student.HeaderText = "Học sinh";
+            this.name_Student.MinimumWidth = 10;
+            this.name_Student.Name = "name_Student";
+            this.name_Student.ReadOnly = true;
+            // 
+            // math
+            // 
+            this.math.FillWeight = 40F;
+            this.math.HeaderText = "Toán";
+            this.math.MinimumWidth = 10;
+            this.math.Name = "math";
+            // 
+            // literature
+            // 
+            this.literature.FillWeight = 40F;
+            this.literature.HeaderText = "Văn";
+            this.literature.MinimumWidth = 10;
+            this.literature.Name = "literature";
+            // 
+            // english
+            // 
+            this.english.FillWeight = 40F;
+            this.english.HeaderText = "Anh";
+            this.english.MinimumWidth = 10;
+            this.english.Name = "english";
+            // 
+            // GPA
+            // 
+            this.GPA.FillWeight = 40F;
+            this.GPA.HeaderText = "TB";
+            this.GPA.MinimumWidth = 10;
+            this.GPA.Name = "GPA";
+            // 
+            // rank
+            // 
+            this.rank.FillWeight = 50F;
+            this.rank.HeaderText = "Xếp loại";
+            this.rank.MinimumWidth = 10;
+            this.rank.Name = "rank";
+            // 
             // guna2HtmlLabel7
             // 
             this.guna2HtmlLabel7.BackColor = System.Drawing.Color.Transparent;
@@ -354,6 +418,7 @@
             this.guna2Panel3.ShadowDecoration.Color = System.Drawing.Color.RoyalBlue;
             this.guna2Panel3.Size = new System.Drawing.Size(289, 170);
             this.guna2Panel3.TabIndex = 13;
+            this.guna2Panel3.Tag = "NoTheme";
             // 
             // guna2Panel7
             // 
@@ -414,6 +479,7 @@
             this.guna2Panel4.Name = "guna2Panel4";
             this.guna2Panel4.Size = new System.Drawing.Size(289, 170);
             this.guna2Panel4.TabIndex = 14;
+            this.guna2Panel4.Tag = "NoTheme";
             // 
             // guna2Panel8
             // 
@@ -474,6 +540,7 @@
             this.guna2Panel5.Name = "guna2Panel5";
             this.guna2Panel5.Size = new System.Drawing.Size(289, 170);
             this.guna2Panel5.TabIndex = 17;
+            this.guna2Panel5.Tag = "NoTheme";
             // 
             // guna2Panel9
             // 
@@ -534,6 +601,7 @@
             this.guna2Panel6.Name = "guna2Panel6";
             this.guna2Panel6.Size = new System.Drawing.Size(290, 170);
             this.guna2Panel6.TabIndex = 18;
+            this.guna2Panel6.Tag = "NoTheme";
             // 
             // guna2Panel10
             // 
@@ -589,76 +657,11 @@
             this.guna2Elipse1.BorderRadius = 40;
             this.guna2Elipse1.TargetControl = this;
             // 
-            // name_Student
-            // 
-            this.name_Student.FillWeight = 200F;
-            this.name_Student.HeaderText = "Học sinh";
-            this.name_Student.MinimumWidth = 10;
-            this.name_Student.Name = "name_Student";
-            this.name_Student.ReadOnly = true;
-            // 
-            // math
-            // 
-            this.math.FillWeight = 40F;
-            this.math.HeaderText = "Toán";
-            this.math.MinimumWidth = 10;
-            this.math.Name = "math";
-            // 
-            // literature
-            // 
-            this.literature.FillWeight = 40F;
-            this.literature.HeaderText = "Văn";
-            this.literature.MinimumWidth = 10;
-            this.literature.Name = "literature";
-            // 
-            // english
-            // 
-            this.english.FillWeight = 40F;
-            this.english.HeaderText = "Anh";
-            this.english.MinimumWidth = 10;
-            this.english.Name = "english";
-            // 
-            // GPA
-            // 
-            this.GPA.FillWeight = 40F;
-            this.GPA.HeaderText = "TB";
-            this.GPA.MinimumWidth = 10;
-            this.GPA.Name = "GPA";
-            // 
-            // rank
-            // 
-            this.rank.FillWeight = 50F;
-            this.rank.HeaderText = "Xếp loại";
-            this.rank.MinimumWidth = 10;
-            this.rank.Name = "rank";
-            // 
-            // btn_Save
-            // 
-            this.btn_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_Save.BorderRadius = 20;
-            this.btn_Save.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btn_Save.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btn_Save.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btn_Save.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btn_Save.FillColor = System.Drawing.Color.SeaGreen;
-            this.btn_Save.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold);
-            this.btn_Save.ForeColor = System.Drawing.Color.White;
-            this.btn_Save.Image = ((System.Drawing.Image)(resources.GetObject("btn_Save.Image")));
-            this.btn_Save.ImageOffset = new System.Drawing.Point(0, 3);
-            this.btn_Save.ImageSize = new System.Drawing.Size(40, 40);
-            this.btn_Save.Location = new System.Drawing.Point(18, 708);
-            this.btn_Save.Name = "btn_Save";
-            this.btn_Save.Size = new System.Drawing.Size(496, 84);
-            this.btn_Save.TabIndex = 31;
-            this.btn_Save.Text = "Lưu điểm";
-            this.btn_Save.Click += new System.EventHandler(this.btn_Save_Click);
-            // 
             // uc_Study_Result
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoScroll = true;
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(245)))), ((int)(((byte)(250)))));
             this.Controls.Add(this.guna2Panel6);
             this.Controls.Add(this.guna2HtmlLabel7);
             this.Controls.Add(this.guna2Panel5);

@@ -314,5 +314,73 @@ namespace SchoolManager.Presentations.All_User_Control
                 currentImageData = null;
             }
         }
+
+        private void guna2DataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            // Bỏ qua Header
+            if (e.RowIndex < 0) return;
+
+            // Kiểm tra đúng cột "delete" (hoặc "edit" nếu bạn chưa đổi tên)
+            if (guna2DataGridView1.Columns[e.ColumnIndex].Name == "edit")
+            {
+                // 1. Vẽ nền mặc định của ô (trừ nội dung)
+                e.Paint(e.CellBounds, DataGridViewPaintParts.All & ~DataGridViewPaintParts.ContentForeground);
+
+                // 2. Tạo khung hình chữ nhật cho nút (giữ nguyên vị trí cũ)
+                var btnRect = new Rectangle(
+                    e.CellBounds.X + 15,
+                    e.CellBounds.Y + 35,
+                    e.CellBounds.Width - 30,
+                    50
+                );
+
+                // 3. Vẽ nền nút màu ĐỎ (Bo tròn)
+                // Nếu bạn chỉ muốn hiện mỗi cái ảnh không cần nền đỏ, hãy xóa đoạn 'using' này đi
+                using (var brush = new SolidBrush(Color.FromArgb(220, 53, 69)))
+                using (var path = GetRoundedRectPath(btnRect, 15))
+                {
+                    e.Graphics.FillPath(brush, path);
+                }
+
+                // 4. VẼ HÌNH ẢNH (Thay thế cho vẽ chữ)
+                Image img = Properties.Resources.delete; // Lấy ảnh từ Resource
+
+                if (img != null)
+                {
+                    // Thiết lập kích thước icon muốn vẽ (ví dụ 24x24 hoặc 30x30)
+                    int iconSize = 24;
+
+                    // Tính toán vị trí để icon nằm CHÍNH GIỮA nút
+                    int x = btnRect.X + (btnRect.Width - iconSize) / 2;
+                    int y = btnRect.Y + (btnRect.Height - iconSize) / 2;
+
+                    // Vẽ ảnh
+                    e.Graphics.DrawImage(img, new Rectangle(x, y, iconSize, iconSize));
+                }
+
+                // 5. Báo hiệu đã vẽ xong
+                e.Handled = true;
+            }
+        }
+
+        private System.Drawing.Drawing2D.GraphicsPath GetRoundedRectPath(Rectangle bounds, int radius)
+        {
+            int diameter = radius * 2;
+            Size size = new Size(diameter, diameter);
+            Rectangle arc = new Rectangle(bounds.Location, size);
+            System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+
+            if (radius == 0) { path.AddRectangle(bounds); return path; }
+
+            path.AddArc(arc, 180, 90);
+            arc.X = bounds.Right - diameter;
+            path.AddArc(arc, 270, 90);
+            arc.Y = bounds.Bottom - diameter;
+            path.AddArc(arc, 0, 90);
+            arc.X = bounds.Left;
+            path.AddArc(arc, 90, 90);
+            path.CloseFigure();
+            return path;
+        }
     }
 }

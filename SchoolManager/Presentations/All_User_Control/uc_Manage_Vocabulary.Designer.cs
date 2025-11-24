@@ -57,6 +57,7 @@
             this.txt_SearchVocab = new Guna.UI2.WinForms.Guna2TextBox();
             this.cbo_FilterCategory = new Guna.UI2.WinForms.Guna2ComboBox();
             this.guna2Elipse1 = new Guna.UI2.WinForms.Guna2Elipse(this.components);
+            this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pic_Preview)).BeginInit();
             this.guna2Panel2.SuspendLayout();
@@ -284,6 +285,7 @@
             this.pic_Preview.Location = new System.Drawing.Point(22, 490);
             this.pic_Preview.Name = "pic_Preview";
             this.pic_Preview.Size = new System.Drawing.Size(380, 383);
+            this.pic_Preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pic_Preview.TabIndex = 0;
             this.pic_Preview.TabStop = false;
             // 
@@ -376,10 +378,12 @@
             this.guna2DataGridView1.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
             this.guna2DataGridView1.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
             this.guna2DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.guna2DataGridView1_CellClick);
+            this.guna2DataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.guna2DataGridView1_CellPainting);
             // 
             // Word
             // 
             this.Word.DataPropertyName = "Word";
+            this.Word.FillWeight = 70F;
             this.Word.HeaderText = "Từ vựng";
             this.Word.MinimumWidth = 10;
             this.Word.Name = "Word";
@@ -387,6 +391,7 @@
             // WordImage
             // 
             this.WordImage.DataPropertyName = "WordImage";
+            this.WordImage.FillWeight = 40F;
             this.WordImage.HeaderText = "Hình ảnh";
             this.WordImage.Image = ((System.Drawing.Image)(resources.GetObject("WordImage.Image")));
             this.WordImage.MinimumWidth = 10;
@@ -460,6 +465,7 @@
             this.txt_SearchVocab.SelectedText = "";
             this.txt_SearchVocab.Size = new System.Drawing.Size(709, 65);
             this.txt_SearchVocab.TabIndex = 46;
+            this.txt_SearchVocab.Tag = "NoTheme";
             this.txt_SearchVocab.TextOffset = new System.Drawing.Point(5, 0);
             this.txt_SearchVocab.TextChanged += new System.EventHandler(this.txt_SearchVocab_TextChanged);
             // 
@@ -486,6 +492,17 @@
             // guna2Elipse1
             // 
             this.guna2Elipse1.TargetControl = this;
+            // 
+            // dataGridViewImageColumn1
+            // 
+            this.dataGridViewImageColumn1.DataPropertyName = "WordImage";
+            this.dataGridViewImageColumn1.HeaderText = "Hình ảnh";
+            this.dataGridViewImageColumn1.Image = ((System.Drawing.Image)(resources.GetObject("dataGridViewImageColumn1.Image")));
+            this.dataGridViewImageColumn1.MinimumWidth = 10;
+            this.dataGridViewImageColumn1.Name = "dataGridViewImageColumn1";
+            this.dataGridViewImageColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewImageColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewImageColumn1.Width = 434;
             // 
             // uc_Manage_Vocabulary
             // 
@@ -533,5 +550,6 @@
         private System.Windows.Forms.DataGridViewImageColumn WordImage;
         private System.Windows.Forms.DataGridViewTextBoxColumn CategoryName;
         private System.Windows.Forms.DataGridViewButtonColumn edit;
+        private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn1;
     }
 }

@@ -30,9 +30,10 @@ namespace SchoolManager.Presentations
 
         private void uc_Study_Result_Load(object sender, EventArgs e)
         {
+            if (this.DesignMode) return;
             bll_Classes = new Business_Logic_Classes();
             bll_Grades = new Business_Logic_Grades();
-            if (this.DesignMode) return;
+            
 
             cbo_Semester.Items.Clear();
             cbo_Semester.Items.Add("HocKy1");

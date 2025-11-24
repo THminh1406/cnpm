@@ -44,13 +44,39 @@ namespace SchoolManager.Presentations.All_User_Control
 
         private void LoadCategories()
         {
-            // Lấy chủ đề CÓ NỘI DUNG
+            // Gọi BLL để lấy danh sách mới nhất từ CSDL
             var categories = bll_Categories.GetAllCategories(true);
+
+            // Thêm mục mặc định
             categories.Insert(0, new CategoryDTO { id_category = 0, category_name = "-- Chọn chủ đề --" });
 
+            // Gán lại DataSource (Gán null trước để nó refresh)
+            cbo_FilterBank.DataSource = null;
+            cbo_FilterBank.DataSource = categories;
             cbo_FilterBank.DisplayMember = "category_name";
             cbo_FilterBank.ValueMember = "id_category";
-            cbo_FilterBank.DataSource = categories;
+
+            if (cbo_FilterBank.Items.Count > 0) cbo_FilterBank.SelectedIndex = 0;
+        }
+
+        public void Reload()
+        {
+            // A. Tải lại danh sách chủ đề (Quan trọng nhất)
+            // Để khi bạn vừa thêm chủ đề bên kia, qua đây nó hiện ra ngay
+            LoadCategories();
+
+            // B. Làm sạch các ô nhập liệu (Reset Form)
+            txt_QuizTitle.Clear();
+
+            // Reset loại game về mặc định
+            if (cbo_QuizType.Items.Count > 0) cbo_QuizType.SelectedIndex = 0;
+
+            // Xóa lưới hiển thị từ vựng cũ
+            dgv_Word.DataSource = null;
+
+            // Reset các thông báo khác
+            lbl_PairCount.Text = "";
+            if (rad_LevelEasy != null) rad_LevelEasy.Checked = true;
         }
 
         // Tải các loại game

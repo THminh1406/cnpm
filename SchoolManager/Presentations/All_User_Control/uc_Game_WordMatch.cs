@@ -55,9 +55,6 @@ namespace SchoolManager.Presentations.All_User_Control
         // (Đã dọn dẹp, bỏ code khởi tạo BLL thừa)
         public void LoadGame(int quizId)
         {
-            // if (this.DesignMode) return; // BỎ ĐI (đã chuyển vào Load)
-            // bll_Quizzes = new Business_Logic_Quizzes(); // BỎ ĐI (đã chuyển vào Load)
-            // bll_Vocabulary = new Business_Logic_Vocabulary(); // BỎ ĐI (đã chuyển vào Load)
 
             this.currentQuizId = quizId;
             this.score = 0;
@@ -122,7 +119,7 @@ namespace SchoolManager.Presentations.All_User_Control
 
                 // Tạo Panel Khung (Bên ngoài)
                 Guna2Panel panel = new Guna2Panel();
-                panel.Size = new Size(150, 150); // Kích thước vuông vức
+                panel.Size = new Size(200, 200); // Kích thước vuông vức
                 panel.BorderRadius = 10;
                 panel.Margin = new Padding(10);  // Khoảng cách giữa các ô
                 panel.Cursor = Cursors.Hand;
@@ -130,7 +127,7 @@ namespace SchoolManager.Presentations.All_User_Control
 
                 // Màu sắc viền
                 panel.FillColor = Color.Black;   // <--- ĐỔI THÀNH MÀU ĐEN (Viền ban đầu)
-                panel.Padding = new Padding(3);  // Độ dày viền (4px)
+                panel.Padding = new Padding(1);  // Độ dày viền (4px)
 
                 // Gắn control vào nhau
                 panel.Controls.Add(pic);
@@ -156,7 +153,7 @@ namespace SchoolManager.Presentations.All_User_Control
                 btnWord.BorderRadius = 10;           // Bo góc giống hình
 
                 // Kích thước: Rộng bằng hình (150), Cao đủ chứa 2 dòng chữ (60)
-                btnWord.Size = new Size(150, 60);
+                btnWord.Size = new Size(200, 100);
                 btnWord.Margin = new Padding(10);    // Khoảng cách đều nhau
 
                 // Lưu dữ liệu & Sự kiện

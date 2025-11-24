@@ -235,26 +235,41 @@ namespace SchoolManager.Presentations.All_User_Control
         {
             if (show)
             {
-                card.CardButton.FillColor = Color.White;
+                // 1. Khi lật ngửa (Hiện nội dung)
+
+                // Đặt màu nền thành Transparent để thấy được BackgroundImage
+                card.CardButton.FillColor = Color.Transparent;
+                card.CardButton.Text = "";
+
                 if (card.IsImage) // Lật thẻ Hình
                 {
-                    card.CardButton.Text = "";
-                    card.CardButton.Image = ConvertByteArrayToImage(card.Data.WordImage);
-                    card.CardButton.ImageSize = new Size(100, 100); // Tùy chỉnh
-                    card.CardButton.ImageAlign = HorizontalAlignment.Center;
+                    // Sử dụng BackgroundImage để ảnh lấp đầy khung
+                    card.CardButton.BackgroundImage = ConvertByteArrayToImage(card.Data.WordImage);
+
+                    // Chọn Zoom (giữ tỉ lệ ảnh) hoặc Stretch (kéo dãn hết khung)
+                    // Khuyên dùng Zoom để ảnh không bị méo
+                    card.CardButton.BackgroundImageLayout = ImageLayout.Zoom;
+
+                    // Xóa Image (icon) để tránh bị chồng chéo
+                    card.CardButton.Image = null;
                 }
                 else // Lật thẻ Chữ
                 {
+                    // Thẻ chữ thì không cần BackgroundImage
+                    card.CardButton.BackgroundImage = null;
+                    card.CardButton.FillColor = Color.DarkGray; // Màu nền cho thẻ chữ
+
                     card.CardButton.Text = card.Data.WordText;
-                    card.CardButton.Font = new Font("Segoe UI", 14F, FontStyle.Bold); // Font nhỏ hơn
+                    card.CardButton.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
                 }
             }
             else
             {
-                // Lật úp
-                card.CardButton.FillColor = Color.DodgerBlue;
+                // 2. Khi lật úp (Về trạng thái ban đầu)
+                card.CardButton.BackgroundImage = null; // Xóa ảnh nền
+                card.CardButton.FillColor = Color.DodgerBlue; // Khôi phục màu xanh
                 card.CardButton.Text = "?";
-                card.CardButton.Font = new Font("Segoe UI", 24F, FontStyle.Bold); // Font to
+                card.CardButton.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
                 card.CardButton.Image = null;
             }
         }

@@ -38,6 +38,12 @@ namespace SchoolManager.Presentations.All_User_Control
 
             // 3. Tải danh sách lớp
             LoadClassesToComboBox();
+
+            if (txt_Search != null)
+            {
+                txt_Search.TextChanged -= txt_Search_TextChanged;
+                txt_Search.TextChanged += txt_Search_TextChanged;
+            }
         }
 
         // === TẢI COMBOBOX LỚP ===
@@ -225,6 +231,7 @@ namespace SchoolManager.Presentations.All_User_Control
         {
             index mainForm = this.FindForm() as index;
             if (mainForm != null) mainForm.showUC(mainForm.uC_Add_New_Student1);
+            mainForm.uC_Add_New_Student1.Reload();
         }
 
         private void guna2Button4_Click(object sender, EventArgs e)
@@ -233,10 +240,18 @@ namespace SchoolManager.Presentations.All_User_Control
             if (mainForm != null) mainForm.showUC(mainForm.uC_Import_File_Excel1);
         }
 
-        private void guna2Button2_Click(object sender, EventArgs e)
+        private void txt_Search_TextChanged(object sender, EventArgs e)
         {
-            index mainForm = this.FindForm() as index;
-            if (mainForm != null) mainForm.showUC(mainForm.uc_Print_Export1);
+            // Kiểm tra nếu chưa chọn lớp thì không tìm
+            if (this.currentClassId <= 0) return;
+
+            string keyword = txt_Search.Text.Trim();
+
+            // Gọi BLL để tìm kiếm
+            List<Students> result = bll_Students.SearchStudents(this.currentClassId, keyword);
+
+            // Cập nhật lại bảng
+            dgv_ClassList.DataSource = result;
         }
     }
 }

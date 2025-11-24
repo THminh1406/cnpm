@@ -178,5 +178,10 @@ namespace SchoolManager.Presentations.Forms
                 MessageBox.Show("Registration failed. Username or email may already be used.");
             }
         }
+
+        private void guna2CircleButton2_Click(object sender, EventArgs e)
+        {
+            this.Close();  
+        }
     }
 }
