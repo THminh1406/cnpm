@@ -166,8 +166,12 @@ namespace SchoolManager.Presentations.Forms
                 if (string.IsNullOrWhiteSpace(txtName.Text)) { MessageBox.Show("Họ tên không được để trống", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
                 // basic email check
                 if (!string.IsNullOrWhiteSpace(txtEmail.Text) && !txtEmail.Text.Contains("@")) { MessageBox.Show("Email không hợp lệ", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+                if (!bll_Res.ValidatePhone(txtPhone.Text))
+                {
+                    MessageBox.Show("Số điện thoại phải từ 0-9 và có 10 số", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); return;
+                }
 
-                bool ok = bll.UpdateTeacherInfo(curId, txtName.Text.Trim(), txtEmail.Text.Trim(), txtPhone.Text.Trim());
+                    bool ok = bll.UpdateTeacherInfo(curId, txtName.Text.Trim(), txtEmail.Text.Trim(), txtPhone.Text.Trim());
                 if (ok)
                 {
                     MessageBox.Show("Cập nhật thông tin thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
