@@ -17,6 +17,7 @@ namespace SchoolManager.Presentations.All_User_Control
     {
         private Business_Logic_ApproveRegistration bllManage;
         private List<Classes> classesList;
+        private List<Subject> subjectsList;
 
         public uc_Teacher_Management()
         {
@@ -31,6 +32,7 @@ namespace SchoolManager.Presentations.All_User_Control
             bllManage = new Business_Logic_ApproveRegistration();
             guna2TextBox1.TextChanged += (s, ev) => RefreshGrid();
             try { classesList = bllManage.GetAllClasses(); } catch { classesList = new List<Classes>(); }
+            try { subjectsList = bllManage.GetAllSubjects(); } catch { subjectsList = new List<Subject>(); }
             guna2DataGridView2.CellContentClick += Guna2DataGridView2_CellContentClick;
             try { this.flowLayoutPanelList.BringToFront(); } catch { }
             this.flowLayoutPanelList.SizeChanged += (s, ev) => AdjustPanelsWidth();
@@ -40,6 +42,10 @@ namespace SchoolManager.Presentations.All_User_Control
 
         private void RefreshGrid()
         {
+            // refresh cached lists so UI reflects DB changes
+            try { classesList = bllManage.GetAllClasses(); } catch { classesList = new List<Classes>(); }
+            try { subjectsList = bllManage.GetAllSubjects(); } catch { subjectsList = new List<Subject>(); }
+
             guna2DataGridView2.Rows.Clear();
             flowLayoutPanelList.Controls.Clear();
              string filter = guna2TextBox1.Text?.Trim().ToLower() ?? string.Empty;
@@ -150,12 +156,29 @@ namespace SchoolManager.Presentations.All_User_Control
         {
             if (MessageBox.Show($"Gán {acc.FullName} làm chủ nhiệm lớp {cls.name_Class}?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (bllManage.AssignTeacherToClass(cls.id_Class, acc.IdTeacher))
+                bool ok = bllManage.AssignTeacherToClass(cls.id_Class, acc.IdTeacher);
+                if (ok)
                 {
                     MessageBox.Show("Phân lớp thành công.");
                     RefreshGrid();
                 }
-                else MessageBox.Show("Phân lớp thất bại.");
+                else
+                {
+                    // Double-check DB: maybe procedure did update but DAL returned false
+                    try
+                    {
+                        int current = new SchoolManager.DAL.data_Access_Account().GetAssignedClassId(acc.IdTeacher);
+                        if (current == cls.id_Class)
+                        {
+                            MessageBox.Show("Phân lớp thành công (xác nhận lại từ DB).", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            RefreshGrid();
+                            return;
+                        }
+                    }
+                    catch { }
+
+                    MessageBox.Show("Phân lớp thất bại.");
+                }
             }
         }
 
@@ -230,7 +253,7 @@ namespace SchoolManager.Presentations.All_User_Control
         private void AddTeacherCard(int teacherId, string name, string username, string email, string phone, string role)
         {
             Guna2GradientPanel panel = new Guna2GradientPanel();
-            panel.Size = new System.Drawing.Size(Math.Max(800, flowLayoutPanelList.ClientSize.Width - 25), 200);
+            panel.Size = new System.Drawing.Size(Math.Max(800, flowLayoutPanelList.ClientSize.Width - 25), 400);
             panel.FillColor = System.Drawing.Color.FromArgb(250, 250, 252);
             panel.FillColor2 = System.Drawing.Color.FromArgb(240, 248, 255);
             panel.BorderColor = System.Drawing.Color.FromArgb(220, 226, 235);
@@ -270,13 +293,68 @@ namespace SchoolManager.Presentations.All_User_Control
             lblClass.ForeColor = Color.Goldenrod;
             panel.Controls.Add(lblClass);
 
+            // subject name (show if assigned)
+            string subjectName = string.Empty;
+            try
+            {
+                var acc = new SchoolManager.DAL.data_Access_Account().GetTeacherById(teacherId);
+                if (acc != null && !string.IsNullOrEmpty(acc.Subject)) subjectName = acc.Subject;
+            }
+            catch { }
+            Guna2HtmlLabel lblSubject = new Guna2HtmlLabel();
+            //lblSubject.Text = string.IsNullOrEmpty(subjectName) ? "Chưa phân môn" : "Môn: " + subjectName;
+            //lblSubject.Font = new Font("Segoe UI", 10F, FontStyle.Italic);
+            //lblSubject.Location = new Point(96, 130);
+            //lblSubject.ForeColor = Color.MidnightBlue;
+            panel.Controls.Add(lblSubject);
+
+            // show existing subject-class assignments for this teacher
+            try
+            {
+                var assignList = bllManage.GetAssignmentsForTeacher(teacherId);
+                int y = 170;
+                foreach (var a in assignList)
+                {
+                    Guna2HtmlLabel l = new Guna2HtmlLabel();
+                    // If ClassName is empty, fallback to show ClassId so user can see the assigned class
+                    string classDisplay = string.IsNullOrWhiteSpace(a.ClassName) ? (a.ClassId > 0 ? ("Lớp #" + a.ClassId.ToString()) : "(không có lớp)") : a.ClassName;
+                    l.Text = $"{a.SubjectName} - {classDisplay}";
+                    l.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
+                    l.Location = new Point(96, y);
+                    l.ForeColor = Color.DarkSlateGray;
+                    // Make sure the label has enough width to show both subject and class
+                    try { l.AutoSize = false; } catch { }
+                    l.Size = new Size(Math.Max(250, panel.ClientSize.Width - 220), 22);
+                    panel.Controls.Add(l);
+
+                    Guna2Button btnDel = new Guna2Button();
+                    btnDel.Text = "Xóa";
+                    btnDel.Size = new Size(60, 28);
+                    // place delete button near right edge but leave margin
+                    btnDel.Location = new Point(panel.ClientSize.Width - 80, y - 4);
+                     btnDel.FillColor = Color.IndianRed;
+                     btnDel.ForeColor = Color.White;
+                     int aid = a.AssignmentId;
+                    btnDel.Click += (s, e) => {
+                        if (MessageBox.Show($"Xóa phân công {a.SubjectName} - {a.ClassName}?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        {
+                            if (bllManage.DeleteAssignment(aid)) { MessageBox.Show("Đã xóa", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information); RefreshGrid(); } else MessageBox.Show("Xóa thất bại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    };
+                    panel.Controls.Add(btnDel);
+
+                    y += 30;
+                }
+            }
+            catch { }
+
             // status
             string status = "Unknown";
             try { var dal = new SchoolManager.DAL.data_Access_Account(); int act = dal.GetActivationState(username); if (act == 1) status = "Active"; else if (act == 0) status = "Inactive"; } catch { }
             Guna2HtmlLabel lblStatus = new Guna2HtmlLabel();
             lblStatus.Text = "Trạng thái: " + status;
             lblStatus.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
-            lblStatus.Location = new Point(96, 150);
+            lblStatus.Location = new Point(96, 135);
             lblStatus.ForeColor = Color.FromArgb(100, 100, 100);
             panel.Controls.Add(lblStatus);
 
@@ -342,6 +420,26 @@ namespace SchoolManager.Presentations.All_User_Control
                         if (MessageBox.Show($"Lớp {classObj.name_Class} hiện đang có chủ nhiệm khác. Bạn vẫn muốn phân?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No) return;
                     }
 
+                    // Enforce only one homeroom per teacher
+                    try
+                    {
+                        int currentAssigned = new SchoolManager.DAL.data_Access_Account().GetAssignedClassId(teacherId);
+                        if (currentAssigned > 0 && currentAssigned != selectedClassId)
+                        {
+                            var prev = classesList.FirstOrDefault(c => c.id_Class == currentAssigned);
+                            string prevName = prev != null ? prev.name_Class : currentAssigned.ToString();
+                            var dr = MessageBox.Show($"Giáo viên này đang là chủ nhiệm lớp {prevName}. Bạn có muốn chuyển chủ nhiệm sang lớp {classObj?.name_Class ?? selectedClassId.ToString()}?\n(Chỉ được làm chủ nhiệm 1 lớp)", "Xác nhận", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (dr == DialogResult.Cancel) return;
+                            if (dr == DialogResult.No)
+                            {
+                                // do not change homeroom but allow other actions (skip assignment)
+                                return;
+                            }
+                            // if Yes -> proceed to reassign (AssignTeacherToClass will overwrite previous class's id_teacher)
+                        }
+                    }
+                    catch { }
+
                     if (MessageBox.Show($"Phân {name} làm chủ nhiệm lớp {classObj?.name_Class ?? selectedClassId.ToString()}?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         if (bllManage.AssignTeacherToClass(selectedClassId, teacherId)) { MessageBox.Show("Phân lớp thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information); RefreshGrid(); } else MessageBox.Show("Phân lớp thất bại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -353,6 +451,135 @@ namespace SchoolManager.Presentations.All_User_Control
                 btnAssign.FillColor = Color.DodgerBlue;
                 btnAssign.ForeColor = Color.White;
                 panel.Controls.Add(btnAssign);
+            }
+
+            // Subject assignment controls
+            if (subjectsList != null && subjectsList.Count > 0 && classesList != null && classesList.Count > 0)
+            {
+                int subjX = panel.Width - 540; // move left to make room for class combobox
+
+                // combo to choose class when assigning subject
+                Guna2ComboBox cboSubjectClass = new Guna2ComboBox();
+                cboSubjectClass.Location = new Point(subjX, 130);
+                cboSubjectClass.Size = new Size(150, 36);
+                cboSubjectClass.DisplayMember = "name_Class";
+                cboSubjectClass.ValueMember = "id_Class";
+                cboSubjectClass.DataSource = classesList;
+
+                // subject combo
+                Guna2ComboBox cboSubject = new Guna2ComboBox();
+                cboSubject.Location = new Point(subjX + 160, 130);
+                cboSubject.Size = new Size(150, 36);
+                cboSubject.DisplayMember = "subject_Name";
+                cboSubject.ValueMember = "subject_Name";
+                cboSubject.DataSource = subjectsList;
+
+                // pre-select current class and subject if available
+                try
+                {
+                    int currentClassId = new SchoolManager.DAL.data_Access_Account().GetAssignedClassId(teacherId);
+                    if (currentClassId > 0) cboSubjectClass.SelectedValue = currentClassId;
+
+                    var acc = new SchoolManager.DAL.data_Access_Account().GetTeacherById(teacherId);
+                    if (acc != null && !string.IsNullOrEmpty(acc.Subject)) cboSubject.SelectedValue = acc.Subject;
+                }
+                catch { }
+
+                // assign button: will set both subject and class for the teacher
+                Guna2Button btnSubjectAssign = new Guna2Button() { Text = "Gán môn/lớp", Size = new Size(150, 36), Location = new Point(subjX + 320, 130), BorderRadius = 8 };
+                btnSubjectAssign.Click += (s, e) => {
+                    if (cboSubject.SelectedItem == null) { MessageBox.Show("Chọn môn trước", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+                    if (cboSubjectClass.SelectedItem == null) { MessageBox.Show("Chọn lớp trước", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+
+                    string selectedSubjectName = cboSubject.SelectedValue as string ?? cboSubject.Text;
+                    int selectedClassId = 0;
+                    try { selectedClassId = Convert.ToInt32(cboSubjectClass.SelectedValue); } catch { MessageBox.Show("Lỗi lấy id lớp", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+
+                    if (string.IsNullOrWhiteSpace(selectedSubjectName)) { MessageBox.Show("Lỗi lấy tên môn đã chọn", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+
+                    if (MessageBox.Show($"Gán {name} dạy môn {selectedSubjectName} cho lớp {(classesList.FirstOrDefault(c=>c.id_Class==selectedClassId)?.name_Class ?? selectedClassId.ToString())}?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+
+                    // set teacher's main subject (optional) and create class-subject-teacher mapping
+                    bool okSubject = bllManage.SetTeacherSubject(teacherId, selectedSubjectName);
+                    bool okAssign = false;
+                    try
+                    {
+                        int subjectId = new SchoolManager.DAL.data_Access_Subjects().GetSubjectIdByName(selectedSubjectName);
+                        if (subjectId > 0)
+                        {
+                            okAssign = bllManage.AssignTeacherToSubjectInClass(teacherId, subjectId, selectedClassId);
+                        }
+                    }
+                    catch { okAssign = false; }
+
+                    if (okSubject && okAssign)
+                    {
+                        MessageBox.Show("Gán môn và lớp thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (okSubject && !okAssign)
+                    {
+                        MessageBox.Show("Gán môn thành công nhưng phân lớp (class assignment) thất bại", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (!okSubject && okAssign)
+                    {
+                        MessageBox.Show("Phân lớp thành công nhưng gán môn thất bại", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Gán môn/lớp thất bại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    // refresh cached lists and UI
+                    try { classesList = bllManage.GetAllClasses(); } catch { }
+                    try { subjectsList = bllManage.GetAllSubjects(); } catch { }
+                    RefreshGrid();
+                };
+
+                cboSubjectClass.BackColor = Color.White;
+                panel.Controls.Add(cboSubjectClass);
+                cboSubject.BackColor = Color.White;
+                panel.Controls.Add(cboSubject);
+                btnSubjectAssign.FillColor = Color.MediumPurple;
+                btnSubjectAssign.ForeColor = Color.White;
+                panel.Controls.Add(btnSubjectAssign);
+            }
+            else if (subjectsList != null && subjectsList.Count > 0)
+            {
+                // fallback: only subject selection (old behavior)
+                int subjX = panel.Width - 360;
+                Guna2ComboBox cboSubject = new Guna2ComboBox();
+                cboSubject.Location = new Point(subjX, 130);
+                cboSubject.Size = new Size(150, 36);
+                cboSubject.DisplayMember = "subject_Name";
+                cboSubject.ValueMember = "subject_Name";
+                cboSubject.DataSource = subjectsList;
+
+                try
+                {
+                    var acc = new SchoolManager.DAL.data_Access_Account().GetTeacherById(teacherId);
+                    if (acc != null && !string.IsNullOrEmpty(acc.Subject))
+                    {
+                        cboSubject.SelectedValue = acc.Subject;
+                    }
+                }
+                catch { }
+
+                Guna2Button btnSubjectAssign = new Guna2Button() { Text = "Gán môn", Size = new Size(150, 36), Location = new Point(subjX + 170, 130), BorderRadius = 8 };
+                btnSubjectAssign.Click += (s, e) => {
+                    if (cboSubject.SelectedItem == null) { MessageBox.Show("Chọn môn trước", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+                    string selectedSubjectName = cboSubject.SelectedValue as string ?? cboSubject.Text;
+                    if (string.IsNullOrWhiteSpace(selectedSubjectName)) { MessageBox.Show("Lỗi lấy tên môn đã chọn", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+                    if (MessageBox.Show($"Gán {name} dạy môn {selectedSubjectName}?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        if (bllManage.SetTeacherSubject(teacherId, selectedSubjectName)) { MessageBox.Show("Gán môn thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information); RefreshGrid(); } else MessageBox.Show("Gán môn thất bại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                };
+
+                cboSubject.BackColor = Color.White;
+                panel.Controls.Add(cboSubject);
+                btnSubjectAssign.FillColor = Color.MediumPurple;
+                btnSubjectAssign.ForeColor = Color.White;
+                panel.Controls.Add(btnSubjectAssign);
             }
 
             // store account id

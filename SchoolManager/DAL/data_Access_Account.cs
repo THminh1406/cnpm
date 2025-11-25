@@ -404,6 +404,8 @@ namespace SchoolManager.DAL
                             Accounts acc = new Accounts(id, name, user, role);
                             acc.Email = email;
                             acc.Phone = phone;
+                            // Map subject column if stored in SP result
+                            try { acc.Subject = GetSafeString(reader, "subject"); } catch { acc.Subject = string.Empty; }
 
                             try { acc.CreatedAt = reader.IsDBNull(reader.GetOrdinal("created_at")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("created_at")); } catch { acc.CreatedAt = null; }
                             list.Add(acc);
@@ -483,6 +485,8 @@ namespace SchoolManager.DAL
                             Accounts acc = new Accounts(id, name, user, role);
                             acc.Email = email;
                             acc.Phone = phone;
+                            // Map subject column if stored in SP result
+                            try { acc.Subject = GetSafeString(reader, "subject"); } catch { acc.Subject = string.Empty; }
                             try { acc.CreatedAt = reader.IsDBNull(reader.GetOrdinal("created_at")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("created_at")); } catch { acc.CreatedAt = null; }
                             list.Add(acc);
                         }
@@ -600,6 +604,8 @@ namespace SchoolManager.DAL
                         Accounts acc = new Accounts(id, name, user, role);
                         acc.Email = email;
                         acc.Phone = phone;
+                        // Map subject column if stored in SP result
+                        try { acc.Subject = GetSafeString(reader, "subject"); } catch { acc.Subject = string.Empty; }
                         try { acc.CreatedAt = reader.IsDBNull(reader.GetOrdinal("created_at")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("created_at")); } catch { acc.CreatedAt = null; }
                         return acc;
                     }

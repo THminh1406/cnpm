@@ -51,8 +51,29 @@ namespace SchoolManager.DAL
                     cmd.Parameters.AddWithValue("@classId", classId);
                     cmd.Parameters.AddWithValue("@teacherId", teacherId);
                     conn.Open();
-                    int affected = cmd.ExecuteNonQuery();
-                    return affected != 0;
+                    // the stored procedure returns SELECT @@ROWCOUNT AS rowsAffected; use ExecuteScalar to read that value
+                    var res = cmd.ExecuteScalar();
+                    int rows = 0;
+                    if (res != null && res != DBNull.Value)
+                    {
+                        int.TryParse(res.ToString(), out rows);
+                        if (rows > 0) return true;
+                    }
+
+                    // If rows == 0 or no scalar returned, double-check current state in DB: if class now has this teacher then consider success
+                    using (SqlCommand check = new SqlCommand("SELECT id_teacher FROM dbo.classes WHERE id_class = @cid", conn))
+                    {
+                        check.Parameters.AddWithValue("@cid", classId);
+                        var cur = check.ExecuteScalar();
+                        if (cur != null && cur != DBNull.Value)
+                        {
+                            int curTeacher = 0;
+                            int.TryParse(cur.ToString(), out curTeacher);
+                            return curTeacher == teacherId;
+                        }
+                    }
+
+                    return false;
                 }
             }
             catch

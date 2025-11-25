@@ -140,6 +140,8 @@
     <Compile Include="DAL\data_Access_QR_Roll_Call.cs" />
     <Compile Include="DAL\data_Access_Quizzes.cs" />
     <Compile Include="DAL\data_Access_Students.cs" />
+    <Compile Include="DAL\data_Access_Subjects.cs" />
+    <Compile Include="DAL\data_Access_TeacherSubjectAssignments.cs" />
     <Compile Include="DAL\data_Access_Vocabulary.cs" />
     <Compile Include="DTO\AcademicReportDTO.cs" />
     <Compile Include="DTO\Accounts.cs" />
@@ -153,7 +155,9 @@
     <Compile Include="DTO\Session.cs" />
     <Compile Include="DTO\Students.cs" />
     <Compile Include="DTO\StudyResultDTO.cs" />
+    <Compile Include="DTO\Subject.cs" />
     <Compile Include="DTO\SubjectResultDTO.cs" />
+    <Compile Include="DTO\TeacherSubjectAssignment.cs" />
     <Compile Include="DTO\VocabularyDTO.cs" />
     <Compile Include="Presentations\All_User_Control\uc_Approve_Registration.cs">
       <SubType>UserControl</SubType>
@@ -461,7 +465,7 @@
     <Folder Include="bin\Debug\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dtb.sql" />
+    <Content Include="Presentations\database.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -9,6 +9,8 @@ namespace SchoolManager.BLL
     {
         private data_Access_Account dal = new data_Access_Account();
         private data_Access_Classes dalClasses = new data_Access_Classes();
+        private data_Access_Subjects dalSubjects = new data_Access_Subjects();
+        private data_Access_TeacherSubjectAssignments dalTeachSub = new data_Access_TeacherSubjectAssignments();
 
         public List<Accounts> GetPendingRegistrations()
         {
@@ -50,5 +52,10 @@ namespace SchoolManager.BLL
 
         public List<Classes> GetAllClasses() => dalClasses.GetAllClasses();
         public bool AssignTeacherToClass(int classId, int teacherId) => dalClasses.AssignTeacherToClass(classId, teacherId);
+        public List<Subject> GetAllSubjects() => dalSubjects.GetAllSubjects();
+        public bool SetTeacherSubject(int teacherId, string subjectName) => dalSubjects.SetTeacherSubject(teacherId, subjectName);
+        public bool AssignTeacherToSubjectInClass(int teacherId, int subjectId, int classId) => dalTeachSub.AssignTeacherToSubjectInClass(teacherId, subjectId, classId);
+        public List<TeacherSubjectAssignment> GetAssignmentsForTeacher(int teacherId) => dalTeachSub.GetAssignmentsForTeacher(teacherId);
+        public bool DeleteAssignment(int assignmentId) => dalTeachSub.DeleteAssignment(assignmentId);
     }
 }
