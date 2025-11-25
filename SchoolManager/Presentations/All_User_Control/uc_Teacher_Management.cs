@@ -339,10 +339,10 @@ namespace SchoolManager.Presentations.All_User_Control
                     if (classObj != null && classObj.AssignedTeacherId.HasValue && classObj.AssignedTeacherId.Value != teacherId)
                     {
                         var other = classObj.AssignedTeacherId.Value;
-                        if (MessageBox.Show($"Lớp {classObj.name_Class} hiện đang có chủ nhiệm khác (ID={other}). Bạn vẫn muốn gán?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No) return;
+                        if (MessageBox.Show($"Lớp {classObj.name_Class} hiện đang có chủ nhiệm khác. Bạn vẫn muốn phân?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No) return;
                     }
 
-                    if (MessageBox.Show($"Gán {name} làm chủ nhiệm lớp {classObj?.name_Class ?? selectedClassId.ToString()}?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show($"Phân {name} làm chủ nhiệm lớp {classObj?.name_Class ?? selectedClassId.ToString()}?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         if (bllManage.AssignTeacherToClass(selectedClassId, teacherId)) { MessageBox.Show("Phân lớp thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information); RefreshGrid(); } else MessageBox.Show("Phân lớp thất bại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }

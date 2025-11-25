@@ -15,24 +15,18 @@ namespace SchoolManager.Presentations.Forms
             InitializeComponent();
         }
 
-        // Existing public handlers with PascalCase
-        private void LinkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            this.Close();
-        }
-
         private void Button1_Click(object sender, EventArgs e)
         {
             string email = this.guna2TextBox4.Text.Trim();
             if (string.IsNullOrWhiteSpace(email))
             {
-                MessageBox.Show("Please enter your email.");
+                MessageBox.Show("Vui lòng nhập email của bạn.");
                 return;
             }
 
             if (!email.EndsWith("@gmail.com", StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("Email must be a gmail address.");
+                MessageBox.Show("Email phải là địa chỉ gmail.");
                 return;
             }
 
@@ -45,11 +39,11 @@ namespace SchoolManager.Presentations.Forms
                 this.guna2TextBox4.ReadOnly = true;
                 this.guna2Button1.Enabled = true;
 
-                MessageBox.Show("OTP sent. Please check your email.");
+                MessageBox.Show("Đã gửi OTP. Vui lòng kiểm tra email của bạn.");
             }
             else
             {
-                MessageBox.Show("Failed to send OTP. Check SMTP configuration or email.");
+                MessageBox.Show("Không gửi được OTP. Kiểm tra cấu hình SMTP hoặc email.");
             }
         }
 
@@ -62,29 +56,29 @@ namespace SchoolManager.Presentations.Forms
            
             if (currentOtp == null)
             {
-                MessageBox.Show("Please request a code first.");
+                MessageBox.Show("Vui lòng yêu cầu nhận mã trước.");
                 return;
             }
 
             if (!string.Equals(otp, currentOtp))
             {
-                MessageBox.Show("Invalid OTP code.");
+                MessageBox.Show("Mã OTP không hợp lệ.");
                 return;
             }
 
             if (newPass != confirm)
             {
-                MessageBox.Show("Password and confirm do not match.");
+                MessageBox.Show("Mật khẩu và xác nhận không khớp.");
                 return;
             }
 
             if (!bll.ResetPassword(email, newPass))
             {
-                MessageBox.Show("Failed to reset password. Ensure the email exists and password meets requirements.");
+                MessageBox.Show("Không đặt lại được mật khẩu. Hãy đảm bảo email tồn tại và mật khẩu đáp ứng yêu cầu.");
                 return;
             }
 
-            MessageBox.Show("Password reset successfully. You can now login.");
+            MessageBox.Show("Đã đặt lại mật khẩu thành công. Bây giờ bạn có thể đăng nhập.");
             this.Close();
         }
 

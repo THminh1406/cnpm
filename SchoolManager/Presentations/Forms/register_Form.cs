@@ -55,7 +55,7 @@ namespace SchoolManager.Presentations.Forms
             else
             {
                 // SMTP may not be configured in dev environment; show OTP so testing is possible.
-                MessageBox.Show($"Failed to send OTP by email. Use this code for testing: {otp}", "OTP (dev)", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"\nKhông gửi được OTP qua email. Vui lòng kiểm tra lại email của bạn", "OTP ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -93,7 +93,7 @@ namespace SchoolManager.Presentations.Forms
                 }
                 catch { }
 
-                MessageBox.Show("Username is invalid or already taken. Use 4-20 letters, numbers or underscores.");
+                MessageBox.Show("Tên người dùng không hợp lệ hoặc đã được sử dụng. Vui lòng sử dụng từ 4-20 chữ cái, số hoặc dấu gạch dưới.");
                 return;
             }
 
@@ -107,14 +107,14 @@ namespace SchoolManager.Presentations.Forms
                 }
                 catch { }
 
-                MessageBox.Show("Email is invalid or already used.");
+                MessageBox.Show("Email không hợp lệ hoặc đã được sử dụng.");
                 return;
             }
 
             // Phone validation (optional)
             if (!bll.ValidatePhone(phone))
             {
-                MessageBox.Show("Phone number is invalid. Use 10 digits.");
+                MessageBox.Show("Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số và bắt đầu từ số 0");
                 return;
             }
 
@@ -144,7 +144,7 @@ namespace SchoolManager.Presentations.Forms
 
             if (!string.Equals(otp, currentOtp))
             {
-                MessageBox.Show("Invalid OTP code.");
+                MessageBox.Show("Mã OTP không hợp lệ.");
                 return;
             }
 
@@ -156,11 +156,11 @@ namespace SchoolManager.Presentations.Forms
 
                 if (sent)
                 {
-                    MessageBox.Show("Tài khoản đã được tạo.");
+                    MessageBox.Show("Tài khoản đã được tạo. Vui lòng đợi quản trị viên duyệt");
                 }
                 else
                 {
-                    MessageBox.Show("Account created but failed to notify admin. Please contact support.");
+                    MessageBox.Show("Tài khoản đã được tạo nhưng không thông báo cho quản trị viên. Vui lòng liên hệ bộ phận hỗ trợ.");
                 }
 
                 // after successful registration, show login form
