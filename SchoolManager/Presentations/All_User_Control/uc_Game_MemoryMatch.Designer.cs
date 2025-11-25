@@ -90,6 +90,7 @@
             // 
             // lbl_Feedback
             // 
+            this.lbl_Feedback.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_Feedback.BackColor = System.Drawing.Color.Transparent;
             this.lbl_Feedback.Font = new System.Drawing.Font("Segoe UI", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.lbl_Feedback.Location = new System.Drawing.Point(1542, 165);
@@ -101,6 +102,7 @@
             // 
             // lbl_Score
             // 
+            this.lbl_Score.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_Score.BackColor = System.Drawing.Color.Transparent;
             this.lbl_Score.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.lbl_Score.Location = new System.Drawing.Point(1813, 40);

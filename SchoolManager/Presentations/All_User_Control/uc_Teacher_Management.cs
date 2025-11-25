@@ -230,7 +230,7 @@ namespace SchoolManager.Presentations.All_User_Control
         private void AddTeacherCard(int teacherId, string name, string username, string email, string phone, string role)
         {
             Guna2GradientPanel panel = new Guna2GradientPanel();
-            panel.Size = new System.Drawing.Size(Math.Max(800, flowLayoutPanelList.ClientSize.Width - 25), 160);
+            panel.Size = new System.Drawing.Size(Math.Max(800, flowLayoutPanelList.ClientSize.Width - 25), 200);
             panel.FillColor = System.Drawing.Color.FromArgb(250, 250, 252);
             panel.FillColor2 = System.Drawing.Color.FromArgb(240, 248, 255);
             panel.BorderColor = System.Drawing.Color.FromArgb(220, 226, 235);
@@ -249,14 +249,14 @@ namespace SchoolManager.Presentations.All_User_Control
             Guna2HtmlLabel lblName = new Guna2HtmlLabel();
             lblName.Text = name;
             lblName.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            lblName.Location = new Point(96, 12);
+            lblName.Location = new Point(96, 16);
             lblName.ForeColor = Color.FromArgb(33, 37, 41);
             panel.Controls.Add(lblName);
 
             Guna2HtmlLabel lblInfo = new Guna2HtmlLabel();
             lblInfo.Text = $"{email}    |    {phone}";
             lblInfo.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
-            lblInfo.Location = new Point(96, 44);
+            lblInfo.Location = new Point(96, 68);
             lblInfo.ForeColor = Color.DimGray;
             panel.Controls.Add(lblInfo);
 
@@ -266,7 +266,7 @@ namespace SchoolManager.Presentations.All_User_Control
             Guna2HtmlLabel lblClass = new Guna2HtmlLabel();
             lblClass.Text = string.IsNullOrEmpty(className) ? "Chưa phân lớp" : "Chủ nhiệm: " + className;
             lblClass.Font = new Font("Segoe UI", 10F, FontStyle.Italic);
-            lblClass.Location = new Point(96, 76);
+            lblClass.Location = new Point(96, 110);
             lblClass.ForeColor = Color.Goldenrod;
             panel.Controls.Add(lblClass);
 
@@ -276,25 +276,25 @@ namespace SchoolManager.Presentations.All_User_Control
             Guna2HtmlLabel lblStatus = new Guna2HtmlLabel();
             lblStatus.Text = "Trạng thái: " + status;
             lblStatus.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
-            lblStatus.Location = new Point(96, 100);
+            lblStatus.Location = new Point(96, 150);
             lblStatus.ForeColor = Color.FromArgb(100, 100, 100);
             panel.Controls.Add(lblStatus);
 
             // buttons
             int btnX = panel.Width - 360; // leave more space for assign controls
-            Guna2Button btnLock = new Guna2Button() { Text = "Khóa", Size = new Size(80, 34), Location = new Point(btnX, 20), BorderRadius = 8 };
+            Guna2Button btnLock = new Guna2Button() { Text = "Khóa", Size = new Size(100, 50), Location = new Point(btnX, 20), BorderRadius = 8 };
             btnLock.Click += (s, e) => { if (MessageBox.Show("Khóa tài khoản?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes) { if (bllManage.LockTeacher(teacherId)) { MessageBox.Show("Đã khóa"); RefreshGrid(); } else MessageBox.Show("Thất bại"); } };
             btnLock.FillColor = Color.OrangeRed;
             btnLock.ForeColor = Color.White;
             panel.Controls.Add(btnLock);
 
-            Guna2Button btnUnlock = new Guna2Button() { Text = "Mở khóa", Size = new Size(80, 34), Location = new Point(btnX + 90, 20), BorderRadius = 8 };
+            Guna2Button btnUnlock = new Guna2Button() { Text = "Mở khóa", Size = new Size(100, 50), Location = new Point(btnX + 110, 20), BorderRadius = 8 };
             btnUnlock.Click += (s, e) => { if (MessageBox.Show("Mở khóa tài khoản?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes) { if (bllManage.UnlockTeacher(teacherId)) { MessageBox.Show("Đã mở khóa"); RefreshGrid(); } else MessageBox.Show("Thất bại"); } };
             btnUnlock.FillColor = Color.SeaGreen;
             btnUnlock.ForeColor = Color.White;
             panel.Controls.Add(btnUnlock);
 
-            Guna2Button btnDelete = new Guna2Button() { Text = "Xóa", Size = new Size(80, 34), Location = new Point(btnX, 62), BorderRadius = 8, FillColor = Color.Crimson };
+            Guna2Button btnDelete = new Guna2Button() { Text = "Xóa", Size = new Size(100, 50), Location = new Point(btnX + 220, 20), BorderRadius = 8, FillColor = Color.Crimson };
             btnDelete.Click += (s, e) => { if (MessageBox.Show("Xóa tài khoản?", "Cảnh báo", MessageBoxButtons.YesNo) == DialogResult.Yes) { if (bllManage.DeleteTeacher(teacherId)) { MessageBox.Show("Đã xóa"); RefreshGrid(); } else MessageBox.Show("Thất bại"); } };
             btnDelete.ForeColor = Color.White;
             panel.Controls.Add(btnDelete);
@@ -303,8 +303,8 @@ namespace SchoolManager.Presentations.All_User_Control
             if (classesList != null && classesList.Count > 0)
             {
                 Guna2ComboBox cboAssign = new Guna2ComboBox();
-                cboAssign.Location = new Point(btnX + 90, 62);
-                cboAssign.Size = new Size(180, 34);
+                cboAssign.Location = new Point(btnX, 80);
+                cboAssign.Size = new Size(150, 60);
                 cboAssign.DisplayMember = "name_Class";
                 cboAssign.ValueMember = "id_Class";
                 cboAssign.DataSource = classesList;
@@ -319,9 +319,9 @@ namespace SchoolManager.Presentations.All_User_Control
                     }
                 }
                 catch { }
-                 // add assign button
-                 Guna2Button btnAssign = new Guna2Button() { Text = "Phân lớp", Size = new Size(90, 34), Location = new Point(btnX + 280, 62), BorderRadius = 8 };
-                 btnAssign.Click += (s, e) => {
+                // add assign button
+                Guna2Button btnAssign = new Guna2Button() { Text = "Phân lớp", Size = new Size(150, 40), Location = new Point(btnX + 170, 75), BorderRadius = 8 };
+                btnAssign.Click += (s, e) => {
                     if (cboAssign.SelectedItem == null) { MessageBox.Show("Chọn lớp trước", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
                     int selectedClassId = 0;
                     try
@@ -343,10 +343,10 @@ namespace SchoolManager.Presentations.All_User_Control
                     }
 
                     if (MessageBox.Show($"Gán {name} làm chủ nhiệm lớp {classObj?.name_Class ?? selectedClassId.ToString()}?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                     {
-                         if (bllManage.AssignTeacherToClass(selectedClassId, teacherId)) { MessageBox.Show("Phân lớp thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information); RefreshGrid(); } else MessageBox.Show("Phân lớp thất bại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                     }
-                 };
+                    {
+                        if (bllManage.AssignTeacherToClass(selectedClassId, teacherId)) { MessageBox.Show("Phân lớp thành công", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information); RefreshGrid(); } else MessageBox.Show("Phân lớp thất bại", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                };
 
                 cboAssign.BackColor = Color.White;
                 panel.Controls.Add(cboAssign);
@@ -355,9 +355,9 @@ namespace SchoolManager.Presentations.All_User_Control
                 panel.Controls.Add(btnAssign);
             }
 
-             // store account id
-             panel.Tag = teacherId;
-             flowLayoutPanelList.Controls.Add(panel);
-         }
+            // store account id
+            panel.Tag = teacherId;
+            flowLayoutPanelList.Controls.Add(panel);
+        }
     }
  }

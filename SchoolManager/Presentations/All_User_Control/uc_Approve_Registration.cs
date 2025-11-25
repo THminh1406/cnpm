@@ -82,86 +82,86 @@ namespace SchoolManager.Presentations.All_User_Control
         }
 
         private void AddTeacherCard(int teacherId, string name, string className, string date, string email, string phone)
-         {
-             // 1. Tạo Panel chính
-             Guna2Panel panel = new Guna2Panel();
-             panel.Size = new System.Drawing.Size(1300, 200); 
-             panel.FillColor = System.Drawing.Color.FloralWhite;
-             panel.BorderColor = System.Drawing.Color.Red;
-             panel.BorderRadius = 40;
-             panel.BorderThickness = 1;
-             panel.Margin = new Padding(0, 0, 0, 20);
+        {
+            // 1. Tạo Panel chính
+            Guna2Panel panel = new Guna2Panel();
+            panel.Size = new System.Drawing.Size(1300, 200);
+            panel.FillColor = System.Drawing.Color.FloralWhite;
+            panel.BorderColor = System.Drawing.Color.Red;
+            panel.BorderRadius = 40;
+            panel.BorderThickness = 1;
+            panel.Margin = new Padding(0, 0, 0, 20);
 
-             // 2. Avatar
-             Guna2CirclePictureBox picAvatar = new Guna2CirclePictureBox();
-             picAvatar.Size = new System.Drawing.Size(60, 60);
-             picAvatar.Location = new Point(20, 20);
-             picAvatar.SizeMode = PictureBoxSizeMode.StretchImage;
-             try
-             {
-                 int diameter = Math.Min(picAvatar.Size.Width, picAvatar.Size.Height);
-                 picAvatar.Image = CreateAvatarFromName(name, diameter);
-             }
-             catch
-             {
-                 picAvatar.FillColor = Color.Gray;
-             }
-             panel.Controls.Add(picAvatar);
+            // 2. Avatar
+            Guna2CirclePictureBox picAvatar = new Guna2CirclePictureBox();
+            picAvatar.Size = new System.Drawing.Size(60, 60);
+            picAvatar.Location = new Point(20, 20);
+            picAvatar.SizeMode = PictureBoxSizeMode.StretchImage;
+            try
+            {
+                int diameter = Math.Min(picAvatar.Size.Width, picAvatar.Size.Height);
+                picAvatar.Image = CreateAvatarFromName(name, diameter);
+            }
+            catch
+            {
+                picAvatar.FillColor = Color.Gray;
+            }
+            panel.Controls.Add(picAvatar);
 
-             // 3. Name
-             Guna2HtmlLabel lblName = new Guna2HtmlLabel();
-             lblName.Text = name;
-             // set larger font for name
-             lblName.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-             lblName.Location = new Point(100, 20);
-             panel.Controls.Add(lblName);
+            // 3. Name
+            Guna2HtmlLabel lblName = new Guna2HtmlLabel();
+            lblName.Text = name;
+            // set larger font for name
+            lblName.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblName.Location = new Point(100, 20);
+            panel.Controls.Add(lblName);
 
-             // 4. Subject / Class
-             Guna2HtmlLabel lblSubject = new Guna2HtmlLabel();
-             lblSubject.Text = className; // subject field kept
-             lblSubject.ForeColor = Color.Goldenrod;
-             lblSubject.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
-             lblSubject.Location = new Point(100, 140);
-             panel.Controls.Add(lblSubject);
+            // 4. Subject / Class
+            Guna2HtmlLabel lblSubject = new Guna2HtmlLabel();
+            lblSubject.Text = className; // subject field kept
+            lblSubject.ForeColor = Color.Goldenrod;
+            lblSubject.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+            lblSubject.Location = new Point(100, 140);
+            panel.Controls.Add(lblSubject);
 
-             // 5. Contact (phone and email shown under the name)
-             Guna2HtmlLabel lblPhone = new Guna2HtmlLabel();
-             lblPhone.Text = $"Điện thoại: <span style='color:dimGray'>{phone}</span>";
-             // set larger font for phone
-             lblPhone.Font = new Font("Segoe UI", 11F, FontStyle.Regular);
-             lblPhone.Location = new Point(100, 60);
-             panel.Controls.Add(lblPhone);
+            // 5. Contact (phone and email shown under the name)
+            Guna2HtmlLabel lblPhone = new Guna2HtmlLabel();
+            lblPhone.Text = $"Điện thoại: <span style='color:dimGray'>{phone}</span>";
+            // set larger font for phone
+            lblPhone.Font = new Font("Segoe UI", 11F, FontStyle.Regular);
+            lblPhone.Location = new Point(100, 75);
+            panel.Controls.Add(lblPhone);
 
-             Guna2HtmlLabel lblEmail = new Guna2HtmlLabel();
-             lblEmail.Text = $"Email: <span style='color:dimGray'>{email}</span>";
-             lblEmail.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
-             lblEmail.Location = new Point(100, 90);
-             panel.Controls.Add(lblEmail);
+            Guna2HtmlLabel lblEmail = new Guna2HtmlLabel();
+            lblEmail.Text = $"Email: <span style='color:dimGray'>{email}</span>";
+            lblEmail.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+            lblEmail.Location = new Point(100, 120);
+            panel.Controls.Add(lblEmail);
 
-             // 6. Approve button
-             Guna2Button btnApprove = new Guna2Button();
-             btnApprove.Text = "Đồng ý";
-             btnApprove.FillColor = Color.SeaGreen;
-             btnApprove.BorderRadius = 20;
-             btnApprove.Size = new Size(172, 71);
-             // Hardcoded button positions (fixed, not auto)
-             btnApprove.Location = new Point(1200, 15);
-             btnApprove.Click += (s, e) => { OnApprove(teacherId, panel); };
-             panel.Controls.Add(btnApprove);
+            // 6. Approve button
+            Guna2Button btnApprove = new Guna2Button();
+            btnApprove.Text = "Đồng ý";
+            btnApprove.FillColor = Color.SeaGreen;
+            btnApprove.BorderRadius = 20;
+            btnApprove.Size = new Size(172, 77);
+            // Hardcoded button positions (fixed, not auto)
+            btnApprove.Location = new Point(2000, 15);
+            btnApprove.Click += (s, e) => { OnApprove(teacherId, panel); };
+            panel.Controls.Add(btnApprove);
 
-             // 7. Reject button
-             Guna2Button btnReject = new Guna2Button();
-             btnReject.Text = "Từ chối";
-             btnReject.FillColor = Color.Crimson;
-             btnReject.BorderRadius = 20;
-             btnReject.Size = new Size(172, 71);
-             btnReject.Location = new Point(1200, 105);
-             btnReject.Click += (s, e) => { OnReject(teacherId, panel); };
-             panel.Controls.Add(btnReject);
+            // 7. Reject button
+            Guna2Button btnReject = new Guna2Button();
+            btnReject.Text = "Từ chối";
+            btnReject.FillColor = Color.Crimson;
+            btnReject.BorderRadius = 20;
+            btnReject.Size = new Size(172, 71);
+            btnReject.Location = new Point(2000, 105);
+            btnReject.Click += (s, e) => { OnReject(teacherId, panel); };
+            panel.Controls.Add(btnReject);
 
-             // Add to flow
-             flowLayoutPanelList.Controls.Add(panel);
-         }
+            // Add to flow
+            flowLayoutPanelList.Controls.Add(panel);
+        }
 
         private void OnApprove(int teacherId, Control panel)
         {

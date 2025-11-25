@@ -121,15 +121,22 @@ namespace SchoolManager.DAL
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("dbo.sp_UpdateStudent", conn))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", s.id_Student);
-                    cmd.Parameters.AddWithValue("@code", s.code_Student);
-                    cmd.Parameters.AddWithValue("@name", s.name_Student);
-                    cmd.Parameters.AddWithValue("@dob", s.birthday);
-                    cmd.Parameters.AddWithValue("@gender", s.gender);
-                    cmd.Parameters.AddWithValue("@ethnicity", s.ethnicity ?? "");
+                    try
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@id", s.id_Student);
+                        cmd.Parameters.AddWithValue("@code", s.code_Student);
+                        cmd.Parameters.AddWithValue("@name", s.name_Student);
+                        cmd.Parameters.AddWithValue("@dob", s.birthday);
+                        cmd.Parameters.AddWithValue("@gender", s.gender);
+                        cmd.Parameters.AddWithValue("@ethnicity", s.ethnicity ?? "");
 
-                    return cmd.ExecuteNonQuery() > 0;
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
                 }
             }
         }
@@ -156,18 +163,40 @@ namespace SchoolManager.DAL
         {
             using (SqlConnection conn = new SqlConnection(connection_String))
             {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("dbo.sp_InsertStudent", conn))
+                try
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@code", s.code_Student);
-                    cmd.Parameters.AddWithValue("@name", s.name_Student);
-                    cmd.Parameters.AddWithValue("@dob", s.birthday);
-                    cmd.Parameters.AddWithValue("@gender", s.gender);
-                    cmd.Parameters.AddWithValue("@ethnicity", s.ethnicity ?? "");
-                    cmd.Parameters.AddWithValue("@classId", s.id_Class);
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("dbo.sp_InsertStudent", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                    return cmd.ExecuteNonQuery() > 0;
+                        cmd.Parameters.AddWithValue("@code", s.code_Student);
+                        cmd.Parameters.AddWithValue("@name", s.name_Student);
+
+                        // Xử lý ngày sinh: Đảm bảo không truyền MinValue
+                        if (s.birthday == DateTime.MinValue)
+                            cmd.Parameters.AddWithValue("@dob", DateTime.Now);
+                        else
+                            cmd.Parameters.AddWithValue("@dob", s.birthday);
+
+                        cmd.Parameters.AddWithValue("@gender", s.gender);
+
+                        // Xử lý null cho dân tộc
+                        // Lưu ý: DB bạn đang để ethnicity NVARCHAR(50), nếu null thì truyền chuỗi rỗng
+                        object ethValue = string.IsNullOrEmpty(s.ethnicity) ? (object)DBNull.Value : s.ethnicity;
+                        cmd.Parameters.AddWithValue("@ethnicity", ethValue);
+
+                        cmd.Parameters.AddWithValue("@classId", s.id_Class);
+
+                        // Vì đã bỏ SET NOCOUNT ON, hàm này sẽ trả về 1 (số dòng thêm được)
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Ghi log lỗi ra để biết chi tiết nếu có
+                    throw new Exception("Lỗi SQL Insert: " + ex.Message);
                 }
             }
         }
@@ -178,13 +207,20 @@ namespace SchoolManager.DAL
         {
             using (SqlConnection conn = new SqlConnection(connection_String))
             {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("dbo.sp_CheckStudentCodeExists", conn))
+                try
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("sp_CheckStudentExists", conn);
+                    cmd.CommandType = CommandType.StoredProcedure; // QUAN TRỌNG
+
                     cmd.Parameters.AddWithValue("@code", code);
 
-                    return (int)cmd.ExecuteScalar() > 0;
+                    int count = (int)cmd.ExecuteScalar();
+                    return count > 0;
+                }
+                catch (Exception)
+                {
+                    return false;
                 }
             }
         }

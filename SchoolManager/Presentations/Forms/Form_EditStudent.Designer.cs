@@ -30,13 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_EditStudent));
             this.dtp_Birthday = new Guna.UI2.WinForms.Guna2DateTimePicker();
-            this.txt_Address = new Guna.UI2.WinForms.Guna2TextBox();
             this.cbo_Gender = new Guna.UI2.WinForms.Guna2ComboBox();
             this.txt_Code = new Guna.UI2.WinForms.Guna2TextBox();
             this.guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2HtmlLabel8 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2HtmlLabel7 = new Guna.UI2.WinForms.Guna2HtmlLabel();
-            this.guna2HtmlLabel6 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2HtmlLabel4 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btn_Cancel = new Guna.UI2.WinForms.Guna2Button();
             this.btn_Save = new Guna.UI2.WinForms.Guna2Button();
@@ -58,33 +56,9 @@
             this.dtp_Birthday.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtp_Birthday.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtp_Birthday.Name = "dtp_Birthday";
-            this.dtp_Birthday.Size = new System.Drawing.Size(473, 83);
+            this.dtp_Birthday.Size = new System.Drawing.Size(1530, 78);
             this.dtp_Birthday.TabIndex = 54;
             this.dtp_Birthday.Value = new System.DateTime(2025, 10, 21, 20, 45, 31, 764);
-            // 
-            // txt_Address
-            // 
-            this.txt_Address.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_Address.BorderColor = System.Drawing.Color.Gray;
-            this.txt_Address.BorderRadius = 20;
-            this.txt_Address.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txt_Address.DefaultText = "";
-            this.txt_Address.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txt_Address.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txt_Address.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txt_Address.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txt_Address.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txt_Address.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txt_Address.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txt_Address.Location = new System.Drawing.Point(585, 425);
-            this.txt_Address.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.txt_Address.Name = "txt_Address";
-            this.txt_Address.PlaceholderForeColor = System.Drawing.Color.Gray;
-            this.txt_Address.PlaceholderText = "Địa chỉ...";
-            this.txt_Address.SelectedText = "";
-            this.txt_Address.Size = new System.Drawing.Size(993, 83);
-            this.txt_Address.TabIndex = 53;
             // 
             // cbo_Gender
             // 
@@ -163,19 +137,6 @@
             this.guna2HtmlLabel7.Size = new System.Drawing.Size(128, 39);
             this.guna2HtmlLabel7.TabIndex = 44;
             this.guna2HtmlLabel7.Text = "Giới tính *";
-            // 
-            // guna2HtmlLabel6
-            // 
-            this.guna2HtmlLabel6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.guna2HtmlLabel6.BackColor = System.Drawing.Color.Transparent;
-            this.guna2HtmlLabel6.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.guna2HtmlLabel6.ForeColor = System.Drawing.Color.Black;
-            this.guna2HtmlLabel6.Location = new System.Drawing.Point(585, 377);
-            this.guna2HtmlLabel6.Name = "guna2HtmlLabel6";
-            this.guna2HtmlLabel6.Size = new System.Drawing.Size(105, 39);
-            this.guna2HtmlLabel6.TabIndex = 43;
-            this.guna2HtmlLabel6.Text = "Địa chỉ *";
             // 
             // guna2HtmlLabel4
             // 
@@ -264,14 +225,12 @@
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.btn_Save);
             this.Controls.Add(this.dtp_Birthday);
-            this.Controls.Add(this.txt_Address);
             this.Controls.Add(this.cbo_Gender);
             this.Controls.Add(this.txt_Code);
             this.Controls.Add(this.guna2HtmlLabel1);
             this.Controls.Add(this.txt_Name);
             this.Controls.Add(this.guna2HtmlLabel8);
             this.Controls.Add(this.guna2HtmlLabel7);
-            this.Controls.Add(this.guna2HtmlLabel6);
             this.Controls.Add(this.guna2HtmlLabel4);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form_EditStudent";
@@ -285,13 +244,11 @@
         #endregion
 
         private Guna.UI2.WinForms.Guna2DateTimePicker dtp_Birthday;
-        private Guna.UI2.WinForms.Guna2TextBox txt_Address;
         private Guna.UI2.WinForms.Guna2ComboBox cbo_Gender;
         private Guna.UI2.WinForms.Guna2TextBox txt_Code;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel1;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel8;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel7;
-        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel6;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel4;
         private Guna.UI2.WinForms.Guna2Button btn_Cancel;
         private Guna.UI2.WinForms.Guna2Button btn_Save;

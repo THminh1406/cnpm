@@ -18,7 +18,7 @@ namespace SchoolManager.Presentations.Forms
         private void LinkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             // Show login form again if it was hidden by the caller
-            var login = Application.OpenForms.OfType<login_Form>().FirstOrDefault();
+            var login = Application.OpenForms.OfType<Login_Form>().FirstOrDefault();
             if (login != null)
             {
                 login.Show();
@@ -27,7 +27,7 @@ namespace SchoolManager.Presentations.Forms
             else
             {
                 // fallback: open a new login form
-                var lf = new login_Form();
+                var lf = new Login_Form();
                 lf.Show();
             }
 
@@ -39,7 +39,7 @@ namespace SchoolManager.Presentations.Forms
             string email = this.guna2TextBox4.Text.Trim();
             if (string.IsNullOrWhiteSpace(email))
             {
-                MessageBox.Show("Please enter an email to receive the code.");
+                MessageBox.Show("Nhập email để nhận code.");
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace SchoolManager.Presentations.Forms
             if (sent)
             {
                 // In production you would not show the OTP. For dev, we confirm email was sent.
-                MessageBox.Show("The code has been sent to your email. Please check your email.");
+                MessageBox.Show("Kiểm tra email của bạn");
             }
             else
             {
@@ -72,13 +72,13 @@ namespace SchoolManager.Presentations.Forms
             // Basic required validations
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show("Please fill in all required fields.");
+                MessageBox.Show("Hãy điền đầy đủ thông tin.");
                 return;
             }
 
             if (name.Length < 2)
             {
-                MessageBox.Show("Name must be at least 2 characters long.");
+                MessageBox.Show("Tên phải có ít nhất 2 ký tự.");
                 return;
             }
 
@@ -121,19 +121,24 @@ namespace SchoolManager.Presentations.Forms
             // Password strength
             if (!bll.ValidatePasswordStrength(password))
             {
-                MessageBox.Show("Password must be at least 8 characters and include upper, lower, digit and special character.");
+                MessageBox.Show("Mật khẩu quá yếu! Yêu cầu:\n" +
+                    "- Ít nhất 8 ký tự\n" +
+                    "- Có chữ Hoa, chữ thường\n" +
+                    "- Có số (0-9)\n" +
+                    "- Có ký tự đặc biệt (ví dụ @, #, !)",
+                    "Cảnh báo bảo mật", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (password != confirm)
             {
-                MessageBox.Show("Password and Confirm Password do not match.");
+                MessageBox.Show("Mật khẩu không khớp.");
                 return;
             }
 
             if (string.IsNullOrEmpty(currentOtp))
             {
-                MessageBox.Show("Please request an OTP code first.");
+                MessageBox.Show("Hãy nhập OTP.");
                 return;
             }
 
@@ -151,7 +156,7 @@ namespace SchoolManager.Presentations.Forms
 
                 if (sent)
                 {
-                    MessageBox.Show("Account created successfully. Admin has been notified for activation.");
+                    MessageBox.Show("Tài khoản đã được tạo.");
                 }
                 else
                 {
@@ -159,7 +164,7 @@ namespace SchoolManager.Presentations.Forms
                 }
 
                 // after successful registration, show login form
-                var existingLogin = Application.OpenForms.OfType<login_Form>().FirstOrDefault();
+                var existingLogin = Application.OpenForms.OfType<Login_Form>().FirstOrDefault();
                 if (existingLogin != null)
                 {
                     existingLogin.Show();
@@ -167,7 +172,7 @@ namespace SchoolManager.Presentations.Forms
                 }
                 else
                 {
-                    var lf = new login_Form();
+                    var lf = new Login_Form();
                     lf.Show();
                 }
 
@@ -175,7 +180,7 @@ namespace SchoolManager.Presentations.Forms
             }
             else
             {
-                MessageBox.Show("Registration failed. Username or email may already be used.");
+                MessageBox.Show("Đăng ký thất bại. Tài khoản hoặc mật khẩu đã tồn tại.");
             }
         }
 

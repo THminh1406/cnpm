@@ -19,7 +19,7 @@ namespace SchoolManager
         {
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new login_Form());
+            Application.Run(new Login_Form());
             //Application.Run(new register_Form());
             //Application.Run(new forget_Password_Form());
             //Application.Run(new admin_Form());

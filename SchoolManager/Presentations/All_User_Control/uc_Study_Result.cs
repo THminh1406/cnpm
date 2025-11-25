@@ -129,7 +129,7 @@ namespace SchoolManager.Presentations
         // Tạo cột cho bảng Tổng hợp
         private void CreateColumns_Summary()
         {
-            dgv_Result.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Họ và Tên", DataPropertyName = "StudentName", Width = 180 });
+            dgv_Result.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Họ và Tên", DataPropertyName = "StudentName", Width = 250 });
             dgv_Result.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Toán", DataPropertyName = "MathAvg" });
             dgv_Result.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tiếng Việt", DataPropertyName = "LitAvg" });
             dgv_Result.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tiếng Anh", DataPropertyName = "EngAvg" });

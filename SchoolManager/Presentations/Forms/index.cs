@@ -15,6 +15,7 @@ namespace SchoolManager.Presentations.Forms
     {
         private Guna.UI2.WinForms.Guna2Panel settingsPanel;
         private SchoolManager.BLL.Business_Logic_Account bll = new SchoolManager.BLL.Business_Logic_Account();
+        private SchoolManager.BLL.Business_Logic_Register bll_Res = new SchoolManager.BLL.Business_Logic_Register();
 
         public index()
         {
@@ -240,7 +241,17 @@ namespace SchoolManager.Presentations.Forms
             btnCancel.Click += (s, ev) => { dlg.Close(); };
             btnSave.Click += (s, ev) => {
                 if (string.IsNullOrEmpty(txtOld.Text) || string.IsNullOrEmpty(txtNew.Text)) { MessageBox.Show("Vui lòng điền đủ thông tin", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
-                if (txtNew.Text.Length < 6) { MessageBox.Show("Mật khẩu mới phải ít nhất 6 ký tự", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+                if (!bll_Res.ValidatePasswordStrength(txtNew.Text))
+                {
+                    // Vì hàm trả về false chung chung nên ta báo lỗi tổng hợp
+                    MessageBox.Show("Mật khẩu quá yếu! Yêu cầu:\n" +
+                                    "- Ít nhất 8 ký tự\n" +
+                                    "- Có chữ Hoa, chữ thường\n" +
+                                    "- Có số (0-9)\n" +
+                                    "- Có ký tự đặc biệt (ví dụ @, #, !)",
+                                    "Cảnh báo bảo mật", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 if (!bll.VerifyPassword(currentAccount.Username, txtOld.Text)) { MessageBox.Show("Mật khẩu hiện tại không đúng", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
 
@@ -267,7 +278,7 @@ namespace SchoolManager.Presentations.Forms
             SchoolManager.Session.CurrentUserRole = string.Empty;
             SchoolManager.Session.CurrentUsername = string.Empty;
 
-            var login = new SchoolManager.login_Form();
+            var login = new SchoolManager.Login_Form();
             login.Show();
             this.Close();
         }

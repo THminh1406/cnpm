@@ -14,15 +14,15 @@ using System.Windows.Forms;
 
 namespace SchoolManager
 {
-    public partial class login_Form : Form
+    public partial class Login_Form : Form
     {
         private Business_Logic_Account bll = new Business_Logic_Account();
-        public login_Form()
+        public Login_Form()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void login(object sender, EventArgs e)
         {
             if(Properties.Settings.Default.Username != string.Empty)
             {

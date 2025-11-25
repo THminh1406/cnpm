@@ -173,7 +173,7 @@
             this.btn_CheckAnswer.Name = "btn_CheckAnswer";
             this.btn_CheckAnswer.Size = new System.Drawing.Size(248, 84);
             this.btn_CheckAnswer.TabIndex = 46;
-            this.btn_CheckAnswer.Text = "Tất cả có mặt";
+            this.btn_CheckAnswer.Text = "Kiểm tra";
             this.btn_CheckAnswer.Click += new System.EventHandler(this.btn_CheckAnswer_Click);
             // 
             // btn_ResetGame
@@ -184,7 +184,7 @@
             this.btn_ResetGame.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btn_ResetGame.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btn_ResetGame.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btn_ResetGame.FillColor = System.Drawing.Color.IndianRed;
+            this.btn_ResetGame.FillColor = System.Drawing.Color.RoyalBlue;
             this.btn_ResetGame.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold);
             this.btn_ResetGame.ForeColor = System.Drawing.Color.White;
             this.btn_ResetGame.ImageOffset = new System.Drawing.Point(0, 3);
@@ -193,7 +193,7 @@
             this.btn_ResetGame.Name = "btn_ResetGame";
             this.btn_ResetGame.Size = new System.Drawing.Size(248, 84);
             this.btn_ResetGame.TabIndex = 47;
-            this.btn_ResetGame.Text = "Tất cả vắng";
+            this.btn_ResetGame.Text = "Chơi lại";
             this.btn_ResetGame.Click += new System.EventHandler(this.btn_ResetGame_Click);
             // 
             // flp_Words

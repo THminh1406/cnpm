@@ -317,11 +317,11 @@
     <Compile Include="Presentations\Forms\register_Form.Designer.cs">
       <DependentUpon>register_Form.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presentations\Forms\login_Form.cs">
+    <Compile Include="Presentations\Forms\Login_Form.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Presentations\Forms\login_Form.Designer.cs">
-      <DependentUpon>login_Form.cs</DependentUpon>
+    <Compile Include="Presentations\Forms\Login_Form.Designer.cs">
+      <DependentUpon>Login_Form.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentations\All_User_Control\uc_Study_Result.cs">
       <SubType>UserControl</SubType>
@@ -420,8 +420,8 @@
     <EmbeddedResource Include="Presentations\Forms\register_Form.resx">
       <DependentUpon>register_Form.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Presentations\Forms\login_Form.resx">
-      <DependentUpon>login_Form.cs</DependentUpon>
+    <EmbeddedResource Include="Presentations\Forms\Login_Form.resx">
+      <DependentUpon>Login_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentations\All_User_Control\uc_Study_Result.resx">
       <DependentUpon>uc_Study_Result.cs</DependentUpon>

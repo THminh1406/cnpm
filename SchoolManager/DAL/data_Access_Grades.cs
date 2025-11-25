@@ -31,21 +31,21 @@ namespace SchoolManager.DAL
 
         // 2. Lấy danh sách môn học
         // Gọi SP: dbo.sp_GetAllSubjects
-        public DataTable GetSubjects()
-        {
-            DataTable dt = new DataTable();
-            using (SqlConnection conn = new SqlConnection(connection_String))
+            public DataTable GetSubjects()
             {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("dbo.sp_GetAllSubjects", conn))
+                DataTable dt = new DataTable();
+                using (SqlConnection conn = new SqlConnection(connection_String))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(dt);
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("dbo.sp_GetAllSubjects", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        da.Fill(dt);
+                    }
                 }
+                return dt;
             }
-            return dt;
-        }
 
         // 3. Lấy ID môn học từ tên (Dùng khi Lưu điểm)
         // Gọi SP: dbo.sp_GetSubjectIdByName

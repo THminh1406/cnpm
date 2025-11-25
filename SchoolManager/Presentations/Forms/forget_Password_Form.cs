@@ -129,7 +129,7 @@ namespace SchoolManager.Presentations.Forms
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            new login_Form().Show();
+            new Login_Form().Show();
             this.Hide();
         }
     }
