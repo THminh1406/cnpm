@@ -654,5 +654,100 @@ namespace SchoolManager.DAL
                 return false;
             }
         }
+
+        public DataTable GetAllSubjects()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connection_String))
+                {
+                    conn.Open();
+                    // Query trực tiếp hoặc dùng SP nếu bạn đã tạo
+                    using (SqlCommand cmd = new SqlCommand("SELECT id_subject, subject_name FROM subjects", conn))
+                    {
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            da.Fill(dt);
+                        }
+                    }
+                }
+            }
+            catch { }
+            return dt;
+        }
+
+        // 2. Lấy lịch dạy chi tiết của một giáo viên
+        public DataTable GetTeachingAssignments(int teacherId)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connection_String))
+                {
+                    conn.Open();
+                    // Gọi SP sp_GetAssignmentsByTeacher đã tạo ở bước SQL trước
+                    using (SqlCommand cmd = new SqlCommand("sp_GetAssignmentsByTeacher", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@TeacherId", teacherId);
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            da.Fill(dt);
+                        }
+                    }
+                }
+            }
+            catch { }
+            return dt;
+        }
+
+        // 3. Thêm phân công giảng dạy
+        public int AddTeachingAssignment(int classId, int subjectId, int teacherId, string semester)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connection_String))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("sp_AddTeachingAssignment", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@ClassId", classId);
+                        cmd.Parameters.AddWithValue("@SubjectId", subjectId);
+                        cmd.Parameters.AddWithValue("@TeacherId", teacherId);
+                        cmd.Parameters.AddWithValue("@Semester", semester);
+
+                        var res = cmd.ExecuteScalar();
+                        if (res != null) return Convert.ToInt32(res);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi SQL: " + ex.Message);
+            }
+            return 0;
+        }
+
+        // 4. Xóa phân công giảng dạy
+        public bool DeleteTeachingAssignment(int assignmentId)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connection_String))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("sp_DeleteTeachingAssignment", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@AssignmentId", assignmentId);
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch { return false; }
+        }
     }
 }

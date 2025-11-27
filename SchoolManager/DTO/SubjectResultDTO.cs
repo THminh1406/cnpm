@@ -6,16 +6,17 @@ namespace SchoolManager.DTO
     public class SubjectResultDTO
     {
         public int StudentId { get; set; }
+        public string StudentCode { get; set; }
         public string StudentName { get; set; }
 
-        public double ScoreMid { get; set; }   // Điểm Giữa kỳ
-        public double ScoreFinal { get; set; } // Điểm Cuối kỳ
+        // Điểm số (Cho phép null hoặc để 0 mặc định)
+        public double ScoreMid { get; set; }   // Giữa kỳ
+        public double ScoreFinal { get; set; } // Cuối kỳ
 
-        // Điểm Trung bình môn (Tự động tính)
-        // Công thức: (Giữa kỳ + Cuối kỳ * 2) / 3
+        // Điểm trung bình (Tính toán)
         public double SubjectAvg
         {
-            get { return Math.Round((ScoreMid + ScoreFinal * 2) / 3, 1); }
+            get { return Math.Round((ScoreMid + ScoreFinal * 2) / 3, 2); }
         }
     }
 }

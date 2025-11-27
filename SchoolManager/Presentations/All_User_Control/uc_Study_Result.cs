@@ -15,6 +15,8 @@ namespace SchoolManager.Presentations
 {
     public partial class uc_Study_Result : UserControl
     {
+
+        private DataTable dtTeachingAssignments;
         Business_Logic_Classes bll_Classes;
         Business_Logic_Grades bll_Grades;
         List<StudentSummaryDTO> summaryListForExport;
@@ -23,46 +25,99 @@ namespace SchoolManager.Presentations
             InitializeComponent();
         }
 
-        private void guna2CircleButton1_Click(object sender, EventArgs e)
-        {
-            this.Visible = false;
-        }
 
         private void uc_Study_Result_Load(object sender, EventArgs e)
         {
             if (this.DesignMode) return;
             bll_Classes = new Business_Logic_Classes();
             bll_Grades = new Business_Logic_Grades();
-            
 
+            // 1. Setup Học kỳ
             cbo_Semester.Items.Clear();
             cbo_Semester.Items.Add("HocKy1");
             cbo_Semester.Items.Add("HocKy2");
             cbo_Semester.SelectedIndex = 0;
 
-            // 2. Load Lớp
-            cbo_SelectClass.DataSource = bll_Classes.GetAllClasses();
-            cbo_SelectClass.DisplayMember = "name_Class";
-            cbo_SelectClass.ValueMember = "id_Class";
+            // 2. Lấy danh sách phân công (QUAN TRỌNG)
+            int currentTeacherId = SchoolManager.Session.CurrentTeacherId;
 
-            // 3. Load Môn học (Thêm dòng 'Tổng hợp')
-            DataTable dtSub = bll_Grades.GetSubjects();
-            cbo_Subject.Items.Clear();
-            cbo_Subject.Items.Add("Tổng hợp");
-            foreach (DataRow row in dtSub.Rows)
+            // Lưu vào biến toàn cục để dùng lại sau này
+            this.dtTeachingAssignments = bll_Grades.GetTeachingAssignments(currentTeacherId);
+
+            // Lọc ra danh sách Lớp (Distinct) để đổ vào cbo_SelectClass
+            if (dtTeachingAssignments.Rows.Count > 0)
             {
-                cbo_Subject.Items.Add(row["subject_name"].ToString());
-            }
-            cbo_Subject.SelectedIndex = 0;
+                DataView view = new DataView(dtTeachingAssignments);
+                DataTable distinctClasses = view.ToTable(true, "id_class", "class_name");
 
-            // 4. Cấu hình DataGridView
+                // Gỡ sự kiện trước khi gán DataSource để tránh kích hoạt sự kiện khi chưa load xong
+                cbo_SelectClass.SelectedIndexChanged -= cbo_SelectClass_SelectedIndexChanged;
+
+                cbo_SelectClass.DataSource = distinctClasses;
+                cbo_SelectClass.DisplayMember = "class_name";
+                cbo_SelectClass.ValueMember = "id_class";
+
+                // Gắn lại sự kiện
+                cbo_SelectClass.SelectedIndexChanged += cbo_SelectClass_SelectedIndexChanged;
+            }
+
+            // 3. XÓA ĐOẠN CODE CŨ LOAD TOÀN BỘ MÔN HỌC Ở ĐÂY ĐI NHÉ
+            // (Vì chúng ta sẽ load môn theo lớp ở sự kiện SelectedIndexChanged bên dưới)
+
+            // 4. Cấu hình Grid
             dgv_Result.AutoGenerateColumns = false;
             dgv_Result.AllowUserToAddRows = false;
+            dgv_Result.ReadOnly = false;
 
-            // Gắn sự kiện (Nếu chưa gắn trong Designer)
-            cbo_SelectClass.SelectedIndexChanged += Filter_Changed;
+            // Gắn các sự kiện lọc khác
             cbo_Semester.SelectedIndexChanged += Filter_Changed;
             cbo_Subject.SelectedIndexChanged += Filter_Changed;
+
+            // Kích hoạt lần đầu để load môn cho lớp đầu tiên
+            if (cbo_SelectClass.Items.Count > 0)
+            {
+                cbo_SelectClass.SelectedIndex = 0;
+                LoadSubjectsBySelectedClass(); // Gọi hàm load môn
+            }
+        }
+
+        private void cbo_SelectClass_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadSubjectsBySelectedClass();
+            Filter_Changed(sender, e); // Load lại dữ liệu lưới
+        }
+
+        // Hàm lọc môn học theo lớp đã chọn
+        private void LoadSubjectsBySelectedClass()
+        {
+            if (cbo_SelectClass.SelectedValue == null || dtTeachingAssignments == null) return;
+
+            int selectedClassId;
+            if (!int.TryParse(cbo_SelectClass.SelectedValue.ToString(), out selectedClassId)) return;
+
+            // Lọc các dòng trong bảng phân công có id_class trùng với lớp đang chọn
+            DataRow[] rows = dtTeachingAssignments.Select("id_class = " + selectedClassId);
+
+            // Xóa danh sách môn cũ
+            cbo_Subject.Items.Clear();
+
+            // Tùy chọn: Vẫn giữ "Tổng hợp" để xem báo cáo (nếu muốn), 
+            // nhưng nếu muốn chặt chẽ chỉ cho nhập điểm thì có thể bỏ dòng này.
+            cbo_Subject.Items.Add("Tổng hợp");
+
+            // Chỉ thêm các môn CÓ TRONG PHÂN CÔNG
+            foreach (DataRow row in rows)
+            {
+                string subjectName = row["subject_name"].ToString();
+                // Kiểm tra để không add trùng (dù logic Distinct lớp đã lọc, nhưng an toàn vẫn hơn)
+                if (!cbo_Subject.Items.Contains(subjectName))
+                {
+                    cbo_Subject.Items.Add(subjectName);
+                }
+            }
+
+            // Chọn môn đầu tiên mặc định
+            if (cbo_Subject.Items.Count > 0) cbo_Subject.SelectedIndex = 0;
         }
 
         private void Filter_Changed(object sender, EventArgs e)
@@ -140,10 +195,23 @@ namespace SchoolManager.Presentations
         // Tạo cột cho bảng Chi tiết môn
         private void CreateColumns_Detail()
         {
-            dgv_Result.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Họ và Tên", DataPropertyName = "StudentName", Width = 180 });
-            dgv_Result.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Điểm Giữa Kỳ", DataPropertyName = "ScoreMid" });
-            dgv_Result.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Điểm Cuối Kỳ", DataPropertyName = "ScoreFinal" });
-            dgv_Result.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "TB Môn", DataPropertyName = "SubjectAvg" });
+            dgv_Result.Columns.Clear();
+
+            var colName = new DataGridViewTextBoxColumn { HeaderText = "Họ và Tên", DataPropertyName = "StudentName", Width = 200 };
+            colName.ReadOnly = true; // Không cho sửa tên
+            dgv_Result.Columns.Add(colName);
+
+            var colMid = new DataGridViewTextBoxColumn { HeaderText = "Điểm Giữa Kỳ", DataPropertyName = "ScoreMid" };
+            colMid.ReadOnly = false; // [CHO PHÉP SỬA]
+            dgv_Result.Columns.Add(colMid);
+
+            var colFinal = new DataGridViewTextBoxColumn { HeaderText = "Điểm Cuối Kỳ", DataPropertyName = "ScoreFinal" };
+            colFinal.ReadOnly = false; // [CHO PHÉP SỬA]
+            dgv_Result.Columns.Add(colFinal);
+
+            var colAvg = new DataGridViewTextBoxColumn { HeaderText = "TB Môn", DataPropertyName = "SubjectAvg" };
+            colAvg.ReadOnly = true; // Điểm TB tự tính, không cho sửa
+            dgv_Result.Columns.Add(colAvg);
         }
 
         // Cập nhật các Label thống kê

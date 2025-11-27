@@ -140,12 +140,13 @@ namespace SchoolManager.Presentations.All_User_Control
             if (userAnswer.Equals(this.currentCorrectAnswer, StringComparison.OrdinalIgnoreCase))
             {
                 // === ĐÚNG ===
+                AudioHelper.PlayCorrect();
                 lbl_Feedback.Text = "Chính xác!";
                 lbl_Feedback.ForeColor = Color.Green;
                 btn_CheckAnswer.Enabled = false;
 
                 // 2. Chờ 1 giây
-                await Task.Delay(1000);
+                await Task.Delay(2000);
 
                 // 3. Tải câu tiếp theo
                 this.currentQuestionIndex++;
@@ -155,6 +156,7 @@ namespace SchoolManager.Presentations.All_User_Control
             else
             {
                 // === SAI ===
+                AudioHelper.PlayWrong();
                 lbl_Feedback.Text = "Sai rồi! Hãy thử lại.";
                 lbl_Feedback.ForeColor = Color.Red;
 

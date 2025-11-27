@@ -15,7 +15,7 @@ namespace SchoolManager.Presentations.Forms
             InitializeComponent();
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void EnterRecoveryEmail(object sender, EventArgs e)
         {
             string email = this.guna2TextBox4.Text.Trim();
             if (string.IsNullOrWhiteSpace(email))
@@ -47,7 +47,7 @@ namespace SchoolManager.Presentations.Forms
             }
         }
 
-        private void BtnContinue_Click(object sender, EventArgs e)
+        private void ResetPassword(object sender, EventArgs e)
         {
             string email = sentEmail ?? this.guna2TextBox4.Text.Trim();
             string otp = this.guna2TextBox1.Text.Trim();
@@ -82,7 +82,7 @@ namespace SchoolManager.Presentations.Forms
             this.Close();
         }
 
-        private void forget_Password_Form_Load(object sender, EventArgs e)
+        private void DisplayForgotPasswordForm(object sender, EventArgs e)
         {
 
         }

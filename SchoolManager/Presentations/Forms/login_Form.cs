@@ -22,7 +22,7 @@ namespace SchoolManager
             InitializeComponent();
         }
 
-        private void login(object sender, EventArgs e)
+        private void DisplayLoginForm(object sender, EventArgs e)
         {
             if(Properties.Settings.Default.Username != string.Empty)
             {
@@ -31,7 +31,7 @@ namespace SchoolManager
             }
         }
 
-        private void guna2Button1_Click(object sender, EventArgs e)
+        private void Login(object sender, EventArgs e)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace SchoolManager
             Application.Exit();
         }
 
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void ClickForgotPassword(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var register = new SchoolManager.Presentations.Forms.register_Form();
             register.Show();

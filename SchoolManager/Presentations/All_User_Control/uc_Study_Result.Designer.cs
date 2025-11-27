@@ -191,6 +191,7 @@
             this.cbo_SelectClass.Name = "cbo_SelectClass";
             this.cbo_SelectClass.Size = new System.Drawing.Size(499, 83);
             this.cbo_SelectClass.TabIndex = 28;
+            this.cbo_SelectClass.SelectedIndexChanged += new System.EventHandler(this.cbo_SelectClass_SelectedIndexChanged);
             // 
             // cbo_Semester
             // 

@@ -109,7 +109,7 @@
             this.guna2Button1.Size = new System.Drawing.Size(142, 38);
             this.guna2Button1.TabIndex = 3;
             this.guna2Button1.Text = "Sign In";
-            this.guna2Button1.Click += new System.EventHandler(this.guna2Button1_Click);
+            this.guna2Button1.Click += new System.EventHandler(this.Login);
             // 
             // linkLabel1
             // 
@@ -218,7 +218,7 @@
             this.linkLabel2.TabIndex = 10;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "Register new Account";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ClickForgotPassword);
             // 
             // guna2Button2
             // 
@@ -275,7 +275,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.TransparencyKey = System.Drawing.Color.Lime;
-            this.Load += new System.EventHandler(this.login);
+            this.Load += new System.EventHandler(this.DisplayLoginForm);
             ((System.ComponentModel.ISupportInitialize)(this.guna2CirclePictureBox1)).EndInit();
             this.guna2Panel1.ResumeLayout(false);
             this.ResumeLayout(false);

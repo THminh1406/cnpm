@@ -42,6 +42,19 @@ namespace SchoolManager.Presentations
         private Dictionary<int, Stack<Bitmap>> undoHistory = new Dictionary<int, Stack<Bitmap>>();
         private Dictionary<int, Stack<Bitmap>> redoHistory = new Dictionary<int, Stack<Bitmap>>();
 
+
+        private Dictionary<int, List<DraggableImage>> pageImages = new Dictionary<int, List<DraggableImage>>();
+
+        // Ảnh đang được chọn để thao tác (dùng chung cho tất cả)
+        private DraggableImage selectedImage = null;
+
+        // Các biến kéo thả cũ (giữ nguyên)
+        private bool isDraggingImage = false;
+        private bool isResizingImage = false;
+        private int resizeHandleIndex = -1;
+        private Point dragStartPoint;
+        private System.Drawing.Rectangle originalBounds;
+
         public uc_Drawing_Board()
         {
             InitializeComponent();
@@ -60,26 +73,73 @@ namespace SchoolManager.Presentations
 
             // 2. Thêm trang đầu tiên (như cũ)
             AddNewPage(true);
+
         }
 
         private void panel_DrawingSurface_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
+                // 1. Lấy danh sách ảnh của trang hiện tại
+                List<DraggableImage> currentImages = null;
+                if (pageImages.ContainsKey(currentPageButtonID))
+                {
+                    currentImages = pageImages[currentPageButtonID];
+                }
+
+                // 2. Ưu tiên kiểm tra ảnh đang chọn (selectedImage) trước để xử lý Resize
+                if (selectedImage != null)
+                {
+                    int handleIdx = selectedImage.HitTestHandles(e.Location);
+                    if (handleIdx >= 0)
+                    {
+                        isResizingImage = true;
+                        resizeHandleIndex = handleIdx;
+                        dragStartPoint = e.Location;
+                        originalBounds = selectedImage.Bounds;
+                        return; // Dừng, không vẽ
+                    }
+                }
+
+                // 3. Kiểm tra xem có click vào thân của BẤT KỲ ảnh nào không?
+                // (Duyệt ngược từ cuối lên đầu để chọn ảnh nằm trên cùng)
+                if (currentImages != null && currentImages.Count > 0)
+                {
+                    for (int i = currentImages.Count - 1; i >= 0; i--)
+                    {
+                        if (currentImages[i].HitTestBody(e.Location))
+                        {
+                            // Tìm thấy ảnh! Chọn nó.
+                            selectedImage = currentImages[i];
+                            selectedImage.IsSelected = true;
+
+                            // Thiết lập kéo thả
+                            isDraggingImage = true;
+                            dragStartPoint = e.Location;
+                            originalBounds = selectedImage.Bounds;
+
+                            panel_DrawingSurface.Invalidate();
+                            return; // Dừng, không vẽ
+                        }
+                    }
+                }
+
+                // 4. Nếu không click vào ảnh nào -> Bỏ chọn (Deselect)
+                selectedImage = null;
+
+                // 5. Bắt đầu vẽ nét bút
                 isDrawing = true;
                 lastPoint = e.Location;
 
-                // --- Chuẩn bị cho Undo ---
-                // Lấy trang (Bitmap) hiện tại
+                // Lưu Undo (Bitmap)
                 Bitmap currentPage = GetCurrentPage();
-                // Lấy Stack 'Undo' của trang hiện tại
-                Stack<Bitmap> currentUndoStack = GetCurrentUndoStack();
+                if (currentPage != null)
+                {
+                    GetCurrentUndoStack().Push(new Bitmap(currentPage));
+                    GetCurrentRedoStack().Clear();
+                }
 
-                // Lưu 1 bản sao (Clone) của trạng thái HIỆN TẠI vào Undo
-                currentUndoStack.Push(new Bitmap(currentPage));
-
-                // Khi bắt đầu vẽ 1 nét mới, xóa toàn bộ lịch sử Redo
-                GetCurrentRedoStack().Clear();
+                panel_DrawingSurface.Invalidate();
             }
         }
 
@@ -87,47 +147,74 @@ namespace SchoolManager.Presentations
 
         private void panel_DrawingSurface_MouseMove(object sender, MouseEventArgs e)
         {
+            // --- XỬ LÝ ẢNH ---
+            // Cập nhật con trỏ chuột
+            if (selectedImage != null && !isDrawing)
+            {
+                int handle = selectedImage.HitTestHandles(e.Location);
+                if (handle == 0 || handle == 3) panel_DrawingSurface.Cursor = Cursors.SizeNWSE;
+                else if (handle == 1 || handle == 2) panel_DrawingSurface.Cursor = Cursors.SizeNESW;
+                else if (selectedImage.HitTestBody(e.Location)) panel_DrawingSurface.Cursor = Cursors.SizeAll;
+                else panel_DrawingSurface.Cursor = Cursors.Default;
+            }
+            else
+            {
+                panel_DrawingSurface.Cursor = Cursors.Default;
+            }
+
+            // Xử lý Kéo (Move)
+            if (isDraggingImage && selectedImage != null)
+            {
+                int dx = e.X - dragStartPoint.X;
+                int dy = e.Y - dragStartPoint.Y;
+                System.Drawing.Rectangle newBounds = originalBounds;
+                newBounds.X += dx;
+                newBounds.Y += dy;
+                selectedImage.Bounds = newBounds;
+                panel_DrawingSurface.Invalidate();
+                return;
+            }
+
+            // Xử lý Co giãn (Resize)
+            if (isResizingImage && selectedImage != null)
+            {
+                int dx = e.X - dragStartPoint.X;
+                int dy = e.Y - dragStartPoint.Y;
+                System.Drawing.Rectangle newBounds = originalBounds;
+
+                switch (resizeHandleIndex)
+                {
+                    case 0: newBounds.X += dx; newBounds.Y += dy; newBounds.Width -= dx; newBounds.Height -= dy; break;
+                    case 1: newBounds.Y += dy; newBounds.Width += dx; newBounds.Height -= dy; break;
+                    case 2: newBounds.X += dx; newBounds.Width -= dx; newBounds.Height += dy; break;
+                    case 3: newBounds.Width += dx; newBounds.Height += dy; break;
+                }
+
+                if (newBounds.Width < 20) newBounds.Width = 20;
+                if (newBounds.Height < 20) newBounds.Height = 20;
+
+                selectedImage.Bounds = newBounds;
+                panel_DrawingSurface.Invalidate();
+                return;
+            }
+
+            // --- XỬ LÝ VẼ BÚT (Giữ nguyên như cũ) ---
             if (!isDrawing || lastPoint.IsEmpty) return;
-
+            // ... (Code vẽ bút cũ của bạn) ...
             Bitmap currentPageBitmap = GetCurrentPage();
-            if (currentPageBitmap == null) return; // Thêm kiểm tra an toàn
+            if (currentPageBitmap == null) return;
 
-            // Tạo đối tượng Graphics từ Bitmap (Đã đúng)
             using (Graphics g = Graphics.FromImage(currentPageBitmap))
             {
-                // Xác định màu vẽ (Đã đúng)
-                Color drawColor = (currentTool == DrawingTool.Eraser)
-                                        ? panel_DrawingSurface.BackColor
-                                        : currentColor;
-
+                Color drawColor = (currentTool == DrawingTool.Eraser) ? panel_DrawingSurface.BackColor : currentColor;
                 using (Pen pen = new Pen(drawColor, currentPenSize))
                 {
-                    // --- SỬA LỖI LOGIC TẠI ĐÂY ---
-                    if (currentTool == DrawingTool.Pen)
-                    {
-                        // Nếu là Bút, dùng đầu tròn VÀ Làm mượt
-                        g.SmoothingMode = SmoothingMode.AntiAlias;
-                        pen.StartCap = LineCap.Round;
-                        pen.EndCap = LineCap.Round;
-                    }
-                    else if (currentTool == DrawingTool.Eraser)
-                    {
-                        // Nếu là Tẩy, dùng đầu vuông VÀ TẮT làm mượt
-                        g.SmoothingMode = SmoothingMode.None; // <-- TẮT LÀM MƯỢT
-                        pen.StartCap = LineCap.Square;
-                        pen.EndCap = LineCap.Square;
-                    }
-                    // --- KẾT THÚC SỬA LỖI ---
-
-                    // Vẽ đường thẳng (Đã đúng)
+                    if (currentTool == DrawingTool.Pen) { g.SmoothingMode = SmoothingMode.AntiAlias; pen.StartCap = LineCap.Round; pen.EndCap = LineCap.Round; }
+                    else { g.SmoothingMode = SmoothingMode.None; pen.StartCap = LineCap.Square; pen.EndCap = LineCap.Square; }
                     g.DrawLine(pen, lastPoint, e.Location);
                 }
             }
-
-            // Cập nhật điểm cuối (Đã đúng)
             lastPoint = e.Location;
-
-            // Yêu cầu Panel 'vẽ lại' (Đã đúng)
             panel_DrawingSurface.Invalidate();
         }
 
@@ -135,19 +222,50 @@ namespace SchoolManager.Presentations
         {
             if (e.Button == MouseButtons.Left)
             {
+                // Dừng việc kéo/dãn ảnh
+                isDraggingImage = false;
+                isResizingImage = false;
+                resizeHandleIndex = -1;
+
+                // Dừng vẽ
                 isDrawing = false;
                 lastPoint = Point.Empty;
             }
         }
 
+
         private void panel_DrawingSurface_Paint(object sender, PaintEventArgs e)
         {
-            // Sự kiện 'Paint' là nơi chúng ta hiển thị Bitmap lên Panel
+            // 1. Vẽ nền (nét bút)
             Bitmap currentPage = GetCurrentPage();
             if (currentPage != null)
             {
-                // Vẽ Bitmap (đã được cập nhật ở MouseMove) lên Panel
                 e.Graphics.DrawImage(currentPage, Point.Empty);
+            }
+
+            // 2. Vẽ tất cả các ảnh trong danh sách của trang này
+            if (pageImages.ContainsKey(currentPageButtonID))
+            {
+                foreach (var imgObj in pageImages[currentPageButtonID])
+                {
+                    e.Graphics.DrawImage(imgObj.Image, imgObj.Bounds);
+                }
+            }
+
+            // 3. Vẽ khung viền cho ảnh ĐANG ĐƯỢC CHỌN (nếu có)
+            if (selectedImage != null && pageImages[currentPageButtonID].Contains(selectedImage))
+            {
+                using (Pen borderPen = new Pen(Color.Blue, 1))
+                {
+                    borderPen.DashStyle = DashStyle.Dash;
+                    e.Graphics.DrawRectangle(borderPen, selectedImage.Bounds);
+                }
+
+                for (int i = 0; i < 4; i++)
+                {
+                    e.Graphics.FillRectangle(Brushes.White, selectedImage.GetHandleRect(i));
+                    e.Graphics.DrawRectangle(Pens.Blue, selectedImage.GetHandleRect(i));
+                }
             }
         }
 
@@ -350,6 +468,7 @@ namespace SchoolManager.Presentations
                     pages[pageIDToDelete].Dispose(); // Giải phóng Bitmap
                     pages.Remove(pageIDToDelete);
                     undoHistory.Remove(pageIDToDelete);
+                    pageImages.Remove(pageIDToDelete);
                     redoHistory.Remove(pageIDToDelete);
                 }
 
@@ -388,6 +507,8 @@ namespace SchoolManager.Presentations
             Dictionary<int, Stack<Bitmap>> newUndoHistory = new Dictionary<int, Stack<Bitmap>>();
             Dictionary<int, Stack<Bitmap>> newRedoHistory = new Dictionary<int, Stack<Bitmap>>();
 
+            Dictionary<int, List<DraggableImage>> newPageImages = new Dictionary<int, List<DraggableImage>>();
+
             int newPageIndex = 1; // Bộ đếm ID mới (bắt đầu từ 1)
             int verticalSpacing = 10;
             int controlHeight = 96;
@@ -402,6 +523,7 @@ namespace SchoolManager.Presentations
                 if (pages.ContainsKey(oldID)) newPages[newID] = pages[oldID];
                 if (undoHistory.ContainsKey(oldID)) newUndoHistory[newID] = undoHistory[oldID];
                 if (redoHistory.ContainsKey(oldID)) newRedoHistory[newID] = redoHistory[oldID];
+                if (pageImages.ContainsKey(oldID)) newPageImages[newID] = pageImages[oldID];
 
                 // 2. Cập nhật Control (Giao diện)
 
@@ -410,6 +532,7 @@ namespace SchoolManager.Presentations
                 int newY = (controlHeight + verticalSpacing) * (newPageIndex - 1) + verticalSpacing; // (newPageIndex - 1) vì index 0-based
                 panel.Location = new Point(newX, newY);
                 panel.TabIndex = 19 + newPageIndex;
+              
 
                 // 2b. Cập nhật Label (Tên)
                 Guna.UI2.WinForms.Guna2HtmlLabel lbl = panel.Controls.OfType<Guna.UI2.WinForms.Guna2HtmlLabel>().FirstOrDefault();
@@ -435,6 +558,7 @@ namespace SchoolManager.Presentations
             pages = newPages;
             undoHistory = newUndoHistory;
             redoHistory = newRedoHistory;
+            pageImages = newPageImages;
 
             // 4. SỬA LỖI QUAN TRỌNG NHẤT:
             // Đặt lại bộ đếm toàn cục
@@ -524,6 +648,7 @@ namespace SchoolManager.Presentations
             int buttonID = pageButtonCounter++; // Lấy ID từ bộ đếm
             pages.Add(buttonID, newPageBitmap);
             undoHistory.Add(buttonID, new Stack<Bitmap>());
+            pageImages.Add(buttonID, new List<DraggableImage>());
             redoHistory.Add(buttonID, new Stack<Bitmap>());
 
 
@@ -699,55 +824,74 @@ namespace SchoolManager.Presentations
             SaveFileDialog saveDialog = new SaveFileDialog();
             saveDialog.Filter = "PDF file|*.pdf";
             saveDialog.Title = "Lưu Bảng vẽ thành PDF";
-            saveDialog.FileName = "BangVeCuaToi.pdf"; // Tên tệp mặc định
+            saveDialog.FileName = "BangVeCuaToi.pdf";
 
             if (saveDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = saveDialog.FileName;
                 try
                 {
-                    // 3. Bắt đầu tạo tệp PDF
-                    // Lấy kích thước của bảng vẽ làm kích thước PDF
-                    // (Dùng 'panel_DrawingSurface' từ code của bạn)
+                    // Lấy kích thước của bảng vẽ
                     iTextSharp.text.Rectangle pageSize = new iTextSharp.text.Rectangle(panel_DrawingSurface.Width, panel_DrawingSurface.Height);
 
-                    // Đặt lề (margins) là 0
+                    // Tạo document PDF
                     Document document = new Document(pageSize, 0, 0, 0, 0);
-
                     PdfWriter.GetInstance(document, new FileStream(filePath, FileMode.Create));
                     document.Open();
 
-                    // 4. Lặp qua các trang (theo thứ tự ID)
+                    // Lấy danh sách ID các trang và sắp xếp
                     List<int> pageIDs = new List<int>(pages.Keys);
-                    pageIDs.Sort(); // Sắp xếp để đảm bảo Trang 1, Trang 2...
+                    pageIDs.Sort();
 
                     foreach (int pageID in pageIDs)
                     {
-                        // Thêm trang mới vào PDF (trừ trang đầu tiên)
-                        if (pageID != pageIDs[0])
+                        if (pageID != pageIDs[0]) document.NewPage();
+
+                        // === BƯỚC QUAN TRỌNG: TẠO ẢNH TỔNG HỢP (Snapshot) ===
+
+                        // 1. Lấy nền gốc (nét vẽ bút)
+                        System.Drawing.Bitmap background = pages[pageID];
+
+                        // 2. Tạo một bản sao tạm thời để gộp ảnh (không làm hỏng bản gốc đang sửa)
+                        using (System.Drawing.Bitmap combinedBitmap = new System.Drawing.Bitmap(background))
                         {
-                            document.NewPage();
+                            // 3. Vẽ các ảnh trôi nổi (Floating Images) lên bản sao này
+                            using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(combinedBitmap))
+                            {
+                                // Cài đặt chất lượng cao
+                                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
+                                // Kiểm tra xem trang này có ảnh trôi nổi nào không
+                                if (pageImages.ContainsKey(pageID))
+                                {
+                                    foreach (var imgObj in pageImages[pageID])
+                                    {
+                                        // Vẽ ảnh đó lên vị trí hiện tại của nó
+                                        g.DrawImage(imgObj.Image, imgObj.Bounds);
+                                    }
+                                }
+                            }
+
+                            // === XUẤT RA PDF (Dùng combinedBitmap thay vì pageBitmap) ===
+
+                            iTextSharp.text.Image pdfImage;
+                            using (MemoryStream ms = new MemoryStream())
+                            {
+                                // Lưu ảnh tổng hợp vào RAM
+                                combinedBitmap.Save(ms, ImageFormat.Png);
+                                byte[] bitmapBytes = ms.ToArray();
+                                pdfImage = iTextSharp.text.Image.GetInstance(bitmapBytes);
+                            }
+
+                            // Căn chỉnh ảnh vừa khít trang PDF
+                            pdfImage.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
+                            pdfImage.SetAbsolutePosition(0, 0);
+
+                            document.Add(pdfImage);
                         }
-
-                        Bitmap pageBitmap = pages[pageID]; // Lấy ảnh Bitmap của trang
-
-                        // 5. Chuyển đổi Bitmap (System.Drawing) sang Image (iTextSharp)
-                        iTextSharp.text.Image pdfImage;
-                        using (MemoryStream ms = new MemoryStream())
-                        {
-                            pageBitmap.Save(ms, ImageFormat.Png); // Lưu ảnh vào RAM
-                            byte[] bitmapBytes = ms.ToArray();
-                            pdfImage = iTextSharp.text.Image.GetInstance(bitmapBytes);
-                        }
-
-                        // 6. Căn chỉnh ảnh vừa khít trang PDF
-                        pdfImage.ScaleToFit(document.PageSize.Width, document.PageSize.Height);
-                        pdfImage.SetAbsolutePosition(0, 0); // Đặt ở góc (0,0)
-
-                        document.Add(pdfImage); // Thêm ảnh vào PDF
                     }
 
-                    // 7. Đóng tệp
                     document.Close();
                     MessageBox.Show("Đã xuất PDF thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -756,6 +900,95 @@ namespace SchoolManager.Presentations
                     MessageBox.Show("Lỗi khi xuất PDF: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void btn_ImportImage_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    System.Drawing.Image img = System.Drawing.Image.FromFile(openFileDialog.FileName);
+
+                    // Tính toán kích thước
+                    int w = 200;
+                    int h = (int)((float)img.Height / img.Width * w);
+                    System.Drawing.Rectangle rect = new System.Drawing.Rectangle(50, 50, w, h);
+
+                    // Tạo đối tượng ảnh mới
+                    DraggableImage newImg = new DraggableImage(img, rect);
+
+                    // Thêm vào danh sách của trang hiện tại
+                    if (pageImages.ContainsKey(currentPageButtonID))
+                    {
+                        pageImages[currentPageButtonID].Add(newImg);
+                    }
+
+                    // Tự động chọn ảnh vừa thêm
+                    selectedImage = newImg;
+
+                    // Chuyển về công cụ Bút để tránh lỗi logic Tẩy
+                    currentTool = DrawingTool.Pen;
+                    panel_DrawingSurface.Invalidate();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi: " + ex.Message);
+                }
+            }
+        }
+    }
+
+    public class DraggableImage
+    {
+        // Sửa Image -> System.Drawing.Image
+        public System.Drawing.Image Image { get; set; }
+
+        // Sửa Rectangle -> System.Drawing.Rectangle
+        public System.Drawing.Rectangle Bounds { get; set; }
+
+        public bool IsSelected { get; set; }
+        public int HandleSize { get; } = 8;
+
+        // Constructor
+        public DraggableImage(System.Drawing.Image img, System.Drawing.Rectangle bounds)
+        {
+            Image = img;
+            Bounds = bounds;
+            IsSelected = true;
+        }
+
+        // Sửa Rectangle -> System.Drawing.Rectangle
+        public System.Drawing.Rectangle GetHandleRect(int index)
+        {
+            int x = 0, y = 0;
+            switch (index)
+            {
+                case 0: x = Bounds.X; y = Bounds.Y; break;
+                case 1: x = Bounds.Right - HandleSize; y = Bounds.Y; break;
+                case 2: x = Bounds.X; y = Bounds.Bottom - HandleSize; break;
+                case 3: x = Bounds.Right - HandleSize; y = Bounds.Bottom - HandleSize; break;
+            }
+            // Sửa new Rectangle -> new System.Drawing.Rectangle
+            return new System.Drawing.Rectangle(x, y, HandleSize, HandleSize);
+        }
+
+        public int HitTestHandles(Point p)
+        {
+            if (!IsSelected) return -1;
+            for (int i = 0; i < 4; i++)
+            {
+                if (GetHandleRect(i).Contains(p)) return i;
+            }
+            return -1;
+        }
+
+        public bool HitTestBody(Point p)
+        {
+            return Bounds.Contains(p);
         }
     }
 }

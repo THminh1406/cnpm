@@ -180,5 +180,158 @@ namespace SchoolManager.DAL
             }
             return list;
         }
+
+        public string GetHomeroomTeacherName(int classId)
+        {
+            string teacherName = "Chưa phân công";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connection_String))
+                {
+                    conn.Open();
+                    // Join bảng classes và teachers để lấy tên
+                    string query = @"
+                SELECT t.full_name 
+                FROM classes c
+                JOIN teachers t ON c.id_teacher = t.id_teacher
+                WHERE c.id_class = @classId";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@classId", classId);
+                        var result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            teacherName = result.ToString();
+                        }
+                    }
+                }
+            }
+            catch { }
+            return teacherName;
+        }
+
+        public DataTable GetTeachingAssignments(int teacherId)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connection_String))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("dbo.sp_GetAssignmentsByTeacher", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@TeacherId", teacherId);
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            da.Fill(dt);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Tùy chọn: throw ex; nếu muốn hiện lỗi ra UI
+            }
+            return dt;
+        }
+
+        // 1.2. Lấy bảng điểm học sinh của 1 lớp - môn - học kỳ - loại điểm cụ thể
+        // Gọi SP: dbo.sp_GetStudentGradesByClass
+        public DataTable GetStudentGradesForInput(int classId, int subjectId, string semester, string period)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connection_String))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("dbo.sp_GetStudentGradesByClass", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@ClassId", classId);
+                        cmd.Parameters.AddWithValue("@SubjectId", subjectId);
+                        cmd.Parameters.AddWithValue("@Semester", semester);
+                        cmd.Parameters.AddWithValue("@GradePeriod", period);
+
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            da.Fill(dt);
+                        }
+                    }
+                }
+            }
+            catch { }
+            return dt;
+        }
+
+        // 1.3. Lưu điểm lẻ (Dùng cho tính năng nhập điểm trực tiếp trên lưới)
+        // Gọi SP: dbo.sp_SaveStudentGrade
+        public bool SaveSpecificGrade(int studentId, int subjectId, decimal score, string semester, string period)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connection_String))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("dbo.sp_SaveStudentGrade", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@StudentId", studentId);
+                        cmd.Parameters.AddWithValue("@SubjectId", subjectId);
+                        cmd.Parameters.AddWithValue("@Score", score);
+                        cmd.Parameters.AddWithValue("@Semester", semester);
+                        cmd.Parameters.AddWithValue("@GradePeriod", period);
+                        cmd.Parameters.AddWithValue("@Date", DateTime.Now);
+
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi lưu điểm: " + ex.Message);
+            }
+        }
+
+        public List<SubjectResultDTO> GetSubjectDetail(int classId, int subjectId, string semester)
+        {
+            List<SubjectResultDTO> list = new List<SubjectResultDTO>();
+            using (SqlConnection conn = new SqlConnection(connection_String))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("dbo.sp_GetSubjectScoreForEdit", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@ClassId", classId);
+                    cmd.Parameters.AddWithValue("@SubjectId", subjectId);
+                    cmd.Parameters.AddWithValue("@Semester", semester);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            list.Add(new SubjectResultDTO
+                            {
+                                StudentId = Convert.ToInt32(reader["id_student"]),
+                                StudentCode = reader["student_code"].ToString(),
+                                StudentName = reader["full_name"].ToString(),
+                                ScoreMid = Convert.ToDouble(reader["ScoreMid"]),
+                                ScoreFinal = Convert.ToDouble(reader["ScoreFinal"])
+                            });
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
+        public int GetSubjectId(string subjectName)
+        {
+            // (Giữ nguyên hàm GetSubjectIdByName bạn đã viết ở bài trước)
+            return GetSubjectIdByName(subjectName);
+        }
     }
 }

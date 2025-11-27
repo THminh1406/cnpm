@@ -208,6 +208,7 @@ namespace SchoolManager.Presentations.All_User_Control
             if (userAnswer.Equals(this.currentCorrectAnswer, StringComparison.OrdinalIgnoreCase))
             {
                 // === ĐÚNG ===
+                AudioHelper.PlayCorrect();
                 lbl_Feedback.Text = "Chính xác!";
                 lbl_Feedback.ForeColor = Color.Green;
 
@@ -218,7 +219,7 @@ namespace SchoolManager.Presentations.All_User_Control
             else
             {
                 // === SAI ===
-
+                AudioHelper.PlayWrong();
                 lbl_Feedback.Text = "Sai rồi! Hãy sắp xếp lại."; // Giữ feedback ngắn
 
                 lbl_Feedback.ForeColor = Color.Red;

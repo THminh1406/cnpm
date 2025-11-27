@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace SchoolManager.Presentations.All_User_Control
 {
@@ -16,6 +17,7 @@ namespace SchoolManager.Presentations.All_User_Control
         private Business_Logic_Classes bll_Classes;
         private Business_Logic_Students bll_Students;
         private int currentClassId = 0;
+        private Random rng = new Random();
 
         public UC_Student_Management()
         {
@@ -252,6 +254,73 @@ namespace SchoolManager.Presentations.All_User_Control
 
             // Cập nhật lại bảng
             dgv_ClassList.DataSource = result;
+        }
+
+        private async void btn_Random_Click(object sender, EventArgs e)
+        {
+            // 1. Kiểm tra xem lưới có dữ liệu không
+            if (dgv_ClassList.Rows.Count == 0)
+            {
+                MessageBox.Show("Danh sách học sinh đang trống!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Khóa nút để tránh bấm liên tục khi đang quay
+            btn_Random.Enabled = false;
+
+            try
+            {
+                int totalRows = dgv_ClassList.Rows.Count;
+                int loops = 30; // Tổng số lần nhảy (hiệu ứng quay)
+                int delay = 30; // Tốc độ ban đầu (ms) - càng nhỏ càng nhanh
+
+                // 2. Vòng lặp tạo hiệu ứng quay số
+                for (int i = 0; i < loops; i++)
+                {
+                    // Chọn ngẫu nhiên một dòng index
+                    int randomIndex = rng.Next(totalRows);
+
+                    // Bỏ chọn các dòng cũ
+                    dgv_ClassList.ClearSelection();
+
+                    // Chọn dòng mới
+                    dgv_ClassList.Rows[randomIndex].Selected = true;
+
+                    // Tự động cuộn lưới đến dòng đang chọn (để người dùng thấy)
+                    dgv_ClassList.FirstDisplayedScrollingRowIndex = randomIndex;
+
+                    // --- LOGIC LÀM CHẬM DẦN ---
+                    // 5 lần nhảy cuối cùng sẽ chậm dần lại để tạo kịch tính
+                    if (i > loops - 10) delay += 20;
+                    if (i > loops - 5) delay += 50;
+
+                    // Dừng một chút trước khi nhảy tiếp
+                    await Task.Delay(delay);
+                }
+
+                // 3. Lấy thông tin người chiến thắng (Dòng đang được chọn cuối cùng)
+                if (dgv_ClassList.SelectedRows.Count > 0)
+                {
+                    var row = dgv_ClassList.SelectedRows[0];
+
+                    // Lấy tên học sinh (Thay "full_name" bằng Tên Cột thực tế trong Grid của bạn)
+                    // Nếu bạn không nhớ tên cột, hãy thử dùng index: row.Cells[1].Value.ToString()
+                    string name = row.Cells["name_Student"].Value != null ? row.Cells["name_Student"].Value.ToString() : "Không tên";
+                    string code = row.Cells["student_Code"].Value != null ? row.Cells["student_Code"].Value.ToString() : "";
+
+                    // Hiển thị kết quả
+                    MessageBox.Show($"Người được gọi là:\n\n{name}\n({code})", "Kết quả Random", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+            finally
+            {
+                // Mở lại nút sau khi quay xong
+                btn_Random.Enabled = true;
+            }
         }
     }
 }

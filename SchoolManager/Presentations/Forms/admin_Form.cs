@@ -32,7 +32,7 @@ namespace SchoolManager.Presentations.Forms
             showUC(uc_Approve_Registration1);
         }
 
-        private void guna2Button1_Click(object sender, EventArgs e)
+        private void AccessTeacherManagement(object sender, EventArgs e)
         {
             showUC(uc_Teacher_Management1);
         }

@@ -98,7 +98,7 @@
             this.guna2Button1.Size = new System.Drawing.Size(151, 39);
             this.guna2Button1.TabIndex = 26;
             this.guna2Button1.Text = "Continue";
-            this.guna2Button1.Click += new System.EventHandler(this.BtnContinue_Click);
+            this.guna2Button1.Click += new System.EventHandler(this.ResetPassword);
             // 
             // guna2CirclePictureBox1
             // 
@@ -225,7 +225,7 @@
             this.sendcode.Size = new System.Drawing.Size(120, 45);
             this.sendcode.TabIndex = 36;
             this.sendcode.Text = "Send";
-            this.sendcode.Click += new System.EventHandler(this.Button1_Click);
+            this.sendcode.Click += new System.EventHandler(this.EnterRecoveryEmail);
             // 
             // guna2Button2
             // 
@@ -302,7 +302,7 @@
             this.Name = "forget_Password_Form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "forget_Password_Form";
-            this.Load += new System.EventHandler(this.forget_Password_Form_Load);
+            this.Load += new System.EventHandler(this.DisplayForgotPasswordForm);
             this.guna2Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.guna2CirclePictureBox1)).EndInit();
             this.ResumeLayout(false);

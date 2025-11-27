@@ -11,30 +11,26 @@ using System.Windows.Forms;
 
 namespace SchoolManager.Presentations.All_User_Control
 {
-
-
     public partial class uc_Game_MemoryMatch : UserControl
     {
-
         private Business_Logic_Quizzes bll_Quizzes;
         private Business_Logic_Vocabulary bll_Vocabulary;
 
-        private List<MemoryCard> gameCards; // Danh sách các thẻ
-        private MemoryCard firstCard = null; // Thẻ đầu tiên lật
-        private MemoryCard secondCard = null; // Thẻ thứ hai lật
+        private List<MemoryCard> gameCards;
+        private MemoryCard firstCard = null;
+        private MemoryCard secondCard = null;
 
         private int currentQuizId = 0;
         private int pairsFound = 0;
         private int totalPairs = 0;
 
-        private TableLayoutPanel tbl_GameBoard; // Bảng game (sẽ tạo bằng code)
+        private TableLayoutPanel tbl_GameBoard;
         private static Random rng = new Random();
 
         public uc_Game_MemoryMatch()
         {
             InitializeComponent();
             this.Load += new System.EventHandler(this.uc_Game_MemoryMatch_Load);
-
         }
 
         private void uc_Game_MemoryMatch_Load(object sender, EventArgs e)
@@ -43,20 +39,19 @@ namespace SchoolManager.Presentations.All_User_Control
             bll_Quizzes = new Business_Logic_Quizzes();
             bll_Vocabulary = new Business_Logic_Vocabulary();
 
-            // Gán sự kiện Reset (Hãy đảm bảo tên 'btn_ResetGame' là đúng)
             btn_ResetGame.Click += btn_ResetGame_Click;
         }
 
-
-        // === 3. HÀM LOADGAME (HÀM CHÍNH) ===
         public void LoadGame(int quizId)
         {
             this.currentQuizId = quizId;
             this.pairsFound = 0;
             lbl_Feedback.Text = "";
-            // XÓA DÒNG GÂY LỖI: tbl_GameBoard.Enabled = true;
 
-            // 1. Lấy dữ liệu (DTO) (PHẢI LÀM VIỆC NÀY TRƯỚC)
+            firstCard = null;
+            secondCard = null;
+
+            // 1. Lấy dữ liệu
             List<VocabularyDTO> gameData;
             try
             {
@@ -72,7 +67,7 @@ namespace SchoolManager.Presentations.All_User_Control
 
             UpdateScore();
 
-            // 2. Tạo danh sách 2N thẻ (N Hình, N Chữ)
+            // 2. Tạo danh sách thẻ
             this.gameCards = new List<MemoryCard>();
             foreach (var vocab in gameData)
             {
@@ -80,38 +75,25 @@ namespace SchoolManager.Presentations.All_User_Control
                 gameCards.Add(new MemoryCard { VocabId = vocab.id_vocabulary, IsImage = false, Data = vocab });
             }
 
-            // 3. Xáo trộn danh sách 2N thẻ
             Shuffle(gameCards);
 
-            // 4. Quyết định kích thước lưới
             int rows, cols;
             DetermineGridSize(this.totalPairs, out rows, out cols);
 
-            // 5. TẠO BẢNG (Bây giờ tbl_GameBoard mới tồn tại)
             CreateGameBoard(rows, cols);
-
-            // 6. (Bây giờ dòng này đã an toàn)
-            tbl_GameBoard.Enabled = true;
-
-            // 7. Đặt các thẻ vào Bảng
             PopulateGrid();
         }
 
-        // === 4. LOGIC XÂY DỰNG LƯỚI ===
-
-        // Quyết định kích thước (6 cặp -> 3x4)
+        // === TẠO GIAO DIỆN ===
         private void DetermineGridSize(int pairCount, out int rows, out int cols)
         {
-            if (pairCount <= 6) { rows = 3; cols = 4; } // 12 thẻ (Dễ)
-            else if (pairCount <= 8) { rows = 4; cols = 4; } // 16 thẻ (Trung bình)
-            else { rows = 4; cols = 5; } // 20 thẻ (Khó - 10 cặp)
-            // (Bạn có thể thêm mức 4x6 = 24 thẻ = 12 cặp nếu muốn)
+            if (pairCount <= 6) { rows = 3; cols = 4; }
+            else if (pairCount <= 8) { rows = 4; cols = 4; }
+            else { rows = 4; cols = 5; }
         }
 
-        // Tạo TableLayoutPanel bằng code
         private void CreateGameBoard(int rows, int cols)
         {
-            // Xóa bảng cũ (nếu có)
             if (tbl_GameBoard != null)
             {
                 pnl_GameArea.Controls.Remove(tbl_GameBoard);
@@ -124,20 +106,12 @@ namespace SchoolManager.Presentations.All_User_Control
             tbl_GameBoard.RowCount = rows;
             tbl_GameBoard.ColumnCount = cols;
 
-            // Đặt kích thước % cho các hàng/cột
-            for (int i = 0; i < rows; i++)
-            {
-                tbl_GameBoard.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
-            }
-            for (int i = 0; i < cols; i++)
-            {
-                tbl_GameBoard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / cols));
-            }
+            for (int i = 0; i < rows; i++) tbl_GameBoard.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
+            for (int i = 0; i < cols; i++) tbl_GameBoard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / cols));
 
             pnl_GameArea.Controls.Add(tbl_GameBoard);
         }
 
-        // Đặt thẻ vào các ô của Bảng
         private void PopulateGrid()
         {
             int cardIndex = 0;
@@ -151,133 +125,163 @@ namespace SchoolManager.Presentations.All_User_Control
 
                         Guna2Button btn = new Guna2Button();
                         btn.Dock = DockStyle.Fill;
-                        btn.BorderRadius = 10;
-                        btn.Margin = new Padding(5);
+                        btn.BorderRadius = 12;
+                        btn.Margin = new Padding(6);
+
+                        // Cấu hình mặc định (Mặt úp)
                         btn.FillColor = Color.DodgerBlue;
-                        btn.Text = "?"; // Úp
+                        btn.Text = "?";
                         btn.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
-                        btn.Tag = card; // Lưu đối tượng Thẻ vào Tag
+                        btn.ForeColor = Color.White;
+
+                        // Quan trọng: Zoom để ảnh không bị méo
+                        btn.BackgroundImageLayout = ImageLayout.Zoom;
+
+                        // Quan trọng: Viền để khi khớp đúng sẽ đổi màu viền
+                        btn.BorderThickness = 3;
+                        btn.BorderColor = Color.DodgerBlue;
+
+                        btn.Tag = card;
                         btn.Click += Card_Click;
 
-                        card.CardButton = btn; // Lưu Nút vào đối tượng Thẻ
-                        tbl_GameBoard.Controls.Add(btn, c, r); // Đặt vào Bảng
+                        card.CardButton = btn;
+                        tbl_GameBoard.Controls.Add(btn, c, r);
                         cardIndex++;
                     }
                 }
             }
         }
 
-        // === 5. LOGIC CHƠI GAME ===
-
+        // === LOGIC CLICK & XỬ LÝ TRẠNG THÁI ===
         private async void Card_Click(object sender, EventArgs e)
         {
-            // 1. Guard Clause: Nếu 2 thẻ đang lật, không cho click thẻ thứ 3
             if (secondCard != null) return;
 
             var clickedButton = (Guna2Button)sender;
             var clickedCard = (MemoryCard)clickedButton.Tag;
 
-            // 2. Nếu click thẻ đã lật/đã ghép, bỏ qua
-            if (!clickedButton.Enabled || clickedButton.FillColor != Color.DodgerBlue)
-                return;
+            if (clickedCard.IsMatched || clickedCard.IsRevealed) return;
 
-            // 3. Lật thẻ (Hiện Hình/Chữ)
-            FlipCard(clickedCard, true);
+            // --- BƯỚC 1: LẬT THẺ ---
+            clickedCard.IsRevealed = true;
+            FlipCardUI(clickedCard, true); // Hiện nội dung
 
             if (firstCard == null)
             {
-                // 4. Đây là thẻ đầu tiên
                 firstCard = clickedCard;
             }
             else
             {
-                // 5. Đây là thẻ thứ hai
                 secondCard = clickedCard;
-                // === XÓA DÒNG NÀY: tbl_GameBoard.Enabled = false; ===
 
-                // 6. So sánh
+                // --- BƯỚC 2: SO SÁNH ---
                 if (firstCard.VocabId == secondCard.VocabId)
                 {
                     // === ĐÚNG ===
-                    firstCard.CardButton.Enabled = false;
-                    secondCard.CardButton.Enabled = false;
+                    AudioHelper.PlayCorrect();
+
+                    firstCard.IsMatched = true;
+                    secondCard.IsMatched = true;
+
+                    // === SỬA LỖI MẤT HÌNH KHI ĐÚNG ===
+                    // Thay vì đổi màu nền (FillColor), ta đổi màu VIỀN (BorderColor)
+                    // Để giữ nguyên ảnh đang hiển thị
+                    SetMatchedStyle(firstCard);
+                    SetMatchedStyle(secondCard);
 
                     pairsFound++;
                     UpdateScore();
 
                     firstCard = null;
                     secondCard = null;
-                    // === XÓA DÒNG NÀY: tbl_GameBoard.Enabled = true; ===
 
                     if (pairsFound == totalPairs)
                     {
-                        lbl_Feedback.Text = "Chúc mừng! Bạn đã thắng!";
-                        lbl_Feedback.ForeColor = Color.Green;
+                        await Task.Delay(500);
+                        MessageBox.Show("Chúc mừng! Bạn đã chiến thắng!", "Thông báo");
                     }
                 }
                 else
                 {
                     // === SAI ===
+
+                    // Báo sai bằng viền đỏ (Tùy chọn)
+                    firstCard.CardButton.BorderColor = Color.Salmon;
+                    secondCard.CardButton.BorderColor = Color.Salmon;
+
                     await Task.Delay(1000); // Chờ 1 giây
 
-                    FlipCard(firstCard, false); // Lật úp
-                    FlipCard(secondCard, false); // Lật úp
+                    // Úp lại
+                    firstCard.IsRevealed = false;
+                    secondCard.IsRevealed = false;
+
+                    FlipCardUI(firstCard, false); // Úp xuống
+                    FlipCardUI(secondCard, false); // Úp xuống
 
                     firstCard = null;
                     secondCard = null;
-                    // === XÓA DÒNG NÀY: tbl_GameBoard.Enabled = true; ===
                 }
             }
         }
 
-        // Hàm lật thẻ (lật/úp)
-        private void FlipCard(MemoryCard card, bool show)
+        // === HÀM LẬT THẺ QUAN TRỌNG (ĐÃ SỬA LỖI HIỂN THỊ) ===
+        private void FlipCardUI(MemoryCard card, bool showContent)
         {
-            if (show)
+            if (showContent) // TRẠNG THÁI NGỬA (Hiện nội dung)
             {
-                // 1. Khi lật ngửa (Hiện nội dung)
-
-                // Đặt màu nền thành Transparent để thấy được BackgroundImage
-                card.CardButton.FillColor = Color.Transparent;
                 card.CardButton.Text = "";
+                card.CardButton.BorderColor = Color.Gold; // Viền vàng khi đang chọn
 
-                if (card.IsImage) // Lật thẻ Hình
+                if (card.IsImage)
                 {
-                    // Sử dụng BackgroundImage để ảnh lấp đầy khung
+                    // --- THẺ HÌNH ---
+                    // 1. Nền PHẢI LÀ Transparent để không che ảnh
+                    card.CardButton.FillColor = Color.Transparent;
+                    // 2. Gán ảnh vào BackgroundImage
                     card.CardButton.BackgroundImage = ConvertByteArrayToImage(card.Data.WordImage);
-
-                    // Chọn Zoom (giữ tỉ lệ ảnh) hoặc Stretch (kéo dãn hết khung)
-                    // Khuyên dùng Zoom để ảnh không bị méo
-                    card.CardButton.BackgroundImageLayout = ImageLayout.Zoom;
-
-                    // Xóa Image (icon) để tránh bị chồng chéo
-                    card.CardButton.Image = null;
                 }
-                else // Lật thẻ Chữ
+                else
                 {
-                    // Thẻ chữ thì không cần BackgroundImage
+                    // --- THẺ CHỮ ---
+                    // 1. Nền màu Cam (hoặc màu sáng tùy ý)
+                    card.CardButton.FillColor = Color.Orange;
                     card.CardButton.BackgroundImage = null;
-                    card.CardButton.FillColor = Color.DarkGray; // Màu nền cho thẻ chữ
-
+                    // 2. Hiện chữ
                     card.CardButton.Text = card.Data.WordText;
+                    card.CardButton.ForeColor = Color.Black; // Chữ đen cho dễ đọc
                     card.CardButton.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
                 }
             }
-            else
+            else // TRẠNG THÁI ÚP (Mặt sau)
             {
-                // 2. Khi lật úp (Về trạng thái ban đầu)
-                card.CardButton.BackgroundImage = null; // Xóa ảnh nền
-                card.CardButton.FillColor = Color.DodgerBlue; // Khôi phục màu xanh
+                card.CardButton.BackgroundImage = null;
+                card.CardButton.FillColor = Color.DodgerBlue; // Màu xanh úp thẻ
+                card.CardButton.BorderColor = Color.DodgerBlue; // Viền cùng màu
                 card.CardButton.Text = "?";
+                card.CardButton.ForeColor = Color.White;
                 card.CardButton.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
-                card.CardButton.Image = null;
             }
         }
 
-        // === 6. HÀM HỖ TRỢ ===
+        // Hàm tạo hiệu ứng khi đã ghép đúng (Giữ ảnh, đổi viền)
+        private void SetMatchedStyle(MemoryCard card)
+        {
+            // Đổi màu viền thành Xanh Lá để báo hiệu đúng
+            card.CardButton.BorderColor = Color.LimeGreen;
+            card.CardButton.BorderThickness = 5;
+
+            if (!card.IsImage)
+            {
+                // Nếu là thẻ chữ, ta có thể đổi màu nền cho đẹp
+                card.CardButton.FillColor = Color.LightGreen;
+            }
+            // Nếu là thẻ hình, GIỮ NGUYÊN FillColor = Transparent để không mất ảnh
+        }
+
         private void UpdateScore()
         {
-            lbl_Score.Text = $"Đã tìm thấy: {pairsFound} / {totalPairs}";
+            if (lbl_Score != null)
+                lbl_Score.Text = $"Đã tìm thấy: {pairsFound} / {totalPairs}";
         }
 
         private void Shuffle<T>(List<T> list)
@@ -293,6 +297,7 @@ namespace SchoolManager.Presentations.All_User_Control
             }
         }
 
+        // Hàm chuyển đổi ảnh AN TOÀN (Fix lỗi mất hình)
         private Image ConvertByteArrayToImage(byte[] data)
         {
             if (data == null || data.Length == 0) return null;
@@ -300,7 +305,8 @@ namespace SchoolManager.Presentations.All_User_Control
             {
                 using (MemoryStream ms = new MemoryStream(data))
                 {
-                    return Image.FromStream(ms);
+                    // Tạo bản sao Bitmap để ngắt kết nối stream
+                    return new Bitmap(Image.FromStream(ms));
                 }
             }
             catch { return null; }
@@ -317,9 +323,11 @@ namespace SchoolManager.Presentations.All_User_Control
 
     internal class MemoryCard
     {
-        public int VocabId { get; set; } // ID để so sánh (ví dụ: 10)
-        public bool IsImage { get; set; } // Là thẻ Hình hay thẻ Chữ?
-        public VocabularyDTO Data { get; set; } // Dữ liệu (chứa Ảnh và Chữ)
-        public Guna2Button CardButton { get; set; } // Nút bấm UI
+        public int VocabId { get; set; }
+        public bool IsImage { get; set; }
+        public VocabularyDTO Data { get; set; }
+        public Guna2Button CardButton { get; set; }
+        public bool IsRevealed { get; set; } = false;
+        public bool IsMatched { get; set; } = false;
     }
 }

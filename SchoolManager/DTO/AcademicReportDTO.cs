@@ -24,8 +24,10 @@ namespace SchoolManager.DTO
     // 3. Class TỔNG HỢP (Dùng để hứng dữ liệu cuối cùng xuất ra Excel)
     public class AcademicReportDTO
     {
+
+        public string HomeroomTeacher { get; set; } // Tên GVCN
+        public string SchoolYear { get; set; }
         public string ClassName { get; set; }
-        public string GradeName { get; set; } // Dùng cho báo cáo khối nếu cần
 
         // --- Bảng 1: Tổng hợp chung ---
         public int TotalStudents { get; set; } = 0;

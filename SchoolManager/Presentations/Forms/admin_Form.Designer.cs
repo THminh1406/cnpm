@@ -135,7 +135,7 @@
             this.guna2Button1.Size = new System.Drawing.Size(265, 54);
             this.guna2Button1.TabIndex = 17;
             this.guna2Button1.Text = "Quản lý giáo viên";
-            this.guna2Button1.Click += new System.EventHandler(this.guna2Button1_Click);
+            this.guna2Button1.Click += new System.EventHandler(this.AccessTeacherManagement);
             // 
             // guna2Button3
             // 

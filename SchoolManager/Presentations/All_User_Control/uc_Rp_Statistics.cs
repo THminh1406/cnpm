@@ -137,8 +137,6 @@ namespace SchoolManager.Presentations.All_User_Control
             try
             {
                 // 1. Lấy dữ liệu
-                List<AcademicReportDTO> dataList = new List<AcademicReportDTO>();
-                // Lưu ý: Hàm GetReportForSingleClass trả về 1 object, ta bỏ vào list hoặc dùng trực tiếp
                 AcademicReportDTO data = bll_Grades.GetReportForSingleClass(idLop, startDate, endDate);
 
                 if (data == null) { MessageBox.Show("Không có dữ liệu."); return; }
@@ -150,25 +148,37 @@ namespace SchoolManager.Presentations.All_User_Control
                 worksheet.Name = "BaoCaoLop";
 
                 // =========================================================
-                // BẢNG 1: THỐNG KÊ SỐ LƯỢNG THEO ĐIỂM SỐ
+                // PHẦN TIÊU ĐỀ CHUNG
                 // =========================================================
 
-                // Tiêu đề
+                // Dòng 1: Tiêu đề lớn
                 Excel.Range title1 = worksheet.Range["A1", "E1"];
                 title1.Merge();
-                title1.Value = $"BÁO CÁO CHẤT LƯỢNG GIÁO DỤC LỚP: {data.ClassName}";
+                title1.Value = $"BÁO CÁO CHẤT LƯỢNG GIÁO DỤC LỚP: {data.ClassName.ToUpper()}";
                 title1.Font.Bold = true; title1.Font.Size = 16; title1.Font.Color = Color.Red;
                 title1.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
 
-                // Tên Bảng 1
-                Excel.Range subTitle1 = worksheet.Range["A3", "E3"];
+                // Dòng 2: Năm học và Giáo viên chủ nhiệm (MỚI THÊM)
+                Excel.Range subInfo = worksheet.Range["A2", "E2"];
+                subInfo.Merge();
+                subInfo.Value = $"Năm học: {data.SchoolYear}    -    GVCN: {data.HomeroomTeacher}";
+                subInfo.Font.Bold = true;
+                subInfo.Font.Size = 12;
+                subInfo.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+                // =========================================================
+                // BẢNG 1: THỐNG KÊ SỐ LƯỢNG THEO ĐIỂM SỐ
+                // =========================================================
+
+                // Dòng 4: Tên Bảng 1 (Đẩy xuống dòng 4 để thoáng)
+                Excel.Range subTitle1 = worksheet.Range["A4", "E4"];
                 subTitle1.Merge();
                 subTitle1.Value = "BẢNG 1: THỐNG KÊ SỐ LƯỢNG THEO ĐIỂM SỐ";
                 subTitle1.Font.Bold = true;
                 subTitle1.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
 
                 // Header Bảng 1
-                int row = 4;
+                int row = 5; // Bắt đầu từ dòng 5
                 worksheet.Cells[row, 1] = "Điểm";
                 worksheet.Cells[row, 2] = "TS";
                 worksheet.Cells[row, 3] = "Nữ";
@@ -183,7 +193,7 @@ namespace SchoolManager.Presentations.All_User_Control
                 row++;
                 int sumTotal = 0, sumFemale = 0, sumEthnic = 0, sumFemaleEthnic = 0;
 
-                // Đổ dữ liệu ScoreTable (10, 9, 8...)
+                // Đổ dữ liệu ScoreTable
                 foreach (var item in data.ScoreTable)
                 {
                     worksheet.Cells[row, 1] = item.ScoreLabel;
@@ -209,14 +219,14 @@ namespace SchoolManager.Presentations.All_User_Control
                 worksheet.Range[$"A{row}", $"E{row}"].Interior.Color = Color.LightYellow;
 
                 // Kẻ khung Bảng 1
-                worksheet.Range["A4", $"E{row}"].Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
-                worksheet.Range["A4", $"E{row}"].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                worksheet.Range["A5", $"E{row}"].Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                worksheet.Range["A5", $"E{row}"].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
 
                 // =========================================================
-                // BẢNG 2: THỐNG KÊ MÔN HỌC (GIỮ NGUYÊN)
+                // BẢNG 2: THỐNG KÊ MÔN HỌC
                 // =========================================================
 
-                row += 3;
+                row += 3; // Cách ra 3 dòng
                 Excel.Range subTitle2 = worksheet.Range[$"A{row}", $"J{row}"];
                 subTitle2.Merge();
                 subTitle2.Value = "BẢNG 2: THỐNG KÊ CHẤT LƯỢNG CÁC MÔN HỌC";
@@ -245,7 +255,7 @@ namespace SchoolManager.Presentations.All_User_Control
                 header2.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
 
                 row++;
-                // Đổ dữ liệu Bảng 2 (Chỉ 1 dòng cho lớp hiện tại)
+                // Đổ dữ liệu Bảng 2
                 worksheet.Cells[row, 1] = data.ClassName;
 
                 worksheet.Cells[row, 2] = data.LitStat.CountT;
@@ -263,7 +273,10 @@ namespace SchoolManager.Presentations.All_User_Control
                 worksheet.Range[$"A{startHeaderRow}", $"J{row}"].Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
                 worksheet.Range[$"A{startHeaderRow}", $"J{row}"].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
 
+                // Tự động chỉnh độ rộng cột
                 worksheet.Columns.AutoFit();
+
+                // Hiển thị Excel
                 excelApp.Visible = true;
             }
             catch (Exception ex)

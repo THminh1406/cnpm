@@ -299,6 +299,27 @@ namespace SchoolManager.Presentations.All_User_Control
             btnDelete.ForeColor = Color.White;
             panel.Controls.Add(btnDelete);
 
+            // --- THÊM NÚT LỊCH DẠY ---
+            Guna2Button btnSchedule = new Guna2Button()
+            {
+                Text = "Phân môn",
+                Size = new Size(150, 50),
+                Location = new Point(btnX, 130), // Đặt vị trí dưới nút Khóa
+                BorderRadius = 8,
+                FillColor = Color.Teal,
+                ForeColor = Color.White
+            };
+
+            btnSchedule.Click += (s, e) =>
+            {
+                // Mở Form phân công, truyền ID và Tên giáo viên sang
+                // Đảm bảo bạn đã tạo Form ở Bước 3 và chỉnh namespace cho đúng
+                var frm = new SchoolManager.Presentations.frm_TeachingAssignment(teacherId, name);
+                frm.StartPosition = FormStartPosition.CenterScreen;
+                frm.ShowDialog();
+            };
+            panel.Controls.Add(btnSchedule);
+
             // Assign dropdown: use classesList as DataSource so SelectedValue gives id_Class
             if (classesList != null && classesList.Count > 0)
             {

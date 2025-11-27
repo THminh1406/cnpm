@@ -115,6 +115,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioHelper.cs" />
     <Compile Include="BLL\Business_Logic_Account.cs" />
     <Compile Include="BLL\Business_Logic_ApproveRegistration.cs" />
     <Compile Include="BLL\Business_Logic_Attendance.cs" />
@@ -305,6 +306,12 @@
     <Compile Include="Presentations\Forms\Form_EditStudent.Designer.cs">
       <DependentUpon>Form_EditStudent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentations\Forms\frm_TeachingAssignment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentations\Forms\frm_TeachingAssignment.Designer.cs">
+      <DependentUpon>frm_TeachingAssignment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentations\Forms\index.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -413,6 +420,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentations\Forms\Form_EditStudent.resx">
       <DependentUpon>Form_EditStudent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentations\Forms\frm_TeachingAssignment.resx">
+      <DependentUpon>frm_TeachingAssignment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentations\Forms\index.resx">
       <DependentUpon>index.cs</DependentUpon>

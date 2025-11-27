@@ -67,6 +67,7 @@
             this.guna2HtmlLabel5 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2HtmlLabel10 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2HtmlLabel9 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            this.btn_ImportImage = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Panel2.SuspendLayout();
             this.guna2Panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2CirclePictureBox2)).BeginInit();
@@ -257,7 +258,7 @@
             this.guna2Panel4.Controls.Add(this.btn_Green);
             this.guna2Panel4.Controls.Add(this.btn_Red);
             this.guna2Panel4.Controls.Add(this.guna2HtmlLabel1);
-            this.guna2Panel4.Location = new System.Drawing.Point(904, 23);
+            this.guna2Panel4.Location = new System.Drawing.Point(764, 23);
             this.guna2Panel4.Name = "guna2Panel4";
             this.guna2Panel4.Size = new System.Drawing.Size(359, 108);
             this.guna2Panel4.TabIndex = 3;
@@ -414,7 +415,7 @@
             this.guna2Panel5.BackColor = System.Drawing.Color.White;
             this.guna2Panel5.Controls.Add(this.trackBar);
             this.guna2Panel5.Controls.Add(this.guna2HtmlLabel2);
-            this.guna2Panel5.Location = new System.Drawing.Point(1375, 23);
+            this.guna2Panel5.Location = new System.Drawing.Point(1165, 23);
             this.guna2Panel5.Name = "guna2Panel5";
             this.guna2Panel5.Size = new System.Drawing.Size(431, 42);
             this.guna2Panel5.TabIndex = 4;
@@ -447,7 +448,7 @@
             this.guna2Panel6.Controls.Add(this.btn_Redo);
             this.guna2Panel6.Controls.Add(this.btn_Undo);
             this.guna2Panel6.Controls.Add(this.guna2HtmlLabel3);
-            this.guna2Panel6.Location = new System.Drawing.Point(1375, 71);
+            this.guna2Panel6.Location = new System.Drawing.Point(1165, 71);
             this.guna2Panel6.Name = "guna2Panel6";
             this.guna2Panel6.Size = new System.Drawing.Size(431, 60);
             this.guna2Panel6.TabIndex = 5;
@@ -652,11 +653,33 @@
             this.guna2HtmlLabel9.TabIndex = 9;
             this.guna2HtmlLabel9.Text = "Trang 1";
             // 
+            // btn_ImportImage
+            // 
+            this.btn_ImportImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_ImportImage.BorderRadius = 20;
+            this.btn_ImportImage.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btn_ImportImage.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btn_ImportImage.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btn_ImportImage.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btn_ImportImage.FillColor = System.Drawing.Color.RoyalBlue;
+            this.btn_ImportImage.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold);
+            this.btn_ImportImage.ForeColor = System.Drawing.Color.White;
+            this.btn_ImportImage.Image = ((System.Drawing.Image)(resources.GetObject("btn_ImportImage.Image")));
+            this.btn_ImportImage.ImageOffset = new System.Drawing.Point(0, 3);
+            this.btn_ImportImage.ImageSize = new System.Drawing.Size(40, 40);
+            this.btn_ImportImage.Location = new System.Drawing.Point(1655, 23);
+            this.btn_ImportImage.Name = "btn_ImportImage";
+            this.btn_ImportImage.Size = new System.Drawing.Size(201, 108);
+            this.btn_ImportImage.TabIndex = 54;
+            this.btn_ImportImage.Text = "Thêm ảnh";
+            this.btn_ImportImage.Click += new System.EventHandler(this.btn_ImportImage_Click);
+            // 
             // uc_Drawing_Board
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(245)))), ((int)(((byte)(250)))));
+            this.Controls.Add(this.btn_ImportImage);
             this.Controls.Add(this.guna2HtmlLabel11);
             this.Controls.Add(this.btn_Save_Export_PDF);
             this.Controls.Add(this.guna2Panel6);
@@ -723,5 +746,6 @@
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel5;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel10;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel9;
+        private Guna.UI2.WinForms.Guna2Button btn_ImportImage;
     }
 }

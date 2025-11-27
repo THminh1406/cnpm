@@ -227,6 +227,7 @@ namespace SchoolManager.Presentations.All_User_Control
 
             if (imageId == wordId)
             {
+                AudioHelper.PlayCorrect();
                 lbl_Feedback.Text = "Chính xác!";
                 lbl_Feedback.ForeColor = Color.Green;
 
@@ -245,6 +246,7 @@ namespace SchoolManager.Presentations.All_User_Control
             }
             else
             {
+                AudioHelper.PlayWrong();
                 lbl_Feedback.Text = "Sai rồi! Hãy thử lại.";
                 lbl_Feedback.ForeColor = Color.Red;
             }
